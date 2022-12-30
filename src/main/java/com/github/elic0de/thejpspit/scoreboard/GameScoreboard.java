@@ -14,7 +14,7 @@ public class GameScoreboard {
     public void update() {
         final Game game = TheJpsPit.getInstance().getGame();
         for (PitPlayer player : game.getPitPlayers()) {
-            player.getBoard().updateLines(boardLines(game).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
+            player.getBoard().updateLines(boardLines(player).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
         }
     }
 
@@ -29,7 +29,7 @@ public class GameScoreboard {
                 "",
                 "japanpvpserver.net"
         ).stream().map(s ->
-                s.replaceAll("%level%", player.getLevel())
+                s.replaceAll("%level%", "none")
         ).collect(Collectors.toList());
     }
 

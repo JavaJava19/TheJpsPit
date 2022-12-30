@@ -2,10 +2,15 @@ package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+import org.bukkit.entity.Player;
+import org.sqlite.SQLiteConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -84,7 +89,7 @@ public class SqLiteDatabase extends Database {
     }
 
     @Override
-    public CompletableFuture<Void> runScript(@NotNull InputStream inputStream, @NotNull Map<String, String> replacements) {
+    public CompletableFuture<Void> runScript(InputStream inputStream, Map<String, String> replacements) {
         return CompletableFuture.runAsync(() -> {
             try {
                 final String[] scriptString;
@@ -109,24 +114,63 @@ public class SqLiteDatabase extends Database {
     }
 
     @Override
-    public CompletableFuture<Optional<PitPlayer>> getPitUser(UUID uuid) {
+    public CompletableFuture<Void> ensureUser(PitPlayer onlineUser) {
+        return CompletableFuture.runAsync(() -> getPitPlayer(onlineUser.getPlayer()).thenAccept(optionalUser ->
+                optionalUser.ifPresentOrElse(existingUser -> {
+                            if (!existingUser.getName().equals(onlineUser.getName())) {
+                                // Update a player's name if it has changed in the database
+                                try {
+                                    try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                                            UPDATE `%players_table%`
+                                            SET `username`=?
+                                            WHERE `uuid`=?"""))) {
+
+                                        statement.setString(1, onlineUser.getName());
+                                        statement.setString(2, existingUser.getUniqueId().toString());
+                                        statement.executeUpdate();
+                                    }
+                                    getLogger().log(Level.INFO, "Updated " + onlineUser.getName() + "'s name in the database (" + existingUser.getName() + " -> " + onlineUser.getName() + ")");
+                                } catch (SQLException e) {
+                                    getLogger().log(Level.SEVERE, "Failed to update a player's name on the database", e);
+                                }
+                            }
+                        },
+                        () -> {
+                            // Insert new player data into the database
+                            try {
+                                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                                        INSERT INTO `%players_table%` (`uuid`,`username`)
+                                        VALUES (?,?);"""))) {
+
+                                    statement.setString(1, onlineUser.getUniqueId().toString());
+                                    statement.setString(2, onlineUser.getName());
+                                    statement.executeUpdate();
+                                }
+                            } catch (SQLException e) {
+                                getLogger().log(Level.SEVERE, "Failed to insert a player into the database", e);
+                            }
+                        })));
+    }
+
+    @Override
+    public CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
-                        SELECT `uuid`, `username`, `home_slots`, `ignoring_requests`, `rtp_cooldown`
+                        SELECT `kills`, `deaths`, `rating`, `xp`
                         FROM `%players_table%`
                         WHERE `uuid`=?"""))) {
 
-                    statement.setString(1, uuid.toString());
+                    statement.setString(1, player.getUniqueId().toString());
 
                     final ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
-                        return Optional.of(new UserData(
-                                new User(UUID.fromString(resultSet.getString("uuid")),
-                                        resultSet.getString("username")),
-                                resultSet.getInt("home_slots"),
-                                resultSet.getBoolean("ignoring_requests"),
-                                resultSet.getTimestamp("rtp_cooldown").toInstant()));
+                        return Optional.of(new PitPlayer(player,
+                                resultSet.getLong("kills"),
+                                resultSet.getLong("deaths"),
+                                resultSet.getDouble("rating"),
+                                resultSet.getDouble("xp")
+                        ));
                     }
                 }
             } catch (SQLException e) {

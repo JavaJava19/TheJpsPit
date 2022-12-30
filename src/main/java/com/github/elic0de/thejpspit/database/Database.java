@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,24 +35,22 @@ public abstract class Database {
 
     protected final String formatStatementTables(String sql) {
         return sql
-                .replaceAll("%positions_table%", positionsTableName)
-                .replaceAll("%players_table%", playerTableName)
-                .replaceAll("%teleports_table%", teleportsTableName)
-                .replaceAll("%saved_positions_table%", savedPositionsTableName)
-                .replaceAll("%homes_table%", homesTableName)
-                .replaceAll("%warps_table%", warpsTableName);
+                .replaceAll("%players_table%", playerTableName);
     }
 
     protected Database(TheJpsPit implementor) {
         this.plugin = implementor;
-        this.playerTableName = implementor.getSettings().getTableName(Settings.TableName.PLAYER_DATA);
-        this.logger = implementor.g();
+        this.playerTableName = "player";
+        this.logger = implementor.getLogger();
     }
 
     public abstract boolean initialize();
 
     public abstract CompletableFuture<Void> runScript(InputStream inputStream, Map<String, String> replacements);
-    public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(UUID uuid);
+
+    public abstract CompletableFuture<Void> ensureUser(PitPlayer pitPlayer);
+
+    public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player);
 
     public abstract void terminate();
 
