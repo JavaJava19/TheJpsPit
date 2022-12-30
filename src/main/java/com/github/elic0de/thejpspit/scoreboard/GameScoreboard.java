@@ -13,12 +13,12 @@ public class GameScoreboard {
 
     public void update() {
         final Game game = TheJpsPit.getInstance().getGame();
-        for (PitPlayer player : game.getPlayers()) {
-            player.getScoreboard().updateLines(boardLines(game).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
+        for (PitPlayer player : game.getPitPlayers()) {
+            player.getBoard().updateLines(boardLines(game).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
         }
     }
 
-    public List<String> boardLines(final Game game) {
+    public List<String> boardLines(PitPlayer player) {
 
         return Arrays.asList(
                 "",

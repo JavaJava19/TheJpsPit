@@ -1,10 +1,12 @@
 package com.github.elic0de.thejpspit;
 
+import com.github.elic0de.thejpspit.game.Game;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheJpsPit extends JavaPlugin {
 
     private static TheJpsPit instance;
+    private Game game;
 
     @Override
     public void onLoad() {
@@ -14,7 +16,7 @@ public final class TheJpsPit extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-
+        game = new Game();
     }
 
     @Override
@@ -24,6 +26,10 @@ public final class TheJpsPit extends JavaPlugin {
 
     public static TheJpsPit getInstance() {
         return instance;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     private void registerCommands() {

@@ -28,4 +28,8 @@ public class Game {
         victim.sendMessage("【PIT】az_akaを倒されました(KDレート:0.53%)");
         killer.sendMessage("【PIT】az_akaを倒しました(KDレート:0.53%)");
     }
+
+    public Set<PitPlayer> getPitPlayers() {
+        return pitPlayers;
+    }
 }

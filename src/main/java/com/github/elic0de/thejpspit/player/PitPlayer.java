@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.player;
 
+import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -9,6 +10,8 @@ public class PitPlayer {
     private long kills;
     private long deaths;
     private double rating;
+
+    private final FastBoard board;
 
     public PitPlayer(Player player) {
         this.player = player;
@@ -46,6 +49,10 @@ public class PitPlayer {
 
     public double getRating() {
         return rating;
+    }
+
+    public FastBoard getBoard() {
+        return board;
     }
 
     public void increaseKills() {
