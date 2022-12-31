@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -104,5 +105,10 @@ public class EventListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onXpGain(PlayerExpChangeEvent event) {
+        event.setAmount(0);
     }
 }
