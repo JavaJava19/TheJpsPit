@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
@@ -72,7 +71,7 @@ public class SqLiteDatabase extends Database {
             // Prepare database schema; make tables if they don't exist
             try {
                 // Load database schema CREATE statements from schema file
-                final String[] databaseSchema = getSchemaStatements("database/sqlite_schema.sql");
+                final String[] databaseSchema = getSchemaStatements();
                 try (Statement statement = getConnection().createStatement()) {
                     for (String tableCreationStatement : databaseSchema) {
                         statement.execute(tableCreationStatement);
@@ -177,6 +176,27 @@ public class SqLiteDatabase extends Database {
                 getLogger().log(Level.SEVERE, "Failed to fetch a player from uuid from the database", e);
             }
             return Optional.empty();
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> updateUserData(PitPlayer player) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                        UPDATE `%players_table%`
+                        SET `kills`=?, `deaths`=?, `rating`=?, `xp`=?
+                        WHERE `uuid`=?"""))) {
+
+                    statement.setLong(1, player.getKills());
+                    statement.setLong(2, player.getDeaths());
+                    statement.setDouble(3, player.getRating());
+                    statement.setDouble(4, player.getXp());
+                    statement.executeUpdate();
+                }
+            } catch (SQLException e) {
+                getLogger().log(Level.SEVERE, "Failed to update user data for " + player.getName() + " on the database", e);
+            }
         });
     }
 

@@ -9,10 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,7 +26,7 @@ public class EventListener implements Listener {
         plugin.getDatabase().ensureUser(PitPlayer.adapt(event.getPlayer())).thenRun(() ->
                 plugin.getDatabase().getPitPlayer(event.getPlayer()).join().ifPresent(pitPlayer -> {
                     if (!PitPlayerManager.isContain(event.getPlayer())) PitPlayerManager.registerUser(pitPlayer);
-                    pitPlayer.showHealth();
+                    pitPlayer.showHealth(pitPlayer);
                     plugin.getGame().join(pitPlayer);
                 })
         );
@@ -71,15 +68,16 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 event.setCancelled(true);
                 return;
             }
-
-            pitPlayer.showHealth();
+        }
+        if (event.getDamager() instanceof Player player) {
+            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
+            pitPlayer.showHealth(pitPlayer);
         }
     }
 

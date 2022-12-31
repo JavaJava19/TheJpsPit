@@ -18,7 +18,7 @@ public class ShowHealth {
         StringBuilder style = new StringBuilder();
         int left = 10;
         double heart = maxHealth / left;
-        double halfHeart = heart ;
+        double halfHeart = heart / 2;
         double tempHealth = health;
 
         if (maxHealth != health && health >= 0 && !target.isDead()) {
@@ -45,10 +45,14 @@ public class ShowHealth {
         if (maxHealth != health) {
             style.append("&7\u2764".repeat(Math.max(0, left)));
         } else {
-            style.append("&4\u2764".repeat(Math.max(0, left)));
+            style.append("&4\u2764".repeat(left));
         }
 
-        pitPlayer.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', style.toString())).create());
+        pitPlayer.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                new ComponentBuilder(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                        '&', pitPlayer.getPlayer().getDisplayName() + style)
+                ).create()
+        );
     }
 
 }

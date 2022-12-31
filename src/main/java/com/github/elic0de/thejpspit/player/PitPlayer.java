@@ -2,12 +2,12 @@ package com.github.elic0de.thejpspit.player;
 
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import fr.mrmicky.fastboard.FastBoard;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.UUID;
 
@@ -18,8 +18,21 @@ public class PitPlayer {
     private long deaths;
     private double rating;
     private double xp;
-
     private FastBoard board;
+
+    private final ItemStack[] INVENTORY = {
+            new ItemStack(Material.IRON_SWORD),
+            new ItemStack(Material.BOW),
+            new ItemStack(Material.ARROW, 32),
+            new ItemStack(Material.GOLDEN_APPLE),
+            new ItemStack(Material.NETHER_STAR)
+    };
+
+    private final ItemStack[] ARMOR = {
+            new ItemStack(Material.CHAINMAIL_BOOTS),
+            new ItemStack(Material.CHAINMAIL_LEGGINGS),
+            new ItemStack(Material.IRON_CHESTPLATE)
+    };
 
     public PitPlayer(Player player) {
         this.player = player;
@@ -36,12 +49,22 @@ public class PitPlayer {
         this.rating = rating;
         this.xp = xp;
         this.board = new FastBoard(player);
-        this.board.updateTitle("THE JPS PIT");
-        this.board.updateLines("");
+        this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
     }
 
     public static PitPlayer adapt(Player player) {
         return new PitPlayer(player);
+    }
+
+    public void addItem() {
+        final PlayerInventory inventory = player.getInventory();
+
+        inventory.setArmorContents(ARMOR);
+
+        for (ItemStack item : INVENTORY) {
+            if (inventory.contains(item)) continue;
+            inventory.addItem(INVENTORY);
+        }
     }
 
     public void showHealth(PitPlayer targetPit) {
@@ -50,6 +73,10 @@ public class PitPlayer {
 
     public void sendMessage(String message) {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    public void sendStatus() {
+
     }
 
     public Player getPlayer() {

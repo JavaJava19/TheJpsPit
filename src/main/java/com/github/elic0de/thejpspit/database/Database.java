@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -26,9 +25,9 @@ public abstract class Database {
         return logger;
     }
 
-    protected final String[] getSchemaStatements(String schemaFileName) throws IOException {
+    protected final String[] getSchemaStatements() throws IOException {
         return formatStatementTables(
-                new String(Objects.requireNonNull(plugin.getResource(schemaFileName)).readAllBytes(),
+                new String(Objects.requireNonNull(plugin.getResource("database/sqlite_schema.sql")).readAllBytes(),
                         StandardCharsets.UTF_8))
                 .split(";");
     }
@@ -51,6 +50,8 @@ public abstract class Database {
     public abstract CompletableFuture<Void> ensureUser(PitPlayer pitPlayer);
 
     public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player);
+
+    public abstract CompletableFuture<Void> updateUserData(PitPlayer player);
 
     public abstract void terminate();
 

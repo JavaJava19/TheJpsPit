@@ -1,11 +1,14 @@
 package com.github.elic0de.thejpspit;
 
+import co.aikar.commands.PaperCommandManager;
+import com.github.elic0de.thejpspit.command.PitCommand;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import com.github.elic0de.thejpspit.util.KillRatingHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +22,8 @@ public final class TheJpsPit extends JavaPlugin {
     private Game game;
 
     private Database database;
+
+    private KillRatingHelper ratingHelper;
 
     @Override
     public void onLoad() {
@@ -42,6 +47,8 @@ public final class TheJpsPit extends JavaPlugin {
                     "Please check the supplied database credentials in the config file");
         }
 
+        ratingHelper = new KillRatingHelper(0.5);
+
         registerCommands();
         registerListener();
 
@@ -51,7 +58,7 @@ public final class TheJpsPit extends JavaPlugin {
                 database.ensureUser(PitPlayer.adapt(player)).thenRun(() ->
                         database.getPitPlayer(player).join().ifPresent(pitPlayer -> {
                             if (!PitPlayerManager.isContain(player)) PitPlayerManager.registerUser(pitPlayer);
-                            pitPlayer.showHealth();
+                            pitPlayer.showHealth(pitPlayer);
                             game.join(pitPlayer);
                         })
                 )
@@ -59,7 +66,11 @@ public final class TheJpsPit extends JavaPlugin {
     }
 
     private void registerCommands() {
+        PaperCommandManager commandManager = new PaperCommandManager(this);
 
+        commandManager.enableUnstableAPI("brigadier");
+
+        commandManager.registerCommand(new PitCommand());
     }
 
     private void registerListener() {
@@ -77,7 +88,7 @@ public final class TheJpsPit extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
-            pitPlayer.getBoard().delete();;
+            pitPlayer.getBoard().delete();
         });
     }
 
@@ -91,5 +102,9 @@ public final class TheJpsPit extends JavaPlugin {
 
     public Database getDatabase() {
         return database;
+    }
+
+    public KillRatingHelper getRatingHelper() {
+        return ratingHelper;
     }
 }

@@ -5,9 +5,9 @@ import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import org.bukkit.ChatColor;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameScoreboard {
 
@@ -20,16 +20,17 @@ public class GameScoreboard {
 
     public List<String> boardLines(PitPlayer player) {
 
-        return Arrays.asList(
+        return Stream.of(
                 "",
                 "レベル:[%level%]",
                 "",
-                "K/Dレート",
-                "次のレベルまで：%nextLevel%",
+                "K/Dレート: &c%rating%",
+                "次のレベルまで：&a%nextLevel%",
                 "",
-                "japanpvpserver.net"
-        ).stream().map(s ->
+                "&ejapanpvpserver.net"
+        ).map(s ->
                 s.replaceAll("%level%", "none")
+                        .replaceAll("%rating%", player.getRating() + "%")
         ).collect(Collectors.toList());
     }
 
