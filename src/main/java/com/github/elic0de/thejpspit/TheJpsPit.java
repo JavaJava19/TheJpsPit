@@ -52,13 +52,15 @@ public final class TheJpsPit extends JavaPlugin {
         registerCommands();
         registerListener();
 
-        Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true));
+        Bukkit.getWorlds().forEach(world -> {
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        });
 
         Bukkit.getOnlinePlayers().forEach(player ->
-                database.ensureUser(PitPlayer.adapt(player)).thenRun(() ->
+                database.ensureUser(player).thenRun(() ->
                         database.getPitPlayer(player).join().ifPresent(pitPlayer -> {
-                            if (!PitPlayerManager.isContain(player)) PitPlayerManager.registerUser(pitPlayer);
-                            pitPlayer.showHealth(pitPlayer);
+                            PitPlayerManager.registerUser(pitPlayer);
                             game.join(pitPlayer);
                         })
                 )
@@ -88,7 +90,7 @@ public final class TheJpsPit extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
-            pitPlayer.getBoard().delete();
+            if (pitPlayer.getBoard() != null) pitPlayer.getBoard().delete();
         });
     }
 

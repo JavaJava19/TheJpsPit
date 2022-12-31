@@ -47,7 +47,7 @@ public abstract class Database {
 
     public abstract CompletableFuture<Void> runScript(InputStream inputStream, Map<String, String> replacements);
 
-    public abstract CompletableFuture<Void> ensureUser(PitPlayer pitPlayer);
+    public abstract CompletableFuture<Void> ensureUser(Player Player);
 
     public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player);
 

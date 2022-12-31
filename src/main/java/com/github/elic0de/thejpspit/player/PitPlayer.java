@@ -54,10 +54,6 @@ public class PitPlayer {
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
     }
 
-    public static PitPlayer adapt(Player player) {
-        return new PitPlayer(player);
-    }
-
     public void addItem() {
         final PlayerInventory inventory = player.getInventory();
 
@@ -65,7 +61,7 @@ public class PitPlayer {
 
         for (ItemStack item : INVENTORY) {
             if (inventory.contains(item)) continue;
-            inventory.addItem(INVENTORY);
+            inventory.addItem(item);
         }
         player.updateInventory();
     }
@@ -80,13 +76,13 @@ public class PitPlayer {
 
     public void sendStatus() {
         Stream.of(
-                "+ -----< %playerName% >----- +" +
-                        "Kills >> %kills%",
-                        "Deaths >> %deaths%",
-                        "KillRate >> %rating%%",
-                        "RateRank >> %%位",
-                        "KillRank >> %%位",
-                        "DeathRank >> %%位"
+                "+ -----< %playerName% >----- +",
+                        "Kills >> &e%kills%",
+                        "Deaths >> &c%deaths%",
+                        "KillRate >> &a%rating%%",
+                        "RateRank >> &e%%位",
+                        "KillRank >> &e%%位",
+                        "DeathRank >> &e%%位"
         ).map(s ->
                 s.replaceAll("%playerName%", getName())
                         .replaceAll("%kills%", kills + "")
@@ -108,7 +104,7 @@ public class PitPlayer {
     }
 
     public PitPlayer getKiller() {
-        return adapt(player.getKiller());
+        return PitPlayerManager.getPitPlayer(player.getKiller());
     }
 
     public long getKills() {

@@ -50,7 +50,7 @@ public class ShowHealth {
 
         pitPlayer.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 new ComponentBuilder(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
-                        '&', pitPlayer.getPlayer().getDisplayName() + style)
+                        '&', pitPlayer.getPlayer().getDisplayName() + " " + style)
                 ).create()
         );
     }

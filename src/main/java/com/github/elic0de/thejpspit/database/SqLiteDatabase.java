@@ -113,10 +113,10 @@ public class SqLiteDatabase extends Database {
     }
 
     @Override
-    public CompletableFuture<Void> ensureUser(PitPlayer onlineUser) {
-        return CompletableFuture.runAsync(() -> getPitPlayer(onlineUser.getPlayer()).thenAccept(optionalUser ->
+    public CompletableFuture<Void> ensureUser(Player player) {
+        return CompletableFuture.runAsync(() -> getPitPlayer(player.getPlayer()).thenAccept(optionalUser ->
                 optionalUser.ifPresentOrElse(existingUser -> {
-                            if (!existingUser.getName().equals(onlineUser.getName())) {
+                            if (!existingUser.getName().equals(player.getName())) {
                                 // Update a player's name if it has changed in the database
                                 try {
                                     try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
@@ -124,11 +124,11 @@ public class SqLiteDatabase extends Database {
                                             SET `username`=?
                                             WHERE `uuid`=?"""))) {
 
-                                        statement.setString(1, onlineUser.getName());
-                                        statement.setString(2, existingUser.getUniqueId().toString());
+                                        statement.setString(1, player.getName());
+                                        statement.setString(2, player.getUniqueId().toString());
                                         statement.executeUpdate();
                                     }
-                                    getLogger().log(Level.INFO, "Updated " + onlineUser.getName() + "'s name in the database (" + existingUser.getName() + " -> " + onlineUser.getName() + ")");
+                                    getLogger().log(Level.INFO, "Updated " + player.getName() + "'s name in the database (" + existingUser.getName() + " -> " + player.getName() + ")");
                                 } catch (SQLException e) {
                                     getLogger().log(Level.SEVERE, "Failed to update a player's name on the database", e);
                                 }
@@ -141,8 +141,8 @@ public class SqLiteDatabase extends Database {
                                         INSERT INTO `%players_table%` (`uuid`,`username`)
                                         VALUES (?,?);"""))) {
 
-                                    statement.setString(1, onlineUser.getUniqueId().toString());
-                                    statement.setString(2, onlineUser.getName());
+                                    statement.setString(1, player.getUniqueId().toString());
+                                    statement.setString(2, player.getName());
                                     statement.executeUpdate();
                                 }
                             } catch (SQLException e) {
@@ -192,6 +192,7 @@ public class SqLiteDatabase extends Database {
                     statement.setLong(2, player.getDeaths());
                     statement.setDouble(3, player.getRating());
                     statement.setDouble(4, player.getXp());
+                    statement.setString(5, player.getUniqueId().toString());
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
