@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.scoreboard;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.game.Game;
+import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import org.bukkit.ChatColor;
 
@@ -25,11 +26,12 @@ public class GameScoreboard {
                 "レベル:[%level%]",
                 "",
                 "K/Dレート: &c%rating%",
-                "次のレベルまで：&a%nextLevel%",
+                "次のレベルまで：&a%neededXp%",
                 "",
                 "&ejapanpvpserver.net"
         ).map(s ->
-                s.replaceAll("%level%", "none")
+                s.replaceAll("%level%", Levels.getPlayerLevel(player) + "")
+                        .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player) + "")
                         .replaceAll("%rating%", player.getRating() + "%")
         ).collect(Collectors.toList());
     }
