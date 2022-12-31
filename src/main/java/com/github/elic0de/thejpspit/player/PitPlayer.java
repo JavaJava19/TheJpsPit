@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PitPlayer {
 
@@ -65,6 +67,7 @@ public class PitPlayer {
             if (inventory.contains(item)) continue;
             inventory.addItem(INVENTORY);
         }
+        player.updateInventory();
     }
 
     public void showHealth(PitPlayer targetPit) {
@@ -76,7 +79,20 @@ public class PitPlayer {
     }
 
     public void sendStatus() {
-
+        Stream.of(
+                "+ -----< %playerName% >----- +" +
+                        "Kills >> %kills%",
+                        "Deaths >> %deaths%",
+                        "KillRate >> %rating%%",
+                        "RateRank >> %%位",
+                        "KillRank >> %%位",
+                        "DeathRank >> %%位"
+        ).map(s ->
+                s.replaceAll("%playerName%", getName())
+                        .replaceAll("%kills%", kills + "")
+                        .replaceAll("%deaths%", deaths + "")
+                        .replaceAll("%rating%", rating + "%")
+        ).forEach(string -> sendMessage(string));
     }
 
     public Player getPlayer() {
@@ -121,6 +137,10 @@ public class PitPlayer {
 
     public void increaseDeaths() {
         this.deaths++;
+    }
+
+    public void increaseXP() {
+        this.xp++;
     }
 
     public void increaseHealth() {

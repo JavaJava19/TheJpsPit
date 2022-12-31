@@ -38,6 +38,7 @@ public class Game {
 
         victim.increaseDeaths();
         killer.increaseKills();
+        killer.increaseXP();
 
         pit.getRatingHelper().initRating(victim);
         pit.getRatingHelper().initRating(killer);
