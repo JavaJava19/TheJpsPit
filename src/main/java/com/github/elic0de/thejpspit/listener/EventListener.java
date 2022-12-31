@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -62,6 +63,11 @@ public class EventListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         plugin.getGame().death(PitPlayerManager.getPitPlayer(event.getEntity()));
         event.getDrops().clear();
+    }
+
+    @EventHandler
+    public void onDurability(PlayerItemDamageEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler
