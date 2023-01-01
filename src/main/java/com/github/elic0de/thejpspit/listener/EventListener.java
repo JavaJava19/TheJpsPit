@@ -54,6 +54,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        PitPlayerManager.getPitPlayer(event.getPlayer()).increaseXP();
         event.setCancelled(true);
     }
 
@@ -97,7 +98,6 @@ public class EventListener implements Listener {
                 pitPlayer.showHealth(pitPlayer);
             }
         }
-
     }
 
     @EventHandler

@@ -23,6 +23,7 @@ public class Game {
     public void join(PitPlayer player) {
         pitPlayers.add(player);
         player.addItem();
+        player.getBoard().updateLines();
     }
 
     public void leave(PitPlayer player) {

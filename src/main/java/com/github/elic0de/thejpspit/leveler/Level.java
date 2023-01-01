@@ -23,6 +23,6 @@ public class Level {
     }
 
     public int getNeededXP() {
-        return neededXP * lev;
+        return neededXP;
     }
 }

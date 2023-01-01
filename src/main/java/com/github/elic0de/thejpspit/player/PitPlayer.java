@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.player;
 
+import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.ChatColor;

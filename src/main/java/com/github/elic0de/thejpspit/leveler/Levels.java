@@ -54,11 +54,10 @@ public class Levels {
         return maxLevel;
     }
 
-    // Returns the amount needed to reach the next level; -1 if the town is max level
-    public static double getPlayerNeededXP(PitPlayer player) {
+    public static int getPlayerNeededXP(PitPlayer player) {
         final List<Integer> requirements = LEVELS.stream().map(level -> level.getNeededXP()).toList();
         for (int requirement : requirements) {
-            double amountToNextLevel = requirement - player.getXp();
+            int amountToNextLevel = (int) (requirement - player.getXp());
             if (amountToNextLevel > 0) {
                 return amountToNextLevel;
             }

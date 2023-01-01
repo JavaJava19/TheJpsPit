@@ -4,6 +4,8 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -13,8 +15,7 @@ import java.util.stream.Stream;
 public class GameScoreboard {
 
     public void update() {
-        final Game game = TheJpsPit.getInstance().getGame();
-        for (PitPlayer player : game.getPitPlayers()) {
+        for (PitPlayer player : Bukkit.getOnlinePlayers().stream().map(player -> PitPlayerManager.getPitPlayer(player)).toList()) {
             player.getBoard().updateLines(boardLines(player).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
         }
     }
