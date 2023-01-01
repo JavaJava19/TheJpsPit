@@ -51,9 +51,16 @@ public abstract class Database {
 
     public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player);
 
+    public abstract CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player, RankType type);
+
     public abstract CompletableFuture<Void> updateUserData(PitPlayer player);
 
     public abstract void terminate();
 
+    public enum RankType {
+        KILLS,
+        DEATHS,
+        RATING
+    }
 
 }

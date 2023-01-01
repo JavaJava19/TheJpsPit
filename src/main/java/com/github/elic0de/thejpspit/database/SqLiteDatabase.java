@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -170,6 +171,30 @@ public class SqLiteDatabase extends Database {
                                 resultSet.getDouble("rating"),
                                 resultSet.getDouble("xp")
                         ));
+                    }
+                }
+            } catch (SQLException e) {
+                getLogger().log(Level.SEVERE, "Failed to fetch a player from uuid from the database", e);
+            }
+            return Optional.empty();
+        });
+    }
+
+    @Override
+    public CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player, RankType type) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                        SELECT RANK() OVER(ORDER BY ? DESC)
+                        FROM `%players_table%`
+                        WHERE `uuid`=?"""))) {
+
+                    statement.setString(1, type.name().toLowerCase(Locale.ROOT));
+                    statement.setString(2, player.getUniqueId().toString());
+
+                    final ResultSet resultSet = statement.executeQuery();
+                    if (resultSet.next()) {
+                        return Optional.of(resultSet.getInt("rank"));
                     }
                 }
             } catch (SQLException e) {

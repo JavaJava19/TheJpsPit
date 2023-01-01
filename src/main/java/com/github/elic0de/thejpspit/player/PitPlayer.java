@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.player;
 
-import com.github.elic0de.thejpspit.leveler.Levels;
+import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.ChatColor;
@@ -11,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PitPlayer {
@@ -76,19 +76,26 @@ public class PitPlayer {
     }
 
     public void sendStatus() {
+        final TheJpsPit pit = TheJpsPit.getInstance();
         Stream.of(
                 "+ -----< %playerName% >----- +",
-                        "Kills >> &e%kills%",
-                        "Deaths >> &c%deaths%",
-                        "KillRate >> &a%rating%%",
-                        "RateRank >> &e%%位",
-                        "KillRank >> &e%%位",
-                        "DeathRank >> &e%%位"
+                        "Kills >> &e%kills% (#%kills_ranking%)",
+                        "Deaths >> &c%deaths% (#%deaths_ranking%)",
+                        "Rating >> &a%rating% (#%rating_ranking%)"
         ).map(s ->
                 s.replaceAll("%playerName%", getName())
-                        .replaceAll("%kills%", kills + "")
-                        .replaceAll("%deaths%", deaths + "")
-                        .replaceAll("%rating%", rating + "%")
+                        .replaceAll("%kills%",
+                                kills + "")
+                        .replaceAll("%deaths%",
+                                deaths + "")
+                        .replaceAll("%rating%",
+                                rating + "%")
+                        .replaceAll("%kills_ranking%",
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS) + "")
+                        .replaceAll("%deaths_ranking%",
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.DEATHS) + "")
+                        .replaceAll("%rating_ranking%",
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING) + "")
         ).forEach(string -> sendMessage(string));
     }
 
