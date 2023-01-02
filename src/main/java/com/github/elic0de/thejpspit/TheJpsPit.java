@@ -8,6 +8,8 @@ import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import com.github.elic0de.thejpspit.queue.QueueManager;
+import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -20,10 +22,10 @@ public final class TheJpsPit extends JavaPlugin {
 
     private static TheJpsPit instance;
     private Game game;
-
     private Database database;
-
     private KillRatingHelper ratingHelper;
+    private QueueManager queueManager;
+    private QueueTask queueTask;
 
     @Override
     public void onLoad() {
@@ -48,6 +50,9 @@ public final class TheJpsPit extends JavaPlugin {
         }
 
         ratingHelper = new KillRatingHelper(0.5);
+        queueManager = new QueueManager();
+
+        queueTask = new QueueTask();
 
         registerCommands();
         registerListener();
@@ -87,11 +92,14 @@ public final class TheJpsPit extends JavaPlugin {
         }
         game.getTask().stop();
 
+        queueTask.stop();
+
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
             if (pitPlayer.getBoard() != null) pitPlayer.getBoard().delete();
         });
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     public static TheJpsPit getInstance() {
@@ -108,5 +116,9 @@ public final class TheJpsPit extends JavaPlugin {
 
     public KillRatingHelper getRatingHelper() {
         return ratingHelper;
+    }
+
+    public QueueManager getQueueManager() {
+        return queueManager;
     }
 }

@@ -3,8 +3,8 @@ package com.github.elic0de.thejpspit.gui;
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
-import com.github.elic0de.thejpspit.queue.QueueManager;
-import com.github.elic0de.thejpspit.queue.ServerQueueType;
+import com.github.elic0de.thejpspit.queue.QueueServerType;
+import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
@@ -36,16 +36,17 @@ public class ServerQueueMenu {
         // Add filler items
         this.menu.setFiller(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1));
         // Add pagination handling
-        this.menu.addElement(getButton('x', ServerQueueType.WOOL_PVP, new ItemStack(Material.PINK_WOOL),"CatchTheWool", "&7相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
-        this.menu.addElement(getButton('y', ServerQueueType.BATTLE_CASTLE, new ItemStack(Material.COBBLESTONE), "BattleCastle", "&7自分のコアを守りつつ相手のコアを破壊せよ！！"));
+        this.menu.addElement(getButton('x', QueueServerType.WOOL_PVP, new ItemStack(Material.PINK_WOOL),"CatchTheWool", "&7相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
+        this.menu.addElement(getButton('y', QueueServerType.BATTLE_CASTLE, new ItemStack(Material.COBBLESTONE), "BattleCastle", "&7自分のコアを守りつつ相手のコアを破壊せよ！！"));
+        this.menu.addElement(statusButton());
         this.menu.addElement(closeButton());
     }
 
-    private StaticGuiElement getButton(char symbol, ServerQueueType type, ItemStack itemStack, String title, String desc) {
+    private StaticGuiElement getButton(char symbol, QueueServerType type, ItemStack itemStack, String title, String desc) {
         return new StaticGuiElement(symbol, itemStack,
                 click -> {
                     final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer((Player) click.getWhoClicked());
-                    //QueueManager.addQueue(pitPlayer, type);
+                    TheJpsPit.getInstance().getQueueManager().addQueue(pitPlayer, type);
                     return true;
                 },
                 title,
@@ -53,11 +54,17 @@ public class ServerQueueMenu {
                 );
     }
 
-    private StaticGuiElement statusButton() {
-        return new StaticGuiElement('z', new ItemStack(Material.IRON_SWORD),
-                click -> true,
-                ""
-        );
+    private DynamicGuiElement statusButton() {
+       return new DynamicGuiElement('z', (viewer) -> {
+           final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(viewer.getKiller());
+            return new StaticGuiElement('z', new ItemStack(Material.IRON_SWORD),
+                    click -> true,
+                    "Pit Status",
+                    "Kills" + pitPlayer.getKills(),
+                    "Deaths" + pitPlayer.getDeaths(),
+                    "Rating" + pitPlayer.getRating()
+            );
+        });
     }
 
     private StaticGuiElement closeButton() {
