@@ -2,6 +2,8 @@ package com.github.elic0de.thejpspit.player;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.database.Database;
+import com.github.elic0de.thejpspit.leveler.Level;
+import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.ChatColor;
@@ -59,7 +61,7 @@ public class PitPlayer {
         final PlayerInventory inventory = player.getInventory();
 
         inventory.setArmorContents(ARMOR);
-
+        inventory.remove(Material.ARROW);
         for (ItemStack item : INVENTORY) {
             if (inventory.contains(item)) continue;
             inventory.addItem(item);
@@ -97,6 +99,13 @@ public class PitPlayer {
                         .replaceAll("%rating_ranking%",
                                 pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING).join().orElse(0) + "")
         ).forEach(string -> sendMessage(string));
+    }
+
+    private void updateXpBar() {
+        final float xp = Levels.getPlayerNeededXP(this);
+        final int level = Levels.getPlayerLevel(this);
+        player.setLevel(level);
+        player.setExp(Math.abs(100 - xp)/100);
     }
 
     public Player getPlayer() {
@@ -145,6 +154,7 @@ public class PitPlayer {
 
     public void increaseXP() {
         this.xp++;
+        updateXpBar();
     }
 
     public void increaseHealth() {

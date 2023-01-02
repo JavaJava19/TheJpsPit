@@ -6,6 +6,7 @@ import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.listener.EventListener;
+import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.queue.QueueManager;
@@ -54,6 +55,9 @@ public final class TheJpsPit extends JavaPlugin {
 
         queueTask = new QueueTask();
 
+        getServer().getMessenger().registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID, new PluginMessageReceiver());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
+
         registerCommands();
         registerListener();
 
@@ -93,6 +97,9 @@ public final class TheJpsPit extends JavaPlugin {
         game.getTask().stop();
 
         queueTask.stop();
+
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
