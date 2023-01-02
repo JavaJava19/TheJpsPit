@@ -185,7 +185,8 @@ public class SqLiteDatabase extends Database {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
-                        SELECT RANK() OVER(ORDER BY ? DESC)
+                        SELECT RANK() OVER(ORDER BY ? DESC) 
+                        AS rank
                         FROM `%players_table%`
                         WHERE `uuid`=?"""))) {
 

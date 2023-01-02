@@ -122,7 +122,7 @@ public class EventListener implements Listener {
 
         Player player = event.getPlayer();
         if (player.isSneaking()) return;
-
+        if (event.getItem() == null) return;
         if (event.getItem().getType() != Material.NETHER_STAR) return;
 
         ServerQueueMenu.create(plugin, "サーバーキュー").show(PitPlayerManager.getPitPlayer(player));

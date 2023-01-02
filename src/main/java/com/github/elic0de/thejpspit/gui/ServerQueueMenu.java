@@ -36,8 +36,8 @@ public class ServerQueueMenu {
         // Add filler items
         this.menu.setFiller(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1));
         // Add pagination handling
-        this.menu.addElement(getButton('x', ServerQueueType.WOOL_PVP, new ItemStack(Material.PINK_WOOL),"CatchTheWool", "相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
-        this.menu.addElement(getButton('y', ServerQueueType.BATTLE_CASTLE, new ItemStack(Material.COBBLESTONE), "BattleCastle", "自分のコアを守りつつ相手のコアを破壊せよ！！"));
+        this.menu.addElement(getButton('x', ServerQueueType.WOOL_PVP, new ItemStack(Material.PINK_WOOL),"CatchTheWool", "&7相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
+        this.menu.addElement(getButton('y', ServerQueueType.BATTLE_CASTLE, new ItemStack(Material.COBBLESTONE), "BattleCastle", "&7自分のコアを守りつつ相手のコアを破壊せよ！！"));
         this.menu.addElement(closeButton());
     }
 
@@ -51,6 +51,13 @@ public class ServerQueueMenu {
                 title,
                 desc
                 );
+    }
+
+    private StaticGuiElement statusButton() {
+        return new StaticGuiElement('z', new ItemStack(Material.IRON_SWORD),
+                click -> true,
+                ""
+        );
     }
 
     private StaticGuiElement closeButton() {

@@ -91,11 +91,11 @@ public class PitPlayer {
                         .replaceAll("%rating%",
                                 rating + "%")
                         .replaceAll("%kills_ranking%",
-                                pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS) + "")
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS).join().orElse(0) + "")
                         .replaceAll("%deaths_ranking%",
-                                pit.getDatabase().getPlayerRanking(this, Database.RankType.DEATHS) + "")
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.DEATHS).join().orElse(0) + "")
                         .replaceAll("%rating_ranking%",
-                                pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING) + "")
+                                pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING).join().orElse(0) + "")
         ).forEach(string -> sendMessage(string));
     }
 
