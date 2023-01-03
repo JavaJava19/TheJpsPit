@@ -31,7 +31,7 @@ public class PluginMessageReceiver implements PluginMessageListener {
         final ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
 
         outputStream.writeUTF("PlayerCount");
-        outputStream.writeUTF(serverName);
+        outputStream.writeUTF("AKA");
 
         Bukkit.getServer().sendPluginMessage(TheJpsPit.getInstance() , BUNGEE_CHANNEL_ID, outputStream.toByteArray());
     }

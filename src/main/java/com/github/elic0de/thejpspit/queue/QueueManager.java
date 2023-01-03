@@ -1,10 +1,7 @@
 package com.github.elic0de.thejpspit.queue;
 
-import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.player.PitPlayer;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 
 import java.util.HashMap;
 import java.util.HashSet;
