@@ -12,12 +12,11 @@ import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 
 public final class TheJpsPit extends JavaPlugin {
 
@@ -27,6 +26,10 @@ public final class TheJpsPit extends JavaPlugin {
     private KillRatingHelper ratingHelper;
     private QueueManager queueManager;
     private QueueTask queueTask;
+
+    public static TheJpsPit getInstance() {
+        return instance;
+    }
 
     @Override
     public void onLoad() {
@@ -47,7 +50,7 @@ public final class TheJpsPit extends JavaPlugin {
             getLogger().log(Level.INFO, "Successfully established a connection to the database");
         } else {
             throw new RuntimeException("Failed to establish a connection to the database. " +
-                    "Please check the supplied database credentials in the config file");
+                "Please check the supplied database credentials in the config file");
         }
 
         ratingHelper = new KillRatingHelper(0.5);
@@ -55,8 +58,11 @@ public final class TheJpsPit extends JavaPlugin {
 
         queueTask = new QueueTask();
 
-        getServer().getMessenger().registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID, new PluginMessageReceiver());
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
+        getServer().getMessenger()
+            .registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID,
+                new PluginMessageReceiver());
+        getServer().getMessenger()
+            .registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
 
         registerCommands();
         registerListener();
@@ -67,12 +73,12 @@ public final class TheJpsPit extends JavaPlugin {
         });
 
         Bukkit.getOnlinePlayers().forEach(player ->
-                database.ensureUser(player).thenRun(() ->
-                        database.getPitPlayer(player).join().ifPresent(pitPlayer -> {
-                            PitPlayerManager.registerUser(pitPlayer);
-                            game.join(pitPlayer);
-                        })
-                )
+            database.ensureUser(player).thenRun(() ->
+                database.getPitPlayer(player).join().ifPresent(pitPlayer -> {
+                    PitPlayerManager.registerUser(pitPlayer);
+                    game.join(pitPlayer);
+                })
+            )
         );
     }
 
@@ -104,13 +110,11 @@ public final class TheJpsPit extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
-            if (pitPlayer.getBoard() != null) pitPlayer.getBoard().delete();
+            if (pitPlayer.getBoard() != null) {
+                pitPlayer.getBoard().delete();
+            }
         });
         Bukkit.getScheduler().cancelTasks(this);
-    }
-
-    public static TheJpsPit getInstance() {
-        return instance;
     }
 
     public Game getGame() {

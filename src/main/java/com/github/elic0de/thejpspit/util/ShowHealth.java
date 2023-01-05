@@ -13,7 +13,9 @@ public class ShowHealth {
         double maxHealth = target.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         double health = target.getHealth() - target.getLastDamage();
 
-        if (health < 0.0 || target.isDead()) health = 0.0;
+        if (health < 0.0 || target.isDead()) {
+            health = 0.0;
+        }
 
         StringBuilder style = new StringBuilder();
         int left = 10;
@@ -49,9 +51,9 @@ public class ShowHealth {
         }
 
         pitPlayer.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                new ComponentBuilder(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
-                        '&', pitPlayer.getPlayer().getDisplayName() + " " + style)
-                ).create()
+            new ComponentBuilder(net.md_5.bungee.api.ChatColor.translateAlternateColorCodes(
+                '&', pitPlayer.getPlayer().getDisplayName() + " " + style)
+            ).create()
         );
     }
 

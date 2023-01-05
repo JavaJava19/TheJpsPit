@@ -4,7 +4,6 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.scoreboard.GameScoreboard;
 import com.github.elic0de.thejpspit.task.GameTask;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ public class Game {
         this.scoreboard = new GameScoreboard();
         this.task = new GameTask();
     }
-    
+
     public void join(PitPlayer player) {
         pitPlayers.add(player);
         player.addItem();
@@ -30,27 +29,28 @@ public class Game {
         pit.getDatabase().updateUserData(player);
         pitPlayers.remove(player);
     }
-    
+
     public void death(PitPlayer player) {
-        final PitPlayer victim = player;
-        final PitPlayer killer = victim.getKiller();
+        final PitPlayer killer = player.getKiller();
 
-        if (killer == null) return;
+        if (killer == null) {
+            return;
+        }
 
-        victim.increaseDeaths();
+        player.increaseDeaths();
         killer.increaseKills();
         killer.increaseXP();
 
-        pit.getRatingHelper().initRating(victim);
+        pit.getRatingHelper().initRating(player);
         pit.getRatingHelper().initRating(killer);
 
-        victim.sendMessage("【PIT】%player%に倒されました(KDレート:%rating%)"
-                .replaceAll("%player%", killer.getName())
-                .replaceAll("%rating%", killer.getRating() + "%")
+        player.sendMessage("【PIT】%player%に倒されました(KDレート:%rating%)"
+            .replaceAll("%player%", killer.getName())
+            .replaceAll("%rating%", killer.getRating() + "%")
         );
         killer.sendMessage("【PIT】%player%を倒しました(KDレート:%rating%)"
-                .replaceAll("%player%", victim.getName())
-                .replaceAll("%rating%", victim.getRating() + "%")
+            .replaceAll("%player%", player.getName())
+            .replaceAll("%rating%", player.getRating() + "%")
         );
     }
 

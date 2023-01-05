@@ -2,24 +2,28 @@ package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
-import org.bukkit.entity.Player;
-import org.sqlite.SQLiteConfig;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import org.bukkit.entity.Player;
+import org.sqlite.SQLiteConfig;
 
 public class SqLiteDatabase extends Database {
 
-    private final File databaseFile;
     private static final String DATABASE_FILE_NAME = "TheJpsPitData.db";
+    private final File databaseFile;
     private Connection connection;
 
     public SqLiteDatabase(TheJpsPit implementor) {
@@ -53,11 +57,15 @@ public class SqLiteDatabase extends Database {
             config.setSynchronous(SQLiteConfig.SynchronousMode.FULL);
 
             // Establish the connection
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getAbsolutePath(), config.toProperties());
+            connection = DriverManager.getConnection(
+                "jdbc:sqlite:" + databaseFile.getAbsolutePath(),
+                config.toProperties());
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "An exception occurred creating the database file", e);
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE, "An SQL exception occurred initializing the SQLite database", e);
+            getLogger().log(Level.SEVERE,
+                "An SQL exception occurred initializing the SQLite database",
+                e);
         } catch (ClassNotFoundException e) {
             getLogger().log(Level.SEVERE, "Failed to load the necessary SQLite driver", e);
         }
@@ -80,21 +88,27 @@ public class SqLiteDatabase extends Database {
                 }
                 return true;
             } catch (SQLException | IOException e) {
-                getLogger().log(Level.SEVERE, "An error occurred creating tables on the SQLite database: ", e);
+                getLogger().log(Level.SEVERE,
+                    "An error occurred creating tables on the SQLite database: ",
+                    e);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "An unhandled exception occurred during database setup!", e);
+            getLogger().log(Level.SEVERE, "An unhandled exception occurred during database setup!",
+                e);
         }
         return false;
     }
 
     @Override
-    public CompletableFuture<Void> runScript(InputStream inputStream, Map<String, String> replacements) {
+    public CompletableFuture<Void> runScript(InputStream inputStream,
+        Map<String, String> replacements) {
         return CompletableFuture.runAsync(() -> {
             try {
                 final String[] scriptString;
-                scriptString = new String[]{new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)};
-                replacements.forEach((key, value) -> scriptString[0] = scriptString[0].replaceAll(key, value));
+                scriptString = new String[]{
+                    new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)};
+                replacements.forEach(
+                    (key, value) -> scriptString[0] = scriptString[0].replaceAll(key, value));
                 final boolean autoCommit = getConnection().getAutoCommit();
 
                 // Execute batched SQLite script
@@ -107,7 +121,9 @@ public class SqLiteDatabase extends Database {
                 }
                 getConnection().setAutoCommit(autoCommit);
             } catch (IOException | SQLException e) {
-                getLogger().log(Level.SEVERE, "An exception occurred running script on the SQLite database", e);
+                getLogger().log(Level.SEVERE,
+                    "An exception occurred running script on the SQLite database",
+                    e);
                 throw new RuntimeException(e);
             }
         });
@@ -115,48 +131,57 @@ public class SqLiteDatabase extends Database {
 
     @Override
     public CompletableFuture<Void> ensureUser(Player player) {
-        return CompletableFuture.runAsync(() -> getPitPlayer(player.getPlayer()).thenAccept(optionalUser ->
+        return CompletableFuture.runAsync(
+            () -> getPitPlayer(player.getPlayer()).thenAccept(optionalUser ->
                 optionalUser.ifPresentOrElse(existingUser -> {
-                            if (!existingUser.getName().equals(player.getName())) {
-                                // Update a player's name if it has changed in the database
-                                try {
-                                    try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
-                                            UPDATE `%players_table%`
-                                            SET `username`=?
-                                            WHERE `uuid`=?"""))) {
-
-                                        statement.setString(1, player.getName());
-                                        statement.setString(2, player.getUniqueId().toString());
-                                        statement.executeUpdate();
-                                    }
-                                    getLogger().log(Level.INFO, "Updated " + player.getName() + "'s name in the database (" + existingUser.getName() + " -> " + player.getName() + ")");
-                                } catch (SQLException e) {
-                                    getLogger().log(Level.SEVERE, "Failed to update a player's name on the database", e);
-                                }
-                            }
-                        },
-                        () -> {
-                            // Insert new player data into the database
+                        if (!existingUser.getName().equals(player.getName())) {
+                            // Update a player's name if it has changed in the database
                             try {
-                                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
-                                        INSERT INTO `%players_table%` (`uuid`,`username`)
-                                        VALUES (?,?);"""))) {
+                                try (PreparedStatement statement = getConnection().prepareStatement(
+                                    formatStatementTables("""
+                                        UPDATE `%players_table%`
+                                        SET `username`=?
+                                        WHERE `uuid`=?"""))) {
 
-                                    statement.setString(1, player.getUniqueId().toString());
-                                    statement.setString(2, player.getName());
+                                    statement.setString(1, player.getName());
+                                    statement.setString(2, player.getUniqueId().toString());
                                     statement.executeUpdate();
                                 }
+                                getLogger().log(Level.INFO,
+                                    "Updated " + player.getName() + "'s name in the database ("
+                                        + existingUser.getName() + " -> " + player.getName() + ")");
                             } catch (SQLException e) {
-                                getLogger().log(Level.SEVERE, "Failed to insert a player into the database", e);
+                                getLogger().log(Level.SEVERE,
+                                    "Failed to update a player's name on the database",
+                                    e);
                             }
-                        })));
+                        }
+                    },
+                    () -> {
+                        // Insert new player data into the database
+                        try {
+                            try (PreparedStatement statement = getConnection().prepareStatement(
+                                formatStatementTables("""
+                                    INSERT INTO `%players_table%` (`uuid`,`username`)
+                                    VALUES (?,?);"""))) {
+
+                                statement.setString(1, player.getUniqueId().toString());
+                                statement.setString(2, player.getName());
+                                statement.executeUpdate();
+                            }
+                        } catch (SQLException e) {
+                            getLogger().log(Level.SEVERE,
+                                "Failed to insert a player into the database", e);
+                        }
+                    })));
     }
 
     @Override
     public CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                try (PreparedStatement statement = getConnection().prepareStatement(
+                    formatStatementTables("""
                         SELECT `kills`, `deaths`, `rating`, `xp`
                         FROM `%players_table%`
                         WHERE `uuid`=?"""))) {
@@ -166,15 +191,16 @@ public class SqLiteDatabase extends Database {
                     final ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
                         return Optional.of(new PitPlayer(player,
-                                resultSet.getLong("kills"),
-                                resultSet.getLong("deaths"),
-                                resultSet.getDouble("rating"),
-                                resultSet.getDouble("xp")
+                            resultSet.getLong("kills"),
+                            resultSet.getLong("deaths"),
+                            resultSet.getDouble("rating"),
+                            resultSet.getDouble("xp")
                         ));
                     }
                 }
             } catch (SQLException e) {
-                getLogger().log(Level.SEVERE, "Failed to fetch a player from uuid from the database", e);
+                getLogger().log(Level.SEVERE,
+                    "Failed to fetch a player from uuid from the database", e);
             }
             return Optional.empty();
         });
@@ -184,8 +210,9 @@ public class SqLiteDatabase extends Database {
     public CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player, RankType type) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
-                        SELECT RANK() OVER(ORDER BY ? DESC) 
+                try (PreparedStatement statement = getConnection().prepareStatement(
+                    formatStatementTables("""
+                        SELECT RANK() OVER(ORDER BY ? DESC)
                         AS rank
                         FROM `%players_table%`
                         WHERE `uuid`=?"""))) {
@@ -199,7 +226,8 @@ public class SqLiteDatabase extends Database {
                     }
                 }
             } catch (SQLException e) {
-                getLogger().log(Level.SEVERE, "Failed to fetch a player from uuid from the database", e);
+                getLogger().log(Level.SEVERE,
+                    "Failed to fetch a player from uuid from the database", e);
             }
             return Optional.empty();
         });
@@ -209,7 +237,8 @@ public class SqLiteDatabase extends Database {
     public CompletableFuture<Void> updateUserData(PitPlayer player) {
         return CompletableFuture.runAsync(() -> {
             try {
-                try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                try (PreparedStatement statement = getConnection().prepareStatement(
+                    formatStatementTables("""
                         UPDATE `%players_table%`
                         SET `kills`=?, `deaths`=?, `rating`=?, `xp`=?
                         WHERE `uuid`=?"""))) {
@@ -222,7 +251,8 @@ public class SqLiteDatabase extends Database {
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {
-                getLogger().log(Level.SEVERE, "Failed to update user data for " + player.getName() + " on the database", e);
+                getLogger().log(Level.SEVERE,
+                    "Failed to update user data for " + player.getName() + " on the database", e);
             }
         });
     }

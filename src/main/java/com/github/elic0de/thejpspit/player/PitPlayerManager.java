@@ -1,14 +1,14 @@
 package com.github.elic0de.thejpspit.player;
 
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.bukkit.entity.Player;
 
 public class PitPlayerManager {
 
     private static final Map<UUID, PitPlayer> pitPlayerMap = new HashMap<>();
+
     public static void registerUser(PitPlayer player) {
         pitPlayerMap.put(player.getUniqueId(), player);
     }

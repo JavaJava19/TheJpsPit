@@ -1,10 +1,10 @@
 package com.github.elic0de.thejpspit.task;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.player.PitPlayer;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameTask {
 
@@ -21,7 +21,7 @@ public class GameTask {
                 pit.getGame().getScoreboard().update();
                 repeats.getAndIncrement();
                 if (repeats.get() >= 5) {
-                    pit.getGame().getPitPlayers().forEach(pitPlayer -> pitPlayer.increaseHealth());
+                    pit.getGame().getPitPlayers().forEach(PitPlayer::increaseHealth);
                     repeats.set(0);
                 }
             }

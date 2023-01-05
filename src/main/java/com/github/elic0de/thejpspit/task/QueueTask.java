@@ -1,10 +1,9 @@
 package com.github.elic0de.thejpspit.task;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class QueueTask {
 

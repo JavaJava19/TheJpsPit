@@ -1,12 +1,13 @@
 package com.github.elic0de.thejpspit.util;
 
-import com.github.elic0de.thejpspit.player.PitPlayer;
-
 import static java.lang.Math.round;
 
+import com.github.elic0de.thejpspit.player.PitPlayer;
+
 public class KillRatingHelper {
-    private final double defaultRating;
+
     private static final double roundingFactor = 10000;
+    private final double defaultRating;
 
     public KillRatingHelper(double defaultRating) {
         this.defaultRating = defaultRating;
