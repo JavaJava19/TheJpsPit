@@ -14,26 +14,6 @@ public class PluginMessageReceiver implements PluginMessageListener {
 
     public static final String BUNGEE_CHANNEL_ID = "BungeeCord";
 
-    public static void sendServerPlayerCount(String serverName) {
-        final ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-
-        outputStream.writeUTF("PlayerCount");
-        outputStream.writeUTF(serverName);
-
-        Bukkit.getServer()
-            .sendPluginMessage(TheJpsPit.getInstance(), BUNGEE_CHANNEL_ID,
-                outputStream.toByteArray());
-    }
-
-    public static void changeServer(PitPlayer player, String serverName) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF(serverName);
-        player.getPlayer()
-            .sendPluginMessage(TheJpsPit.getInstance(), PluginMessageReceiver.BUNGEE_CHANNEL_ID,
-                out.toByteArray());
-    }
-
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         if (!channel.equals(BUNGEE_CHANNEL_ID)) {
@@ -44,8 +24,23 @@ public class PluginMessageReceiver implements PluginMessageListener {
         String server = input.readUTF(); // Name of server, as given in the arguments
         int playercount = input.readInt();
 
-        TheJpsPit.getInstance().getQueueManager()
-            .updateQueue(QueueServerType.valueOf(server), playercount);
+        TheJpsPit.getInstance().getQueueManager().updateQueue(QueueServerType.valueOf(server), playercount);
+    }
+
+    public static void sendServerPlayerCount(String serverName) {
+        final ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
+
+        outputStream.writeUTF("PlayerCount");
+        outputStream.writeUTF("AKA");
+
+        Bukkit.getServer().sendPluginMessage(TheJpsPit.getInstance() , BUNGEE_CHANNEL_ID, outputStream.toByteArray());
+    }
+
+    public static void changeServer(PitPlayer player, String serverName) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Connect");
+        out.writeUTF(serverName);
+        player.getPlayer().sendPluginMessage(TheJpsPit.getInstance(), PluginMessageReceiver.BUNGEE_CHANNEL_ID, out.toByteArray());
     }
 
 }

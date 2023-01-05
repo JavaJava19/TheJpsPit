@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.queue;
 
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,12 +20,9 @@ public class QueueManager {
     public void checkQueue() {
         for (QueueServerType type : QueueServerType.values()) {
             PluginMessageReceiver.sendServerPlayerCount(type.name());
-            if (servers.isEmpty()) {
-                continue;
-            }
+            if (servers.isEmpty()) continue;
             final int playerSize = servers.get(type);
-            final Set<PitPlayer> queuedPlayers =
-                type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
+            final Set<PitPlayer> queuedPlayers = type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
 
             if (MIN_PLAYER_SIZE < playerSize + queuedPlayers.size()) {
                 sendServer(type);
@@ -34,11 +32,8 @@ public class QueueManager {
 
     public void addQueue(PitPlayer player, QueueServerType type) {
         cancelQueue(player);
-        if (type == QueueServerType.BATTLE_CASTLE) {
-            queuedBattlePlayer.add(player);
-        } else {
-            queuedWoolPlayer.add(player);
-        }
+        if (type == QueueServerType.BATTLE_CASTLE) queuedBattlePlayer.add(player);
+        else queuedWoolPlayer.add(player);
         checkQueue();
     }
 
@@ -52,14 +47,12 @@ public class QueueManager {
     }
 
     public boolean isQueued(PitPlayer player, QueueServerType type) {
-        final Set<PitPlayer> queuedPlayers =
-            type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
+        final Set<PitPlayer> queuedPlayers = type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
         return queuedPlayers.contains(player);
     }
 
     private void sendServer(QueueServerType type) {
-        final Set<PitPlayer> queuedPlayers =
-            type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
+        final Set<PitPlayer> queuedPlayers = type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
 
         for (PitPlayer player : queuedPlayers) {
             PluginMessageReceiver.changeServer(player, type.name());
@@ -67,11 +60,8 @@ public class QueueManager {
     }
 
     public int getNeededPlayer(QueueServerType type) {
-        if (servers.isEmpty()) {
-            return 6;
-        }
-        final Set<PitPlayer> queuedPlayers =
-            type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
+        if (servers.isEmpty()) return 6;
+        final Set<PitPlayer> queuedPlayers = type == QueueServerType.WOOL_PVP ? queuedWoolPlayer : queuedBattlePlayer;
         return Math.max(0, 6 - (queuedPlayers.size() + servers.get(type)));
     }
 }
