@@ -56,7 +56,7 @@ public final class TheJpsPit extends JavaPlugin {
         ratingHelper = new KillRatingHelper(0.5);
         queueManager = new QueueManager();
 
-        queueTask = new QueueTask();
+        //queueTask = new QueueTask();
 
         getServer().getMessenger()
             .registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID,
@@ -102,7 +102,7 @@ public final class TheJpsPit extends JavaPlugin {
         }
         game.getTask().stop();
 
-        queueTask.stop();
+        //queueTask.stop();
 
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         getServer().getMessenger().unregisterIncomingPluginChannel(this);

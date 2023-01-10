@@ -33,13 +33,13 @@ public class QueueManager {
     }
 
     public void addQueue(PitPlayer player, QueueServerType type) {
-        cancelQueue(player);
+        /*cancelQueue(player);
         if (type == QueueServerType.BATTLE_CASTLE) {
             queuedBattlePlayer.add(player);
         } else {
             queuedWoolPlayer.add(player);
         }
-        checkQueue();
+        checkQueue();*/
     }
 
     public void cancelQueue(PitPlayer player) {
