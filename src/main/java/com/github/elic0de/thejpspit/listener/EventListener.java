@@ -81,6 +81,7 @@ public class EventListener implements Listener {
         }
         plugin.getGame().death(PitPlayerManager.getPitPlayer(event.getEntity()));
         event.getDrops().clear();
+        event.setDeathMessage(null);
     }
 
     @EventHandler
