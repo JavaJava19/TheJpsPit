@@ -58,6 +58,8 @@ public abstract class Database {
 
     public abstract CompletableFuture<Void> updateUserData(PitPlayer player);
 
+    public abstract void deletePlayerData();
+
     public abstract void terminate();
 
     public enum RankType {

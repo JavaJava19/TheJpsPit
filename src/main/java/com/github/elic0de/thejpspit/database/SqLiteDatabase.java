@@ -258,6 +258,19 @@ public class SqLiteDatabase extends Database {
     }
 
     @Override
+    public void deletePlayerData() {
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(formatStatementTables("""
+                    DELETE FROM `%players_table%`
+                    """))) {
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE, "Failed to delete playerData from table", e);
+        }
+    }
+
+    @Override
     public void terminate() {
         try {
             if (connection != null) {
