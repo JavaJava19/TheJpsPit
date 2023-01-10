@@ -53,7 +53,7 @@ public final class TheJpsPit extends JavaPlugin {
                 "Please check the supplied database credentials in the config file");
         }
 
-        ratingHelper = new KillRatingHelper(0.5);
+        ratingHelper = new KillRatingHelper(0);
         queueManager = new QueueManager();
 
         //queueTask = new QueueTask();

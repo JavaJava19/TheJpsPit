@@ -29,13 +29,14 @@ public class GameScoreboard {
             "K/Dレート: &c%rating%",
             "次のレベルまで：&a%neededXp%",
             "",
-            "連続キル数:",
+            "連続キル数: &a%streaks%",
             "",
             "&ejapanpvpserver.net"
         ).map(s ->
             s.replaceAll("%level%", Levels.getPlayerLevel(player) + "")
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player) + "")
                 .replaceAll("%rating%", player.getRating() + "%")
+                .replaceAll("%streaks%", player.getStreaks() + "")
         ).collect(Collectors.toList());
     }
 
