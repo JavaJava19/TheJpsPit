@@ -20,7 +20,7 @@ public class GameTask {
             public void run() {
                 pit.getGame().getScoreboard().update();
                 repeats.getAndIncrement();
-                if (repeats.get() >= 5) {
+                if (repeats.get() >= 10) {
                     pit.getGame().getPitPlayers().forEach(PitPlayer::increaseHealth);
                     repeats.set(0);
                 }
