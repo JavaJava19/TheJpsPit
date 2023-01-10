@@ -49,14 +49,14 @@ public abstract class Database {
     public abstract CompletableFuture<Void> runScript(InputStream inputStream,
         Map<String, String> replacements);
 
-    public abstract CompletableFuture<Void> ensureUser(Player Player);
+    public abstract void createPitPlayer(Player Player);
 
-    public abstract CompletableFuture<Optional<PitPlayer>> getPitPlayer(Player player);
+    public abstract Optional<PitPlayer> getPitPlayer(Player player);
 
     public abstract CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player,
         RankType type);
 
-    public abstract CompletableFuture<Void> updateUserData(PitPlayer player);
+    public abstract void updateUserData(PitPlayer player);
 
     public abstract void deletePlayerData();
 

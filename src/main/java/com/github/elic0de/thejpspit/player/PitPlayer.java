@@ -17,6 +17,10 @@ import org.bukkit.inventory.PlayerInventory;
 public class PitPlayer {
 
     private final Player player;
+
+    private final String name;
+
+    private final UUID uuid;
     private final ItemStack[] INVENTORY = {
         new ItemStack(Material.IRON_SWORD),
         new ItemStack(Material.BOW),
@@ -39,6 +43,8 @@ public class PitPlayer {
 
     public PitPlayer(Player player) {
         this.player = player;
+        this.name = player.getName();
+        this.uuid = player.getUniqueId();
         this.kills = 0;
         this.streaks= 0;
         this.deaths = 0;
@@ -50,6 +56,8 @@ public class PitPlayer {
 
     public PitPlayer(Player player, long kills, long streaks, long deaths, double rating, double xp) {
         this.player = player;
+        this.name = player.getName();
+        this.uuid = player.getUniqueId();
         this.kills = kills;
         this.streaks = streaks;
         this.deaths = deaths;

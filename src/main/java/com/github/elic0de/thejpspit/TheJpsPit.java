@@ -12,10 +12,12 @@ import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheJpsPit extends JavaPlugin {
@@ -72,14 +74,27 @@ public final class TheJpsPit extends JavaPlugin {
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
 
-        Bukkit.getOnlinePlayers().forEach(player ->
-            database.ensureUser(player).thenRun(() ->
-                database.getPitPlayer(player).join().ifPresent(pitPlayer -> {
-                    PitPlayerManager.registerUser(pitPlayer);
-                    game.join(pitPlayer);
-                })
-            )
-        );
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            final Optional<PitPlayer> userData = database.getPitPlayer(player);
+            if (userData.isEmpty()) {
+                database.createPitPlayer(player);
+                PitPlayerManager.registerUser(new PitPlayer(player));
+                return;
+            }
+            // Update the user's name if it has changed
+            final PitPlayer pitPlayer = userData.get();
+            boolean updateNeeded = false;
+
+            if (!pitPlayer.getName().equals(player.getName())) {
+                updateNeeded = true;
+            }
+
+            PitPlayerManager.registerUser(pitPlayer);
+            game.join(pitPlayer);
+            if (updateNeeded) {
+                database.updateUserData(pitPlayer);
+            }
+        });
     }
 
     private void registerCommands() {

@@ -21,9 +21,4 @@ public class PitPlayerManager {
     public static PitPlayer getPitPlayer(Player player) {
         return pitPlayerMap.get(player.getUniqueId());
     }
-
-    public static boolean isContain(Player player) {
-        return pitPlayerMap.containsKey(player.getUniqueId());
-    }
-
 }

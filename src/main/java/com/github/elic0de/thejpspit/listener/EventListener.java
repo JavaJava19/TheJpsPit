@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.gui.ServerQueueMenu;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,16 +35,26 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (PitPlayerManager.isContain(event.getPlayer())) {
-            plugin.getGame().join(PitPlayerManager.getPitPlayer(event.getPlayer()));
+        final Player player = event.getPlayer();
+        final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
+        if (userData.isEmpty()) {
+            plugin.getDatabase().createPitPlayer(player);
+            PitPlayerManager.registerUser(new PitPlayer(player));
             return;
         }
-        plugin.getDatabase().ensureUser(event.getPlayer()).thenRun(() ->
-            plugin.getDatabase().getPitPlayer(event.getPlayer()).join().ifPresent(pitPlayer -> {
-                PitPlayerManager.registerUser(pitPlayer);
-                plugin.getGame().join(pitPlayer);
-            })
-        );
+        // Update the user's name if it has changed
+        final PitPlayer pitPlayer = userData.get();
+        boolean updateNeeded = false;
+
+        if (!pitPlayer.getName().equals(player.getName())) {
+            updateNeeded = true;
+        }
+
+        PitPlayerManager.registerUser(pitPlayer);
+        plugin.getGame().join(pitPlayer);
+        if (updateNeeded) {
+            plugin.getDatabase().updateUserData(pitPlayer);
+        }
     }
 
     @EventHandler
