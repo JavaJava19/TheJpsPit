@@ -29,6 +29,8 @@ public class GameScoreboard {
             "K/Dレート: &c%rating%",
             "次のレベルまで：&a%neededXp%",
             "",
+            "連続キル数:",
+            "",
             "&ejapanpvpserver.net"
         ).map(s ->
             s.replaceAll("%level%", Levels.getPlayerLevel(player) + "")

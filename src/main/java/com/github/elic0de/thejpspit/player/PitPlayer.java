@@ -41,6 +41,8 @@ public class PitPlayer {
         this.deaths = 0;
         this.rating = 0;
         this.xp = 0;
+        this.board = new FastBoard(player);
+        this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
     }
 
     public PitPlayer(Player player, long kills, long deaths, double rating, double xp) {
