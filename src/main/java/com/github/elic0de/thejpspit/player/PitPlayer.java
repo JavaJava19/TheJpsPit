@@ -69,6 +69,13 @@ public class PitPlayer {
         player.updateInventory();
     }
 
+    public void addReward() {
+        final PlayerInventory inventory = player.getInventory();
+
+        inventory.addItem(new ItemStack(Material.GOLDEN_APPLE));
+        player.updateInventory();
+    }
+
     public void showHealth(PitPlayer targetPit) {
         ShowHealth.showHealth(this, targetPit);
     }

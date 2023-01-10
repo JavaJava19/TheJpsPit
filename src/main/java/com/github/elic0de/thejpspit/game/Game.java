@@ -40,6 +40,7 @@ public class Game {
         player.increaseDeaths();
         killer.increaseKills();
         killer.increaseXP();
+        killer.addReward();
 
         pit.getRatingHelper().initRating(player);
         pit.getRatingHelper().initRating(killer);
