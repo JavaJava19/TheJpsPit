@@ -182,7 +182,7 @@ public class SqLiteDatabase extends Database {
             try {
                 try (PreparedStatement statement = getConnection().prepareStatement(
                     formatStatementTables("""
-                        SELECT `kills`, `deaths`, `rating`, `xp`
+                        SELECT `kills`, `streaks`, `deaths`, `rating`, `xp`
                         FROM `%players_table%`
                         WHERE `uuid`=?"""))) {
 
@@ -192,6 +192,7 @@ public class SqLiteDatabase extends Database {
                     if (resultSet.next()) {
                         return Optional.of(new PitPlayer(player,
                             resultSet.getLong("kills"),
+                            resultSet.getLong("streaks"),
                             resultSet.getLong("deaths"),
                             resultSet.getDouble("rating"),
                             resultSet.getDouble("xp")
@@ -240,14 +241,15 @@ public class SqLiteDatabase extends Database {
                 try (PreparedStatement statement = getConnection().prepareStatement(
                     formatStatementTables("""
                         UPDATE `%players_table%`
-                        SET `kills`=?, `deaths`=?, `rating`=?, `xp`=?
+                        SET `kills`=?, `streaks`=?, `deaths`=?, `rating`=?, `xp`=?
                         WHERE `uuid`=?"""))) {
 
                     statement.setLong(1, player.getKills());
-                    statement.setLong(2, player.getDeaths());
-                    statement.setDouble(3, player.getRating());
-                    statement.setDouble(4, player.getXp());
-                    statement.setString(5, player.getUniqueId().toString());
+                    statement.setLong(2, player.getStreaks());
+                    statement.setLong(3, player.getDeaths());
+                    statement.setDouble(4, player.getRating());
+                    statement.setDouble(5, player.getXp());
+                    statement.setString(6, player.getUniqueId().toString());
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {

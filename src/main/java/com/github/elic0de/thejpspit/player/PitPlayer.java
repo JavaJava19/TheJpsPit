@@ -30,6 +30,8 @@ public class PitPlayer {
         new ItemStack(Material.IRON_CHESTPLATE)
     };
     private long kills;
+
+    private long streaks;
     private long deaths;
     private double rating;
     private double xp;
@@ -38,6 +40,7 @@ public class PitPlayer {
     public PitPlayer(Player player) {
         this.player = player;
         this.kills = 0;
+        this.streaks= 0;
         this.deaths = 0;
         this.rating = 0;
         this.xp = 0;
@@ -45,9 +48,10 @@ public class PitPlayer {
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
     }
 
-    public PitPlayer(Player player, long kills, long deaths, double rating, double xp) {
+    public PitPlayer(Player player, long kills, long streaks, long deaths, double rating, double xp) {
         this.player = player;
         this.kills = kills;
+        this.streaks = streaks;
         this.deaths = deaths;
         this.rating = rating;
         this.xp = xp;
@@ -141,6 +145,10 @@ public class PitPlayer {
         return kills;
     }
 
+    public long getStreaks() {
+        return streaks;
+    }
+
     public long getDeaths() {
         return deaths;
     }
@@ -165,6 +173,9 @@ public class PitPlayer {
         this.kills++;
     }
 
+    public void increaseStreaks() {
+        this.streaks ++;
+    }
     public void increaseDeaths() {
         this.deaths++;
     }
@@ -177,5 +188,9 @@ public class PitPlayer {
     public void increaseHealth() {
         player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
             player.getHealth() + 1));
+    }
+
+    public void resetStreaks() {
+        streaks = 0;
     }
 }

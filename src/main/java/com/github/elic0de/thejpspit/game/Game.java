@@ -38,8 +38,10 @@ public class Game {
         }
 
         player.increaseDeaths();
+        player.resetStreaks();
         killer.increaseKills();
         killer.increaseXP();
+        killer.increaseStreaks();
         killer.addReward();
 
         pit.getRatingHelper().initRating(player);
