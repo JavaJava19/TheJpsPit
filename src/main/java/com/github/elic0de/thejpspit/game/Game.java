@@ -45,11 +45,11 @@ public class Game {
         pit.getRatingHelper().initRating(player);
         pit.getRatingHelper().initRating(killer);
 
-        player.sendMessage("【PIT】%player%に倒されました(KDレート:%rating%)"
+        player.sendMessage("&c【PIT】%player%に倒されました(KDレート:%rating%)"
             .replaceAll("%player%", killer.getName())
             .replaceAll("%rating%", killer.getRating() + "%")
         );
-        killer.sendMessage("【PIT】%player%を倒しました(KDレート:%rating%)"
+        killer.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
             .replaceAll("%player%", player.getName())
             .replaceAll("%rating%", player.getRating() + "%")
         );
