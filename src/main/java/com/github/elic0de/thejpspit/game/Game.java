@@ -34,6 +34,14 @@ public class Game {
         final PitPlayer killer = player.getKiller();
 
         if (killer == null) {
+            player.increaseDeaths();
+            player.resetStreaks();
+
+            pit.getRatingHelper().initRating(player);
+
+            player.sendMessage("&c【PIT】死亡しました (KDレート:%rating%)"
+                .replaceAll("%rating%", killer.getRating() + "%")
+            );
             return;
         }
 

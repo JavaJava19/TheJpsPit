@@ -76,9 +76,6 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() == null) {
-            return;
-        }
         plugin.getGame().death(PitPlayerManager.getPitPlayer(event.getEntity()));
         event.getDrops().clear();
         event.setDeathMessage(null);
