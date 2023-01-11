@@ -68,16 +68,6 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        PitPlayerManager.getPitPlayer(event.getPlayer()).increaseXP();
-        event.setCancelled(true);
-    }
 
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
