@@ -51,7 +51,6 @@ public class EventListener implements Listener {
         }
 
         PitPlayerManager.registerUser(pitPlayer);
-        plugin.getGame().join(pitPlayer);
         if (updateNeeded) {
             plugin.getDatabase().updateUserData(pitPlayer);
         }
