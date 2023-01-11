@@ -51,7 +51,6 @@ public class EventListener implements Listener {
         }
 
         PitPlayerManager.registerUser(pitPlayer);
-        plugin.getGame().join(pitPlayer);
         if (updateNeeded) {
             plugin.getDatabase().updateUserData(pitPlayer);
         }
@@ -68,16 +67,6 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        PitPlayerManager.getPitPlayer(event.getPlayer()).increaseXP();
-        event.setCancelled(true);
-    }
 
     @EventHandler
     public void onHungerChange(FoodLevelChangeEvent event) {
@@ -109,8 +98,8 @@ public class EventListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player vitim) {
-            if (event.getDamager() instanceof Player) {
-                final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(vitim);
+            if (event.getDamager() instanceof Player damager) {
+                final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(damager);
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     event.setCancelled(true);
                     return;

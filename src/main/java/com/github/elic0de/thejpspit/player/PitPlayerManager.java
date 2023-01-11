@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.player;
 
+import com.github.elic0de.thejpspit.TheJpsPit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -10,6 +11,7 @@ public class PitPlayerManager {
     private static final Map<UUID, PitPlayer> pitPlayerMap = new HashMap<>();
 
     public static void registerUser(PitPlayer player) {
+        TheJpsPit.getInstance().getGame().join(player);
         pitPlayerMap.put(player.getUniqueId(), player);
     }
 

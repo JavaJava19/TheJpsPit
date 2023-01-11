@@ -7,7 +7,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 public class KillRatingHelper {
 
     // 少数第二で四捨五入
-    private static final double roundingFactor = 10000;
+    private static final double roundingFactor = 1000000;
     private final double defaultRating;
 
     public KillRatingHelper(double defaultRating) {

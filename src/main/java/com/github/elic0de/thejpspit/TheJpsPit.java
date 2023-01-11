@@ -90,7 +90,6 @@ public final class TheJpsPit extends JavaPlugin {
             }
 
             PitPlayerManager.registerUser(pitPlayer);
-            game.join(pitPlayer);
             if (updateNeeded) {
                 database.updateUserData(pitPlayer);
             }
