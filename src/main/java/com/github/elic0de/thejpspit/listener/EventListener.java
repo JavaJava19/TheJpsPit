@@ -35,6 +35,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        event.setJoinMessage("");
+
         final Player player = event.getPlayer();
         final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
         if (userData.isEmpty()) {
@@ -58,6 +60,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        event.setQuitMessage("");
+
         final PitPlayer player = PitPlayerManager.getPitPlayer(event.getPlayer());
 
         PitPlayerManager.unregisterUser(player);
