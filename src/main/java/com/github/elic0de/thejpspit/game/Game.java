@@ -39,9 +39,7 @@ public class Game {
 
             pit.getRatingHelper().initRating(player);
 
-            player.sendMessage("&c【PIT】死亡しました (KDレート:%rating%)"
-                .replaceAll("%rating%", killer.getRating() + "%")
-            );
+            player.sendMessage("&c【PIT】死亡しました");
             return;
         }
 
