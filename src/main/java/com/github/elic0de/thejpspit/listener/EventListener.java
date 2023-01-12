@@ -99,12 +99,13 @@ public class EventListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player vitim) {
             if (event.getDamager() instanceof Player damager) {
+                final PitPlayer victimPitPlayer = PitPlayerManager.getPitPlayer(vitim);
                 final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(damager);
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     event.setCancelled(true);
                     return;
                 }
-                pitPlayer.showHealth(pitPlayer);
+                pitPlayer.showHealth(victimPitPlayer);
             }
         }
     }
