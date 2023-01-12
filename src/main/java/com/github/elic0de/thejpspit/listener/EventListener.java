@@ -6,18 +6,18 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import java.util.Optional;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -78,7 +78,7 @@ public class EventListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         plugin.getGame().death(PitPlayerManager.getPitPlayer(event.getEntity()));
         event.getDrops().clear();
-        event.setDeathMessage(null);
+        event.setDeathMessage("");
     }
 
     @EventHandler
@@ -93,6 +93,12 @@ public class EventListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        if (event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
+        event.setCancelled(true);
     }
 
     @EventHandler
