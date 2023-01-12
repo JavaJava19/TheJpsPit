@@ -81,6 +81,11 @@ public class PitPlayer {
         player.updateInventory();
     }
 
+    public void resetItem() {
+        player.getInventory().clear();
+        addItem();
+    }
+
     public void addReward() {
         final PlayerInventory inventory = player.getInventory();
 

@@ -47,6 +47,7 @@ public class Game {
 
         player.increaseDeaths();
         player.resetStreaks();
+        player.resetItem();
         killer.increaseKills();
         killer.increaseXP();
         killer.increaseStreaks();
