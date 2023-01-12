@@ -134,8 +134,8 @@ public class PitPlayer {
     private void updateXpBar() {
         final float xp = Levels.getPlayerNeededXP(this);
         final int level = Levels.getPlayerLevel(this);
-        player.setLevel(level);
-        player.setExp(Math.abs(100 - xp) / 100);
+        /*player.setLevel(level);
+        player.setExp(Math.abs(100 - xp) / 100);*/
     }
 
     public Player getPlayer() {
