@@ -35,6 +35,7 @@ public class Game {
 
         if (killer == null) {
             player.increaseDeaths();
+            player.resetItem();
             player.resetStreaks();
 
             pit.getRatingHelper().initRating(player);
