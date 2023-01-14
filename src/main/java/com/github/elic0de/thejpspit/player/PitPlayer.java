@@ -45,9 +45,9 @@ public class PitPlayer {
         this.player = player;
         this.name = player.getName();
         this.uuid = player.getUniqueId();
-        this.kills = 0;
+        this.kills = 8;
         this.streaks= 0;
-        this.deaths = 0;
+        this.deaths = 7;
         this.rating = 0;
         this.xp = 0;
         this.board = new FastBoard(player);
@@ -134,8 +134,8 @@ public class PitPlayer {
     private void updateXpBar() {
         final float xp = Levels.getPlayerNeededXP(this);
         final int level = Levels.getPlayerLevel(this);
-        player.setLevel(level);
-        player.setExp(Math.abs(100 - xp) / 100);
+        /*player.setLevel(level);
+        player.setExp(Math.abs(100 - xp) / 100);*/
     }
 
     public Player getPlayer() {
@@ -151,6 +151,7 @@ public class PitPlayer {
     }
 
     public PitPlayer getKiller() {
+        if (player.getKiller() == null) return null;
         return PitPlayerManager.getPitPlayer(player.getKiller());
     }
 

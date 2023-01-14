@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +16,10 @@ import java.sql.Statement;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.sqlite.SQLiteConfig;
 
@@ -131,17 +134,49 @@ public class SqLiteDatabase extends Database {
 
     @Override
     public Optional<PitPlayer> getPitPlayer(Player player) {
+        return getPitPlayer(player.getUniqueId());
+    }
+
+    @Override
+    public Optional<PitPlayer> getPitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
-                formatStatementTables("""
+            formatStatementTables("""
                     SELECT `kills`, `streaks`, `deaths`, `rating`, `xp`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
 
-            statement.setString(1, player.getUniqueId().toString());
+            statement.setString(1, uuid.toString());
 
             final ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new PitPlayer(player,
+                return Optional.of(new PitPlayer(Bukkit.getPlayer(uuid),
+                    resultSet.getLong("kills"),
+                    resultSet.getLong("streaks"),
+                    resultSet.getLong("deaths"),
+                    resultSet.getDouble("rating"),
+                    resultSet.getDouble("xp")
+                ));
+            }
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE,
+                "Failed to fetch a player from uuid from the database", e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid) {
+        try (PreparedStatement statement = getConnection().prepareStatement(
+            formatStatementTables("""
+                    SELECT `kills`, `streaks`, `deaths`, `rating`, `xp`
+                    FROM `%players_table%`
+                    WHERE `uuid`=?"""))) {
+
+            statement.setString(1, uuid.toString());
+
+            final ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(new OfflinePitPlayer(uuid,
                     resultSet.getLong("kills"),
                     resultSet.getLong("streaks"),
                     resultSet.getLong("deaths"),
@@ -223,6 +258,30 @@ public class SqLiteDatabase extends Database {
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE,
                 "Failed to update user data for " + player.getName() + " on the database", e);
+        }
+    }
+
+    @Override
+    public void updateUserData(OfflinePitPlayer player) {
+        try {
+            try (PreparedStatement statement = getConnection().prepareStatement(
+                formatStatementTables("""
+                    UPDATE `%players_table%`
+                    SET `kills`=?, `streaks`=?, `deaths`=?, `rating`=?, `xp`=?
+                    WHERE `uuid`=?"""))) {
+
+                statement.setLong(1, player.getKills());
+                statement.setLong(2, player.getStreaks());
+                statement.setLong(3, player.getDeaths());
+                statement.setDouble(4, player.getRating());
+                statement.setDouble(5, player.getXp());
+                statement.setString(6, player.getUniqueId().toString());
+                statement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE,
+                "Failed to update user data for " + player.getUniqueId().toString() + " on the database", e);
         }
     }
 

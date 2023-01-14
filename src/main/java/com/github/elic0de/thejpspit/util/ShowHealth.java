@@ -11,7 +11,7 @@ public class ShowHealth {
     public static void showHealth(PitPlayer pitPlayer, PitPlayer targetPit) {
         Player target = targetPit.getPlayer();
         double maxHealth = target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-        double health = target.getHealth() - target.getLastDamage();
+        double health = target.getHealth();
 
         if (health < 0.0 || target.isDead()) {
             health = 0.0;

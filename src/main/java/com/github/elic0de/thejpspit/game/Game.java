@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.scoreboard.GameScoreboard;
 import com.github.elic0de.thejpspit.task.GameTask;
+import com.github.elic0de.thejpspit.util.killAssistHelper.KillAssistHelper;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ public class Game {
 
         if (killer == null) {
             player.increaseDeaths();
+            player.resetItem();
             player.resetStreaks();
 
             pit.getRatingHelper().initRating(player);
@@ -62,6 +64,8 @@ public class Game {
             .replaceAll("%player%", player.getName())
             .replaceAll("%rating%", player.getRating() + "%")
         );
+
+        //KillAssistHelper.test(player.getPlayer());
     }
 
     public Set<PitPlayer> getPitPlayers() {
