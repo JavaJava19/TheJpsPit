@@ -2,3 +2,5 @@ name: TheJpsPit
 version: '${project.version}'
 main: com.github.elic0de.thejpspit.TheJpsPit
 api-version: 1.19
+softdepend:
+  - Vault

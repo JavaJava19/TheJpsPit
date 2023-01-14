@@ -5,6 +5,9 @@ import com.github.elic0de.thejpspit.command.PitCommand;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
+import com.github.elic0de.thejpspit.hook.EconomyHook;
+import com.github.elic0de.thejpspit.hook.Hook;
+import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.listener.CombatTagger;
 import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
@@ -14,11 +17,14 @@ import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.killAssistHelper.KillAssistHelper;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheJpsPit extends JavaPlugin {
@@ -29,6 +35,8 @@ public final class TheJpsPit extends JavaPlugin {
     private KillRatingHelper ratingHelper;
     private QueueManager queueManager;
     private QueueTask queueTask;
+
+    private List<Hook> hooks = new ArrayList<>();
 
     public static TheJpsPit getInstance() {
         return instance;
@@ -45,6 +53,8 @@ public final class TheJpsPit extends JavaPlugin {
         saveConfig();
         final AtomicBoolean initialized = new AtomicBoolean(true);
         game = new Game();
+
+        this.hooks = new ArrayList<>();
 
         this.database = new SqLiteDatabase(this);
 
@@ -69,6 +79,7 @@ public final class TheJpsPit extends JavaPlugin {
 
         registerCommands();
         registerListener();
+        registerHooks();
 
         Bukkit.getWorlds().forEach(world -> {
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
@@ -84,11 +95,7 @@ public final class TheJpsPit extends JavaPlugin {
             }
             // Update the user's name if it has changed
             final PitPlayer pitPlayer = userData.get();
-            boolean updateNeeded = false;
-
-            if (!pitPlayer.getName().equals(player.getName())) {
-                updateNeeded = true;
-            }
+            boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
 
             PitPlayerManager.registerUser(pitPlayer);
             if (updateNeeded) {
@@ -109,6 +116,13 @@ public final class TheJpsPit extends JavaPlugin {
         new EventListener();
         new CombatTagger();
         new KillAssistHelper();
+    }
+
+    private void registerHooks() {
+        final PluginManager plugins = Bukkit.getPluginManager();
+        if (plugins.getPlugin("Vault") != null) {
+            this.registerHook(new VaultEconomyHook(this));
+        }
     }
 
     @Override
@@ -132,6 +146,30 @@ public final class TheJpsPit extends JavaPlugin {
             }
         });
         Bukkit.getScheduler().cancelTasks(this);
+    }
+
+    private List<Hook> getHooks() {
+        return hooks;
+    }
+
+    private void registerHook(Hook hook) {
+        getHooks().add(hook);
+    }
+
+    private void loadHooks() {
+        getHooks().stream().filter(Hook::isNotEnabled).forEach(Hook::enable);
+        getLogger().log(Level.INFO, "Successfully loaded " + getHooks().size() + " hooks");
+    }
+
+    private <T extends Hook> Optional<T> getHook(Class<T> hookClass) {
+        return getHooks().stream()
+            .filter(hook -> hookClass.isAssignableFrom(hook.getClass()))
+            .map(hookClass::cast)
+            .findFirst();
+    }
+
+    public Optional<EconomyHook> getEconomyHook() {
+        return getHook(EconomyHook.class);
     }
 
     public Game getGame() {
