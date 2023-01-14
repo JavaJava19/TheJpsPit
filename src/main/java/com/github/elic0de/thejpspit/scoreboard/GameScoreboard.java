@@ -25,18 +25,22 @@ public class GameScoreboard {
         return Stream.of(
             "",
             "レベル:[%level%]",
+            "最高レート: &b%bestRating%",
             "",
             "K/Dレート: &c%rating%",
             "次のレベルまで：&a%neededXp%",
             "",
             "連続キル数: &a%streaks%",
+            "最高連続キル数: &a%bestStreaks%",
             "",
             "&ejapanpvpserver.net"
         ).map(s ->
             s.replaceAll("%level%", Levels.getPlayerLevel(player) + "")
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player) + "")
                 .replaceAll("%rating%", player.getRating() + "%")
+                .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
+                .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
         ).collect(Collectors.toList());
     }
 

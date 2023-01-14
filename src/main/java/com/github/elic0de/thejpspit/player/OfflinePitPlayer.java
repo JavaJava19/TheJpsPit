@@ -11,16 +11,20 @@ public class OfflinePitPlayer {
     private long kills;
 
     private long streaks;
+    private long bestStreaks;
     private long deaths;
     private double rating;
-    private double xp;
+    private double bestRating;
+    private final double xp;
 
-    public OfflinePitPlayer(UUID uuid,long kills, long streaks, long deaths, double rating, double xp) {
+    public OfflinePitPlayer(UUID uuid,long kills, long streaks, long bestStreaks, long deaths, double rating, double bestRating, double xp) {
         this.uuid = uuid;
         this.kills = kills;
         this.streaks = streaks;
+        this.bestStreaks = bestStreaks;
         this.deaths = deaths;
         this.rating = rating;
+        this.bestRating = bestRating;
         this.xp = xp;
     }
 
@@ -36,6 +40,10 @@ public class OfflinePitPlayer {
         return streaks;
     }
 
+    public long getBestStreaks() {
+        return bestStreaks;
+    }
+
     public long getDeaths() {
         return deaths;
     }
@@ -48,8 +56,15 @@ public class OfflinePitPlayer {
         return rating;
     }
 
+    public double getBestRating() {
+        return bestRating;
+    }
+
     public void setRating(double rating) {
         this.rating = rating;
+        if (bestRating > rating) {
+            this.bestRating = rating;
+        }
     }
 
     public void increaseKills() {
@@ -58,6 +73,9 @@ public class OfflinePitPlayer {
 
     public void increaseStreaks() {
         this.streaks ++;
+        if (bestStreaks > streaks) {
+            this.bestStreaks = streaks;
+        }
     }
     public void increaseDeaths() {
         this.deaths++;
