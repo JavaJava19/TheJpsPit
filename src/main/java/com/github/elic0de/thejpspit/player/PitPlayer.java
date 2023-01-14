@@ -45,9 +45,9 @@ public class PitPlayer {
         this.player = player;
         this.name = player.getName();
         this.uuid = player.getUniqueId();
-        this.kills = 0;
+        this.kills = 8;
         this.streaks= 0;
-        this.deaths = 0;
+        this.deaths = 7;
         this.rating = 0;
         this.xp = 0;
         this.board = new FastBoard(player);
@@ -151,6 +151,7 @@ public class PitPlayer {
     }
 
     public PitPlayer getKiller() {
+        if (player.getKiller() == null) return null;
         return PitPlayerManager.getPitPlayer(player.getKiller());
     }
 
