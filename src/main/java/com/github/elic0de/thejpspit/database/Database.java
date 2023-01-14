@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
@@ -53,10 +55,16 @@ public abstract class Database {
 
     public abstract Optional<PitPlayer> getPitPlayer(Player player);
 
+    public abstract Optional<PitPlayer> getPitPlayer(UUID uuid);
+
+    public abstract Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid);
+
     public abstract CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player,
         RankType type);
 
     public abstract void updateUserData(PitPlayer player);
+
+    public abstract void updateUserData(OfflinePitPlayer player);
 
     public abstract void deletePlayerData();
 
