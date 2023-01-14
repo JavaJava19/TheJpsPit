@@ -141,7 +141,7 @@ public class SqLiteDatabase extends Database {
     public Optional<PitPlayer> getPitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
             formatStatementTables("""
-                    SELECT `kills`, `streaks`, `deaths`, `rating`, `xp`
+                    SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
 
@@ -152,8 +152,10 @@ public class SqLiteDatabase extends Database {
                 return Optional.of(new PitPlayer(Bukkit.getPlayer(uuid),
                     resultSet.getLong("kills"),
                     resultSet.getLong("streaks"),
+                    resultSet.getLong("bestStreaks"),
                     resultSet.getLong("deaths"),
                     resultSet.getDouble("rating"),
+                    resultSet.getDouble("bestRating"),
                     resultSet.getDouble("xp")
                 ));
             }
@@ -168,7 +170,7 @@ public class SqLiteDatabase extends Database {
     public Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
             formatStatementTables("""
-                    SELECT `kills`, `streaks`, `deaths`, `rating`, `xp`
+                    SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
 
@@ -179,8 +181,10 @@ public class SqLiteDatabase extends Database {
                 return Optional.of(new OfflinePitPlayer(uuid,
                     resultSet.getLong("kills"),
                     resultSet.getLong("streaks"),
+                    resultSet.getLong("bestStreaks"),
                     resultSet.getLong("deaths"),
                     resultSet.getDouble("rating"),
+                    resultSet.getDouble("bestRating"),
                     resultSet.getDouble("xp")
                 ));
             }

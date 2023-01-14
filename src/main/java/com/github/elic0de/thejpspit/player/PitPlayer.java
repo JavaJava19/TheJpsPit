@@ -36,32 +36,38 @@ public class PitPlayer {
     private long kills;
 
     private long streaks;
+    private long bestStreaks;
     private long deaths;
     private double rating;
+    private double bestRating;
     private double xp;
-    private FastBoard board;
+    private final FastBoard board;
 
     public PitPlayer(Player player) {
         this.player = player;
         this.name = player.getName();
         this.uuid = player.getUniqueId();
-        this.kills = 8;
-        this.streaks= 0;
-        this.deaths = 7;
+        this.kills = 0;
+        this.streaks = 0;
+        this.bestStreaks = 0;
+        this.deaths = 0;
         this.rating = 0;
+        this.bestRating = 0;
         this.xp = 0;
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
     }
 
-    public PitPlayer(Player player, long kills, long streaks, long deaths, double rating, double xp) {
+    public PitPlayer(Player player, long kills, long streaks, long bestStreaks, long deaths, double rating, double bestRating, double xp) {
         this.player = player;
         this.name = player.getName();
         this.uuid = player.getUniqueId();
         this.kills = kills;
         this.streaks = streaks;
+        this.bestStreaks = bestStreaks;
         this.deaths = deaths;
         this.rating = rating;
+        this.bestRating = bestRating;
         this.xp = xp;
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
@@ -163,6 +169,10 @@ public class PitPlayer {
         return streaks;
     }
 
+    public long getBestStreaks() {
+        return bestStreaks;
+    }
+
     public long getDeaths() {
         return deaths;
     }
@@ -171,8 +181,15 @@ public class PitPlayer {
         return rating;
     }
 
+    public double getBestRating() {
+        return bestRating;
+    }
+
     public void setRating(double rating) {
         this.rating = rating;
+        if (bestRating > rating) {
+            this.bestRating = rating;
+        }
     }
 
     public double getXp() {
@@ -189,6 +206,9 @@ public class PitPlayer {
 
     public void increaseStreaks() {
         this.streaks ++;
+        if (bestStreaks > streaks) {
+            this.bestStreaks = streaks;
+        }
     }
     public void increaseDeaths() {
         this.deaths++;
