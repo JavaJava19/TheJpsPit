@@ -121,30 +121,30 @@ public class PitPlayer {
             "Rating >> &a%rating% (#%rating_ranking%)",
             "Best Rating >> &e%best_rating%"
         ).map(s ->
-            s.replaceAll("%playerName%", getName())
+            s.replaceAll("%playerName%", player.getName())
                 .replaceAll("%kills%",
-                    kills + "")
+                    player.getKills() + "")
                 .replaceAll("%best_streaks%",
-                    bestStreaks + "")
+                    player.getBestStreaks() + "")
                 .replaceAll("%deaths%",
-                    deaths + "")
+                    player.getDeaths() + "")
                 .replaceAll("%rating%",
-                    rating + "%")
+                    player.getRating() + "%")
                 .replaceAll("%best_rating%",
-                    bestRating + "")
+                    player.getBestRating() + "")
                 .replaceAll("%kills_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.KILLS).join()
                         .orElse(0)
                         + "")
                 .replaceAll("%deaths_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.DEATHS).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.DEATHS).join()
                         .orElse(0)
                         + "")
                 .replaceAll("%rating_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.RATING).join()
                         .orElse(0)
                         + "")
-        ).forEach(player::sendMessage);
+        ).forEach(this::sendMessage);
     }
 
     private void updateXpBar() {

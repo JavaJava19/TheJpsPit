@@ -42,8 +42,8 @@ public final class TheJpsPit extends JavaPlugin {
     private QueueTask queueTask;
     private List<Hook> hooks = new ArrayList<>();
 
-    private final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-    private final Team team = scoreboard.registerNewTeam("pit");
+    private Scoreboard scoreboard;
+    private Team team;
 
     public static TheJpsPit getInstance() {
         return instance;
@@ -110,6 +110,7 @@ public final class TheJpsPit extends JavaPlugin {
             if (updateNeeded) {
                 database.updateUserData(pitPlayer);
             }
+
         });
     }
 
@@ -122,6 +123,8 @@ public final class TheJpsPit extends JavaPlugin {
     }
 
     private void optionScoreboard() {
+        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        team = scoreboard.registerNewTeam("pit");
         team.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
     }
 
