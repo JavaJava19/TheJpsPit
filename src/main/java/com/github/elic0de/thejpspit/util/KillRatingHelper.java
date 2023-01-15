@@ -27,6 +27,7 @@ public class KillRatingHelper {
         long deaths = player.getDeaths();
         long kills = player.getKills();
         long total = deaths + kills;
+        if (deaths == 0) deaths++;
         if (deaths >= 0 && kills >= 0 && total > 0) {
             return round((double) kills / deaths * roundingFactor) / roundingFactor;
         } else {
@@ -38,6 +39,7 @@ public class KillRatingHelper {
         long deaths = player.getDeaths();
         long kills = player.getKills();
         long total = deaths + kills;
+        if (deaths == 0) deaths++;
         if (deaths >= 0 && kills >= 0 && total > 0) {
             return round((double) kills / deaths * roundingFactor) / roundingFactor;
         } else {

@@ -30,7 +30,7 @@ public class PitPlayer {
     };
     private final ItemStack[] ARMOR = {
         new ItemStack(Material.CHAINMAIL_BOOTS),
-        new ItemStack(Material.CHAINMAIL_LEGGINGS),
+        new ItemStack(Material.IRON_LEGGINGS),
         new ItemStack(Material.IRON_CHESTPLATE)
     };
     private long kills;
@@ -187,7 +187,7 @@ public class PitPlayer {
 
     public void setRating(double rating) {
         this.rating = rating;
-        if (bestRating > rating) {
+        if (bestRating < rating) {
             this.bestRating = rating;
         }
     }

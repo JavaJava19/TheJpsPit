@@ -60,11 +60,7 @@ public class EventListener implements Listener {
         }
         // Update the user's name if it has changed
         final PitPlayer pitPlayer = userData.get();
-        boolean updateNeeded = false;
-
-        if (!pitPlayer.getName().equals(player.getName())) {
-            updateNeeded = true;
-        }
+        boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
 
         PitPlayerManager.registerUser(pitPlayer);
         if (updateNeeded) {
@@ -76,11 +72,13 @@ public class EventListener implements Listener {
             player.setHealth(entity.getHealth());
             entity.remove();
         }
+        plugin.addPitTeam(player.getPlayer());
+
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        event.setQuitMessage("");
+        event.setQuitMessage(null);
 
         final PitPlayer player = PitPlayerManager.getPitPlayer(event.getPlayer());
         final UUID uuid = player.getUniqueId();
@@ -100,6 +98,7 @@ public class EventListener implements Listener {
         if (player.getBoard() != null) {
             player.getBoard().delete();
         }
+        plugin.removePitTeam(player.getPlayer());
     }
 
     @EventHandler
@@ -135,7 +134,7 @@ public class EventListener implements Listener {
                         player.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
                             .replaceAll("%player%", entity.getCustomName())
                             .replaceAll("%rating%", vitim.getRating() + "%")
-                    );
+                        );
                     });
                 }
             }
