@@ -108,20 +108,30 @@ public class PitPlayer {
     }
 
     public void sendStatus() {
+        sendStatus(this);
+    }
+
+    public void sendStatus(PitPlayer player) {
         final TheJpsPit pit = TheJpsPit.getInstance();
         Stream.of(
             "+ -----< %playerName% >----- +",
             "Kills >> &e%kills% (#%kills_ranking%)",
+            "Best Kill Streaks >> &e%best_streaks%",
             "Deaths >> &c%deaths% (#%deaths_ranking%)",
-            "Rating >> &a%rating% (#%rating_ranking%)"
+            "Rating >> &a%rating% (#%rating_ranking%)",
+            "Best Rating >> &e%best_rating%"
         ).map(s ->
             s.replaceAll("%playerName%", getName())
                 .replaceAll("%kills%",
                     kills + "")
+                .replaceAll("%best_streaks%",
+                    bestStreaks + "")
                 .replaceAll("%deaths%",
                     deaths + "")
                 .replaceAll("%rating%",
                     rating + "%")
+                .replaceAll("%best_rating%",
+                    bestRating + "")
                 .replaceAll("%kills_ranking%",
                     pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS).join()
                         .orElse(0)
@@ -134,7 +144,7 @@ public class PitPlayer {
                     pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING).join()
                         .orElse(0)
                         + "")
-        ).forEach(this::sendMessage);
+        ).forEach(player::sendMessage);
     }
 
     private void updateXpBar() {
@@ -224,7 +234,7 @@ public class PitPlayer {
 
     public void increaseHealth() {
         player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
-            player.getHealth() + 4));
+            player.getHealth() + 2));
     }
 
     public void resetStreaks() {
