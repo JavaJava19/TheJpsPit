@@ -247,15 +247,17 @@ public class SqLiteDatabase extends Database {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 formatStatementTables("""
                     UPDATE `%players_table%`
-                    SET `kills`=?, `streaks`=?, `deaths`=?, `rating`=?, `xp`=?
+                    SET `kills`=?, `streaks`=?, `bestStreaks`=?, `deaths`=?, `rating`=?, `bestRating`=?, `xp`=?
                     WHERE `uuid`=?"""))) {
 
                 statement.setLong(1, player.getKills());
                 statement.setLong(2, player.getStreaks());
-                statement.setLong(3, player.getDeaths());
-                statement.setDouble(4, player.getRating());
-                statement.setDouble(5, player.getXp());
-                statement.setString(6, player.getUniqueId().toString());
+                statement.setLong(3, player.getBestStreaks());
+                statement.setLong(4, player.getDeaths());
+                statement.setDouble(5, player.getRating());
+                statement.setDouble(6, player.getBestRating());
+                statement.setDouble(7, player.getXp());
+                statement.setString(8, player.getUniqueId().toString());
                 statement.executeUpdate();
             }
 
