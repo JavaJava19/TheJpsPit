@@ -80,7 +80,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        event.setQuitMessage("");
+        event.setQuitMessage(null);
 
         final PitPlayer player = PitPlayerManager.getPitPlayer(event.getPlayer());
         final UUID uuid = player.getUniqueId();
@@ -135,7 +135,7 @@ public class EventListener implements Listener {
                         player.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
                             .replaceAll("%player%", entity.getCustomName())
                             .replaceAll("%rating%", vitim.getRating() + "%")
-                    );
+                        );
                     });
                 }
             }
