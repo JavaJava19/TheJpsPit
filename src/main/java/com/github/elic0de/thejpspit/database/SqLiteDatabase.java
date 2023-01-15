@@ -201,10 +201,12 @@ public class SqLiteDatabase extends Database {
             try {
                 try (PreparedStatement statement = getConnection().prepareStatement(
                     formatStatementTables("""
-                        SELECT RANK() OVER(ORDER BY ? DESC)
-                        AS rank
-                        FROM `%players_table%`
-                        WHERE `uuid`=?"""))) {
+                        SELECT uuid, rank 
+                        FROM(SELECT `uuid`, 
+                        RANK() 
+                        OVER(ORDER BY ? DESC) 
+                        AS rank FROM `%players_table%`) 
+                        WHERE uuid=?;"""))) {
 
                     statement.setString(1, type.name().toLowerCase(Locale.ROOT));
                     statement.setString(2, player.getUniqueId().toString());
