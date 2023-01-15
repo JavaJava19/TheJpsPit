@@ -221,7 +221,7 @@ public class PitPlayer {
 
     public void increaseHealth() {
         player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
-            player.getHealth() + 1));
+            player.getHealth() + 2));
     }
 
     public void resetStreaks() {
