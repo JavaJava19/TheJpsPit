@@ -206,6 +206,9 @@ public class PitPlayer {
 
     public void increaseStreaks() {
         this.streaks ++;
+
+        if (streaks % 5 == 0) TheJpsPit.getInstance().getGame().broadcast(player.getName() + "&aが連続で&c" + streaks + "&aキルしています！" );
+
         if (bestStreaks < streaks) {
             this.bestStreaks = streaks;
         }

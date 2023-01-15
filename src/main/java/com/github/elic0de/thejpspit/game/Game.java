@@ -4,9 +4,10 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.scoreboard.GameScoreboard;
 import com.github.elic0de.thejpspit.task.GameTask;
-import com.github.elic0de.thejpspit.util.killAssistHelper.KillAssistHelper;
+import de.themoep.minedown.MineDown;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.entity.Player;
 
 public class Game {
 
@@ -66,6 +67,14 @@ public class Game {
         );
 
         //KillAssistHelper.test(player.getPlayer());
+    }
+
+    public void broadcast(String message) {
+        for (PitPlayer pitPlayer : getPitPlayers()) {
+            final Player player = pitPlayer.getPlayer();
+
+            player.spigot().sendMessage(new MineDown(message).toComponent());
+        }
     }
 
     public Set<PitPlayer> getPitPlayers() {
