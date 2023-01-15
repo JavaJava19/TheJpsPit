@@ -73,7 +73,7 @@ public class OfflinePitPlayer {
 
     public void increaseStreaks() {
         this.streaks ++;
-        if (bestStreaks > streaks) {
+        if (bestStreaks < streaks) {
             this.bestStreaks = streaks;
         }
     }
