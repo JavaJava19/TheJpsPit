@@ -3,7 +3,9 @@ package com.github.elic0de.thejpspit.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
@@ -16,10 +18,15 @@ public class PitCommand extends BaseCommand {
 
     @Subcommand("data")
     @CommandPermission("tjp.data")
-    public void onCommand(Player player) {
+    public void onCommand(Player player, @Optional OnlinePlayer onlinePlayer) {
         final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
 
-        pitPlayer.sendStatus();
+        if (onlinePlayer == null) {
+            pitPlayer.sendStatus();
+            return;
+        }
+
+        pitPlayer.sendStatus(PitPlayerManager.getPitPlayer(onlinePlayer.getPlayer()));
     }
 
     @Subcommand("reset")
