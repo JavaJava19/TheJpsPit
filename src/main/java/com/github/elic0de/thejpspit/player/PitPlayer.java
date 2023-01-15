@@ -206,7 +206,7 @@ public class PitPlayer {
 
     public void increaseStreaks() {
         this.streaks ++;
-        if (bestStreaks > streaks) {
+        if (bestStreaks < streaks) {
             this.bestStreaks = streaks;
         }
     }
@@ -221,7 +221,7 @@ public class PitPlayer {
 
     public void increaseHealth() {
         player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
-            player.getHealth() + 2));
+            player.getHealth() + 4));
     }
 
     public void resetStreaks() {
