@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.scoreboard;
 
+import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
@@ -24,10 +25,12 @@ public class GameScoreboard {
 
         return Stream.of(
             "",
-            "レベル:[%level%]",
-            "最高レート: &b%bestRating%",
+            "レベル: [%level%]",
+            "JP: [%coins%]",
             "",
             "K/Dレート: &c%rating%",
+            "最高レート: &b%bestRating%",
+            "",
             "次のレベルまで：&a%neededXp%",
             "",
             "連続キル数: &a%streaks%",
@@ -41,6 +44,7 @@ public class GameScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
+                .replaceAll("%coins%", "0")
         ).collect(Collectors.toList());
     }
 
