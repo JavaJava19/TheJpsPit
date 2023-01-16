@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.listener;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class CombatTagger implements Listener {
                                 combatPlayers.get(uuid).remove();
                                 combatPlayers.remove(uuid);
                             }
+                            PitPlayerManager.getPitPlayer(Bukkit.getPlayer(uuid)).setLastDamager(null);
                         }
                     }.runTaskLater(TheJpsPit.getInstance(), delay * 20L);
                 }

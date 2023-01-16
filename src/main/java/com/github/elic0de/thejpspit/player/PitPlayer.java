@@ -43,6 +43,8 @@ public class PitPlayer {
     private double xp;
     private final FastBoard board;
 
+    private PitPlayer lastDamager;
+
     public PitPlayer(Player player) {
         this.player = player;
         this.name = player.getName();
@@ -121,37 +123,44 @@ public class PitPlayer {
             "Rating >> &a%rating% (#%rating_ranking%)",
             "Best Rating >> &e%best_rating%"
         ).map(s ->
-            s.replaceAll("%playerName%", getName())
+            s.replaceAll("%playerName%", player.getName())
                 .replaceAll("%kills%",
-                    kills + "")
+                    player.getKills() + "")
                 .replaceAll("%best_streaks%",
-                    bestStreaks + "")
+                    player.getBestStreaks() + "")
                 .replaceAll("%deaths%",
-                    deaths + "")
+                    player.getDeaths() + "")
                 .replaceAll("%rating%",
-                    rating + "%")
+                    player.getRating() + "%")
                 .replaceAll("%best_rating%",
-                    bestRating + "")
+                    player.getBestRating() + "")
                 .replaceAll("%kills_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.KILLS).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.KILLS).join()
                         .orElse(0)
                         + "")
                 .replaceAll("%deaths_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.DEATHS).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.DEATHS).join()
                         .orElse(0)
                         + "")
                 .replaceAll("%rating_ranking%",
-                    pit.getDatabase().getPlayerRanking(this, Database.RankType.RATING).join()
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.RATING).join()
                         .orElse(0)
                         + "")
-        ).forEach(player::sendMessage);
+        ).forEach(this::sendMessage);
     }
 
     private void updateXpBar() {
         final float xp = Levels.getPlayerNeededXP(this);
+        final float neededXp = Levels.getLevelNeededXP(this);
         final int level = Levels.getPlayerLevel(this);
-        /*player.setLevel(level);
-        player.setExp(Math.abs(100 - xp) / 100);*/
+        player.setLevel(level);
+        player.setExp((neededXp - xp)/neededXp);
+        System.out.println(xp + ":" + neededXp);
+    }
+
+    public void updateDisplayName() {
+        player.setDisplayName("[" + Levels.getPlayerLevel(this) + "]" + " " + getName());
+        player.setPlayerListName("[" + Levels.getPlayerLevel(this) + "]" + " " + getName());
     }
 
     public Player getPlayer() {
@@ -167,7 +176,7 @@ public class PitPlayer {
     }
 
     public PitPlayer getKiller() {
-        if (player.getKiller() == null) return null;
+        if (player.getKiller() == null) return lastDamager;
         return PitPlayerManager.getPitPlayer(player.getKiller());
     }
 
@@ -230,11 +239,16 @@ public class PitPlayer {
     public void increaseXP() {
         this.xp++;
         updateXpBar();
+        updateDisplayName();
     }
 
     public void increaseHealth() {
         player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
             player.getHealth() + 2));
+    }
+
+    public void setLastDamager(PitPlayer player) {
+        this.lastDamager = player;
     }
 
     public void resetStreaks() {

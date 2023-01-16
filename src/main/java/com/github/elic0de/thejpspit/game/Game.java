@@ -25,11 +25,15 @@ public class Game {
         pitPlayers.add(player);
         player.addItem();
         player.getBoard().updateLines();
+        pit.addPitTeam(player.getPlayer());
+        player.updateDisplayName();
+        player.setLastDamager(null);
     }
 
     public void leave(PitPlayer player) {
         pit.getDatabase().updateUserData(player);
         pitPlayers.remove(player);
+        pit.removePitTeam(player.getPlayer());
     }
 
     public void death(PitPlayer player) {
@@ -57,6 +61,8 @@ public class Game {
         pit.getRatingHelper().initRating(player);
         pit.getRatingHelper().initRating(killer);
 
+        pit.getAssistKillHelper().death(player);
+
         player.sendMessage("&c【PIT】%player%に倒されました(KDレート:%rating%)"
             .replaceAll("%player%", killer.getName())
             .replaceAll("%rating%", killer.getRating() + "%")
@@ -66,7 +72,7 @@ public class Game {
             .replaceAll("%rating%", player.getRating() + "%")
         );
 
-        //KillAssistHelper.test(player.getPlayer());
+        player.setLastDamager(null);
     }
 
     public void broadcast(String message) {

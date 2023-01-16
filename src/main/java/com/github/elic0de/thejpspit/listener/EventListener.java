@@ -75,8 +75,6 @@ public class EventListener implements Listener {
             player.setHealth(entity.getHealth());
             entity.remove();
         }
-        plugin.addPitTeam(player.getPlayer());
-
     }
 
     @EventHandler
@@ -101,7 +99,6 @@ public class EventListener implements Listener {
         if (player.getBoard() != null) {
             player.getBoard().delete();
         }
-        plugin.removePitTeam(player.getPlayer());
     }
 
     @EventHandler
@@ -200,6 +197,7 @@ public class EventListener implements Listener {
                     return;
                 }
                 pitPlayer.showHealth(victimPitPlayer);
+                victimPitPlayer.setLastDamager(pitPlayer);
             }
         }
     }

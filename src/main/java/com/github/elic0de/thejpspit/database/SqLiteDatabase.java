@@ -19,6 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.sqlite.SQLiteConfig;
@@ -199,17 +201,17 @@ public class SqLiteDatabase extends Database {
     public CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player, RankType type) {
         return CompletableFuture.supplyAsync(() -> {
             try {
+                String test = """
+                    SELECT uuid, rank 
+                    FROM(SELECT `uuid`, 
+                    RANK() 
+                    OVER(ORDER BY %type% DESC) 
+                    AS rank FROM `%players_table%`) 
+                    WHERE `uuid`=?;
+                    """;
                 try (PreparedStatement statement = getConnection().prepareStatement(
-                    formatStatementTables("""
-                        SELECT uuid, rank 
-                        FROM(SELECT `uuid`, 
-                        RANK() 
-                        OVER(ORDER BY ? DESC) 
-                        AS rank FROM `%players_table%`) 
-                        WHERE uuid=?;"""))) {
-
-                    statement.setString(1, type.name().toLowerCase(Locale.ROOT));
-                    statement.setString(2, player.getUniqueId().toString());
+                    formatStatementTables(test.replaceAll("%type%", type.name().toLowerCase())))) {
+                    statement.setString(1, player.getUniqueId().toString());
 
                     final ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
