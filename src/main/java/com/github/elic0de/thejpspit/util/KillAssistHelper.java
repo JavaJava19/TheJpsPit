@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import static java.lang.Math.round;
+
 public class KillAssistHelper implements Listener {
 
     private HashMap<UUID, HashMap<UUID, Double>> pitPlayers = new HashMap<>();
@@ -31,7 +33,7 @@ public class KillAssistHelper implements Listener {
                 final Player player = Bukkit.getPlayer(uuid);
                 if (player == null) continue;
                 final double damaged = pitPlayers.get(pitPlayer.getUniqueId()).get(uuid);
-                final double assistPer = damaged/totalDamage;
+                final double assistPer = round(damaged/totalDamage * 100/ 100);
                 player.spigot().sendMessage(new MineDown("アシストキル [%per%]% %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName)).toComponent());
             }
          }
