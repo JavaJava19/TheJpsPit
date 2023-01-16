@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.util.ShowHealth;
+import de.themoep.minedown.MineDown;
 import fr.mrmicky.fastboard.FastBoard;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -108,7 +109,7 @@ public class PitPlayer {
     }
 
     public void sendMessage(String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+        player.spigot().sendMessage(new MineDown(message).toComponent());
     }
 
     public void sendStatus() {
