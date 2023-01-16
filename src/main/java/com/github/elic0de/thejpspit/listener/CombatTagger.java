@@ -62,7 +62,10 @@ public class CombatTagger implements Listener {
                                 combatPlayers.get(uuid).remove();
                                 combatPlayers.remove(uuid);
                             }
-                            PitPlayerManager.getPitPlayer(Bukkit.getPlayer(uuid)).setLastDamager(null);
+                            if (Bukkit.getPlayer(uuid) != null) {
+                                PitPlayerManager.getPitPlayer(Bukkit.getPlayer(uuid))
+                                    .setLastDamager(null);
+                            }
                         }
                     }.runTaskLater(TheJpsPit.getInstance(), delay * 20L);
                 }
