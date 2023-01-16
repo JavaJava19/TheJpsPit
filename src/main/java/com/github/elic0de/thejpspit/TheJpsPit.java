@@ -15,7 +15,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
-import com.github.elic0de.thejpspit.util.killAssistHelper.KillAssistHelper;
+import com.github.elic0de.thejpspit.util.KillAssistHelper;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +38,8 @@ public final class TheJpsPit extends JavaPlugin {
     private Game game;
     private Database database;
     private KillRatingHelper ratingHelper;
+
+    private KillAssistHelper assistKillHelper;
     private QueueManager queueManager;
     private QueueTask queueTask;
     private List<Hook> hooks = new ArrayList<>();
@@ -73,6 +75,7 @@ public final class TheJpsPit extends JavaPlugin {
                 "Please check the supplied database credentials in the config file");
         }
 
+        assistKillHelper = new KillAssistHelper();
         ratingHelper = new KillRatingHelper(0);
         queueManager = new QueueManager();
 
@@ -139,7 +142,6 @@ public final class TheJpsPit extends JavaPlugin {
     private void registerListener() {
         new EventListener();
         new CombatTagger();
-        new KillAssistHelper();
     }
 
     private void registerHooks() {
@@ -203,9 +205,12 @@ public final class TheJpsPit extends JavaPlugin {
     public Database getDatabase() {
         return database;
     }
-
     public KillRatingHelper getRatingHelper() {
         return ratingHelper;
+    }
+
+    public KillAssistHelper getAssistKillHelper() {
+        return assistKillHelper;
     }
 
     public QueueManager getQueueManager() {
