@@ -198,7 +198,7 @@ public class EventListener implements Listener {
                     return;
                 }
                 if (event.getCause() == DamageCause.PROJECTILE) {
-                    event.setDamage(event.getDamage() / 0.8);
+                    event.setDamage(event.getDamage() - (event.getDamage() / 0.8));
                 }
                 pitPlayer.showHealth(victimPitPlayer);
                 victimPitPlayer.setLastDamager(pitPlayer);
