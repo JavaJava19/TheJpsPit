@@ -155,7 +155,6 @@ public class PitPlayer {
         final int level = Levels.getPlayerLevel(this);
         player.setLevel(level);
         player.setExp((neededXp - xp)/neededXp);
-        System.out.println(xp + ":" + neededXp);
     }
 
     public void updateDisplayName() {
