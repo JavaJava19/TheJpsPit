@@ -70,4 +70,16 @@ public class Levels {
         }
         return 0;
     }
+
+    public static int getLevelNeededXP(PitPlayer player) {
+        final List<Integer> requirements = LEVELS.stream().map(Level::getNeededXP)
+            .toList();
+        for (int requirement : requirements) {
+            int amountToNextLevel = (int) (requirement - player.getXp());
+            if (amountToNextLevel > 0) {
+                return requirement;
+            }
+        }
+        return 0;
+    }
 }
