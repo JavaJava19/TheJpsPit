@@ -4,7 +4,9 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.Bukkit;
@@ -22,6 +24,9 @@ public class GameScoreboard {
     }
 
     public List<String> boardLines(PitPlayer player) {
+        AtomicReference<BigDecimal> bigDecimal = new AtomicReference<>(BigDecimal.ZERO);
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> bigDecimal.set(
+            economyHook.getBalance(player)));
 
         return Stream.of(
             "",
@@ -44,7 +49,7 @@ public class GameScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
-                .replaceAll("%coins%", "0")
+                .replaceAll("%coins%", bigDecimal  + "")
         ).collect(Collectors.toList());
     }
 

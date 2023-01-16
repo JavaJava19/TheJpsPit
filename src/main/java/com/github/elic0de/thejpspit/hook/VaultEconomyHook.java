@@ -26,7 +26,8 @@ public class VaultEconomyHook extends EconomyHook {
         plugin.getLogger().log(Level.INFO, "Enabled Vault economy hook");
     }
 
-    private BigDecimal getBalance(PitPlayer player) {
+    @Override
+    public BigDecimal getBalance(PitPlayer player) {
         return BigDecimal.valueOf(economy.getBalance(player.getPlayer()));
     }
 

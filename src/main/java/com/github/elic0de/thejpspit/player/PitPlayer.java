@@ -5,6 +5,7 @@ import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import fr.mrmicky.fastboard.FastBoard;
+import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
@@ -99,6 +100,7 @@ public class PitPlayer {
 
         inventory.addItem(new ItemStack(Material.GOLDEN_APPLE));
         player.updateInventory();
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, BigDecimal.ONE));
     }
 
     public void showHealth(PitPlayer targetPit) {
