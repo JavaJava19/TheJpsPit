@@ -24,11 +24,7 @@ public class GameScoreboard {
     }
 
     public List<String> boardLines(PitPlayer player) {
-        AtomicReference<BigDecimal> bigDecimal = new AtomicReference<>(BigDecimal.ZERO);
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> bigDecimal.set(
-            economyHook.getBalance(player)));
-
-        return Stream.of(
+        final List<String> strings = Stream.of(
             "",
             "レベル: [%level%]",
             "JP: [%coins%]",
@@ -49,8 +45,11 @@ public class GameScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
-                .replaceAll("%coins%", bigDecimal  + "")
         ).collect(Collectors.toList());
+
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> strings.stream().map(s -> s.replaceAll("%coins%", economyHook.getBalance(player) + "")).collect(Collectors.toList()));
+
+        return strings;
     }
 
 }
