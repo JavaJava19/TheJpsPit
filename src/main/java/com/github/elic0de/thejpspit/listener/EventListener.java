@@ -23,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -195,6 +196,9 @@ public class EventListener implements Listener {
                 if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     event.setCancelled(true);
                     return;
+                }
+                if (event.getCause() == DamageCause.PROJECTILE) {
+                    event.setDamage(event.getDamage() / 0.8);
                 }
                 pitPlayer.showHealth(victimPitPlayer);
                 victimPitPlayer.setLastDamager(pitPlayer);
