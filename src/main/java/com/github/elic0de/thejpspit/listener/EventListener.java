@@ -197,6 +197,7 @@ public class EventListener implements Listener {
                     return;
                 }
                 pitPlayer.showHealth(victimPitPlayer);
+                victimPitPlayer.setLastDamager(pitPlayer);
             }
         }
     }
