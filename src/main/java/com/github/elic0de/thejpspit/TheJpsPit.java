@@ -93,6 +93,8 @@ public final class TheJpsPit extends JavaPlugin {
         registerListener();
         registerHooks();
 
+        loadHooks();
+
         Bukkit.getWorlds().forEach(world -> {
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
