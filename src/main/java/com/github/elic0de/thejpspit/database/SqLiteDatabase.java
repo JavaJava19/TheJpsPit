@@ -265,7 +265,7 @@ public class SqLiteDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 formatStatementTables("""
-                                    INSERT INTO `%pit_preferences%` (`username`)
+                                    INSERT INTO `%pit_preferences%` (`preferences`)
                                     VALUES (?);"""))) {
 
                 statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
@@ -324,6 +324,19 @@ public class SqLiteDatabase extends Database {
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE,
                 "Failed to update user data for " + player.getUniqueId().toString() + " on the database", e);
+        }
+    }
+
+    @Override
+    public void updatePitPreferences(PitPreferences pitPreferences) {
+        try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                UPDATE `%pit_preferences%`
+                SET `preferences` = ?
+                LIMIT 1"""))) {
+            statement.setBytes(2, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE, "Failed to update user in table", e);
         }
     }
 

@@ -74,6 +74,8 @@ public abstract class Database {
 
     public abstract void updateUserData(OfflinePitPlayer player);
 
+    public abstract void updatePitPreferences(PitPreferences pitPreferences);
+
     public abstract void deletePlayerData();
 
     public abstract void terminate();
