@@ -14,9 +14,10 @@ import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.listener.CombatTagger;
 import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
+import com.github.elic0de.thejpspit.nms.PacketManager;
+import com.github.elic0de.thejpspit.nms.PacketManager1_19_R1;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
-import com.github.elic0de.thejpspit.player.Preferences;
 import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillAssistHelper;
@@ -54,6 +55,8 @@ public final class TheJpsPit extends JavaPlugin {
     private Team team;
     private Optional<PitPreferences> pitPreferences;
 
+    private PacketManager packetManager;
+
     public static TheJpsPit getInstance() {
         return instance;
     }
@@ -88,6 +91,7 @@ public final class TheJpsPit extends JavaPlugin {
 
         optionScoreboard();
         setPreferences();
+        setPacketManager();
 
         //queueTask = new QueueTask();
 
@@ -104,7 +108,7 @@ public final class TheJpsPit extends JavaPlugin {
         loadHooks();
 
         Bukkit.getWorlds().forEach(world -> {
-            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            //world.setGameRule(GameRule., true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
 
@@ -149,6 +153,19 @@ public final class TheJpsPit extends JavaPlugin {
             return;
         }
         this.pitPreferences = preferences;
+    }
+
+    private void setPacketManager() {
+        final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
+        PacketManager packetManager;
+        switch (serverVersion) {
+            case "v1_19_R1":
+                packetManager = PacketManager1_19_R1.make();
+                break;
+            default:
+                throw new RuntimeException("Failed to create version specific server accessor");
+        }
+        this.packetManager = packetManager;
     }
 
     private void registerCommands() {
@@ -241,6 +258,10 @@ public final class TheJpsPit extends JavaPlugin {
 
     public Optional<PitPreferences> getPitPreferences() {
         return pitPreferences;
+    }
+
+    public PacketManager getPacketManager() {
+        return packetManager;
     }
 
     public Gson getGson() {
