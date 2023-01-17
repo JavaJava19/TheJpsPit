@@ -4,10 +4,9 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.scoreboard.GameScoreboard;
 import com.github.elic0de.thejpspit.task.GameTask;
-import de.themoep.minedown.MineDown;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import org.bukkit.entity.Player;
 
 public class Game {
 
@@ -50,6 +49,19 @@ public class Game {
             return;
         }
 
+        final long streaks = player.getStreaks();
+
+        if (streaks > 5) {
+            broadcast("&c【PIT】&a%killer%&7が&c%vitim%の&c%streaks%ストリーク&7を止めました！"
+                .replaceAll("%killer%", killer.getName())
+                .replaceAll("%vitim%", player.getName())
+                .replaceAll("%streaks%", streaks + "")
+            );
+            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(player,
+                BigDecimal.valueOf(streaks * 100)));
+            killer.sendMessage(streaks * 100 + "の懸賞金がもらえます");
+        }
+
         player.increaseDeaths();
         player.resetStreaks();
         player.resetItem();
@@ -78,9 +90,7 @@ public class Game {
 
     public void broadcast(String message) {
         for (PitPlayer pitPlayer : getPitPlayers()) {
-            final Player player = pitPlayer.getPlayer();
-
-            player.spigot().sendMessage(new MineDown(message).toComponent());
+            pitPlayer.sendMessage(message);
         }
     }
 

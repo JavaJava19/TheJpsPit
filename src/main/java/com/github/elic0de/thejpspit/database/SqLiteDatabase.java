@@ -332,7 +332,7 @@ public class SqLiteDatabase extends Database {
         try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
                 UPDATE `%pit_preferences%`
                 SET `preferences` = ?
-                LIMIT 1"""))) {
+                """))) {
             statement.setBytes(2, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
             statement.executeUpdate();
         } catch (SQLException e) {

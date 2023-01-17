@@ -33,8 +33,8 @@ public class KillAssistHelper implements Listener {
                 final Player player = Bukkit.getPlayer(uuid);
                 if (player == null) continue;
                 final double damaged = pitPlayers.get(pitPlayer.getUniqueId()).get(uuid);
-                final double assistPer = round(damaged/totalDamage * 100);
-                player.spigot().sendMessage(new MineDown("アシストキル [%per%]% %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName)).toComponent());
+                final int assistPer = (int) round(damaged/totalDamage * 100);
+                pitPlayer.sendMessage("アシストキル [%per%]% %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName));
             }
             pitPlayers.get(pitPlayer.getUniqueId()).clear();
          }
