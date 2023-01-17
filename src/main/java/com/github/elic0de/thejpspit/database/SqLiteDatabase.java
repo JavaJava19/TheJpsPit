@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.io.File;
@@ -13,14 +14,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.sqlite.SQLiteConfig;
@@ -169,6 +167,23 @@ public class SqLiteDatabase extends Database {
     }
 
     @Override
+    public Optional<PitPreferences> getPitPreferences() {
+        try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+                SELECT `preferences`
+                FROM `%pit_preferences%`
+                LIMIT 1"""))) {
+            final ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                final String preferences = new String(resultSet.getBytes("preferences"), StandardCharsets.UTF_8);
+                return Optional.of(plugin.getGson().fromJson(preferences, PitPreferences.class));
+            }
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE, "Failed to fetch user data from table by UUID", e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
             formatStatementTables("""
@@ -202,11 +217,11 @@ public class SqLiteDatabase extends Database {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String test = """
-                    SELECT uuid, rank 
-                    FROM(SELECT `uuid`, 
-                    RANK() 
-                    OVER(ORDER BY %type% DESC) 
-                    AS rank FROM `%players_table%`) 
+                    SELECT uuid, rank
+                    FROM(SELECT `uuid`,
+                    RANK()
+                    OVER(ORDER BY %type% DESC)
+                    AS rank FROM `%players_table%`)
                     WHERE `uuid`=?;
                     """;
                 try (PreparedStatement statement = getConnection().prepareStatement(
@@ -237,6 +252,23 @@ public class SqLiteDatabase extends Database {
 
                 statement.setString(1, player.getUniqueId().toString());
                 statement.setString(2, player.getName());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            getLogger().log(Level.SEVERE,
+                "Failed to insert a player into the database", e);
+        }
+    }
+
+    @Override
+    public void createPitPreferences(PitPreferences pitPreferences) {
+        try {
+            try (PreparedStatement statement = getConnection().prepareStatement(
+                formatStatementTables("""
+                                    INSERT INTO `%pit_preferences%` (`username`)
+                                    VALUES (?);"""))) {
+
+                statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

@@ -68,6 +68,7 @@ public class EventListener implements Listener {
         if (updateNeeded) {
             plugin.getDatabase().updateUserData(pitPlayer);
         }
+        plugin.getPitPreferences().ifPresent(pitPreferences -> player.teleport(pitPreferences.getSpawn().orElse(player.getLocation())));
     }
 
     @EventHandler

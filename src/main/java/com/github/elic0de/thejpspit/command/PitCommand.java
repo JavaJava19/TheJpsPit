@@ -34,4 +34,10 @@ public class PitCommand extends BaseCommand {
     public void onReset(Player player) {
         pit.getDatabase().deletePlayerData();
     }
+
+    @Subcommand("set spawn")
+    @CommandPermission("tjp.spawn")
+    public void onSetSpawn(Player player) {
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setSpawn(player.getLocation()));
+    }
 }

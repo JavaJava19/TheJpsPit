@@ -12,3 +12,9 @@ CREATE TABLE IF NOT EXISTS `%players_table%`
 
     PRIMARY KEY (`uuid`)
 );
+
+CREATE TABLE IF NOT EXISTS `%pit_preferences%`
+(
+    `id`   integer     NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `preferences` longblob    NOT NULL
+);

@@ -1,7 +1,10 @@
 package com.github.elic0de.thejpspit;
 
 import co.aikar.commands.PaperCommandManager;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.github.elic0de.thejpspit.command.PitCommand;
+import com.github.elic0de.thejpspit.command.SpawnCommand;
+import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
@@ -13,10 +16,13 @@ import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import com.github.elic0de.thejpspit.player.Preferences;
 import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillAssistHelper;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +52,7 @@ public final class TheJpsPit extends JavaPlugin {
 
     private Scoreboard scoreboard;
     private Team team;
+    private Optional<PitPreferences> pitPreferences;
 
     public static TheJpsPit getInstance() {
         return instance;
@@ -80,6 +87,7 @@ public final class TheJpsPit extends JavaPlugin {
         queueManager = new QueueManager();
 
         optionScoreboard();
+        setPreferences();
 
         //queueTask = new QueueTask();
 
@@ -133,12 +141,23 @@ public final class TheJpsPit extends JavaPlugin {
         team.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
     }
 
+    private void setPreferences() {
+        final Optional<PitPreferences> preferences = database.getPitPreferences();
+        if (preferences.isEmpty()) {
+            database.createPitPreferences(PitPreferences.getDefaults());
+            this.pitPreferences = Optional.of(PitPreferences.getDefaults());
+            return;
+        }
+        this.pitPreferences = preferences;
+    }
+
     private void registerCommands() {
         PaperCommandManager commandManager = new PaperCommandManager(this);
 
         commandManager.enableUnstableAPI("brigadier");
 
         commandManager.registerCommand(new PitCommand());
+        commandManager.registerCommand(new SpawnCommand());
     }
 
     private void registerListener() {
@@ -217,5 +236,13 @@ public final class TheJpsPit extends JavaPlugin {
 
     public QueueManager getQueueManager() {
         return queueManager;
+    }
+
+    public Optional<PitPreferences> getPitPreferences() {
+        return pitPreferences;
+    }
+
+    public Gson getGson() {
+        return Converters.registerOffsetDateTime(new GsonBuilder().excludeFieldsWithoutExposeAnnotation()).create();
     }
 }

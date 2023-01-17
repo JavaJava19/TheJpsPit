@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.database;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 public abstract class Database {
 
     protected final String playerTableName;
+    protected final String preferencesTableName;
 
     protected final TheJpsPit plugin;
 
@@ -25,6 +27,7 @@ public abstract class Database {
     protected Database(TheJpsPit implementor) {
         this.plugin = implementor;
         this.playerTableName = "player";
+        this.preferencesTableName = "preferences";
         this.logger = implementor.getLogger();
     }
 
@@ -43,6 +46,7 @@ public abstract class Database {
 
     protected final String formatStatementTables(String sql) {
         return sql
+            .replaceAll("%pit_preferences%", preferencesTableName)
             .replaceAll("%players_table%", playerTableName);
     }
 
@@ -53,9 +57,13 @@ public abstract class Database {
 
     public abstract void createPitPlayer(Player Player);
 
+    public abstract void createPitPreferences(PitPreferences preferences);
+
     public abstract Optional<PitPlayer> getPitPlayer(Player player);
 
     public abstract Optional<PitPlayer> getPitPlayer(UUID uuid);
+
+    public abstract Optional<PitPreferences> getPitPreferences();
 
     public abstract Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid);
 
