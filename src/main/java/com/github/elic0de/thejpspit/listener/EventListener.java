@@ -91,9 +91,10 @@ public class EventListener implements Listener {
     public void onConsume(PlayerItemConsumeEvent event) {
         final Player player = event.getPlayer();
 
-        if (event.getItem().getType() == Material.GOLD_BLOCK)
-        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 2));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 60 * 2, 0));
+        if (event.getItem().getType() == Material.GOLDEN_APPLE) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 2));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20 * 60 * 2, 0));
+        }
     }
 
 
