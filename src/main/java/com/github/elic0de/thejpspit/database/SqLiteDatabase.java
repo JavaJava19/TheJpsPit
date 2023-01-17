@@ -336,7 +336,7 @@ public class SqLiteDatabase extends Database {
             statement.setBytes(2, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
             statement.executeUpdate();
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE, "Failed to update user in table", e);
+            getLogger().log(Level.SEVERE, "Failed to update preferences in table", e);
         }
     }
 
