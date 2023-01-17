@@ -73,6 +73,7 @@ public class Game {
         );
 
         player.setLastDamager(null);
+        pit.getDatabase().updateUserData(player);
     }
 
     public void broadcast(String message) {
