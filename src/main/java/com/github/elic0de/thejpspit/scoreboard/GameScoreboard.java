@@ -47,7 +47,7 @@ public class GameScoreboard {
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
         ).collect(Collectors.toList());
 
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> strings.stream().map(s -> s.replaceAll("%coins%", economyHook.getBalance(player) + "")).collect(Collectors.toList()));
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> strings.stream().map(s -> s.replaceAll("%coins%", economyHook.formatMoney(economyHook.getBalance(player)) + "")).collect(Collectors.toList()));
 
         return strings;
     }
