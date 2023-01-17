@@ -1,12 +1,12 @@
 package com.github.elic0de.thejpspit.scoreboard;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.Bukkit;
@@ -24,7 +24,16 @@ public class GameScoreboard {
     }
 
     public List<String> boardLines(PitPlayer player) {
-        final List<String> strings = Stream.of(
+        final Optional<EconomyHook> optionalHook = TheJpsPit.getInstance().getEconomyHook();
+        String coin = "";
+        if (!optionalHook.isEmpty()) {
+            final EconomyHook economy = optionalHook.get();
+
+            coin = String.valueOf( economy.getBalance(player).intValue());
+        }
+
+        String finalCoin = coin;
+        return Stream.of(
             "",
             "レベル: [%level%]",
             "JP: [%coins%]",
@@ -45,11 +54,8 @@ public class GameScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
+                .replaceAll("%coins%", finalCoin)
         ).collect(Collectors.toList());
-
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> strings.stream().map(s -> s.replaceAll("%coins%", economyHook.formatMoney(economyHook.getBalance(player)) + "")).collect(Collectors.toList()));
-
-        return strings;
     }
 
 }
