@@ -56,14 +56,9 @@ public class CombatTagger implements Listener {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            // TODO コード修正
-                            final Map<UUID, Entity> combatPlayers = EventListener.combatPlayers;
-                            if (combatPlayers.containsKey(uuid)) {
-                                combatPlayers.get(uuid).remove();
-                                combatPlayers.remove(uuid);
-                            }
-                            if (Bukkit.getPlayer(uuid) != null) {
-                                PitPlayerManager.getPitPlayer(Bukkit.getPlayer(uuid))
+                            final Player player = Bukkit.getPlayer(uuid);
+                            if (player != null) {
+                                PitPlayerManager.getPitPlayer(player)
                                     .setLastDamager(null);
                             }
                         }

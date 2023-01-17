@@ -49,8 +49,6 @@ public class EventListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, TheJpsPit.getInstance());
     }
 
-    public static final Map<UUID, Entity> combatPlayers = new HashMap<>();
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
@@ -70,12 +68,6 @@ public class EventListener implements Listener {
         if (updateNeeded) {
             plugin.getDatabase().updateUserData(pitPlayer);
         }
-
-        if (combatPlayers.containsKey(player.getUniqueId())) {
-            LivingEntity entity = (LivingEntity) combatPlayers.get(player.getUniqueId());
-            player.setHealth(entity.getHealth());
-            entity.remove();
-        }
     }
 
     @EventHandler
@@ -83,16 +75,9 @@ public class EventListener implements Listener {
         event.setQuitMessage(null);
 
         final PitPlayer player = PitPlayerManager.getPitPlayer(event.getPlayer());
-        final UUID uuid = player.getUniqueId();
-        // 直近攻撃や攻撃を受けていたら仮プレイヤーゾンビを召喚させる
+        // 直近攻撃や攻撃を受けていて離脱したらペナルティーとして最後に与えたプレイヤーのキルとする
         if (CombatTagger.isTagged(player.getUniqueId())) {
-            LivingEntity entity = (LivingEntity) player.getPlayer().getWorld().spawnEntity(player.getPlayer().getLocation(), EntityType.ZOMBIE);
-            entity.setMetadata("uuid", new FixedMetadataValue(TheJpsPit.getInstance(), uuid));
-            entity.getWorld().strikeLightningEffect(entity.getLocation());
-            entity.getEquipment().setArmorContents(player.getPlayer().getInventory().getArmorContents());
-            entity.setCustomName(player.getName());
-            entity.setHealth(player.getPlayer().getHealth());
-            combatPlayers.put(uuid, entity);
+            plugin.getGame().death(player);
         }
 
         PitPlayerManager.unregisterUser(player);
@@ -100,48 +85,6 @@ public class EventListener implements Listener {
         if (player.getBoard() != null) {
             player.getBoard().delete();
         }
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        final LivingEntity entity = event.getEntity();
-        final Database database = TheJpsPit.getInstance().getDatabase();
-
-        if (entity.getType() != EntityType.ZOMBIE) return;
-        if (entity.hasMetadata("uuid")) {
-            final List<MetadataValue> metadataValues = entity.getMetadata("uuid");
-            for (MetadataValue metadata : metadataValues) {
-                final UUID uuid = (UUID) metadata.value();
-                combatPlayers.get(uuid).remove();
-
-                if (entity.getKiller() != null) {
-                    final Player killer = entity.getKiller();
-                    final PitPlayer player = PitPlayerManager.getPitPlayer(killer);
-                    final Optional<OfflinePitPlayer> vitimOptional = database.getOfflinePitPlayer(uuid);
-
-                    player.increaseKills();
-                    player.increaseXP();
-                    player.increaseStreaks();
-                    player.addReward();
-
-                    TheJpsPit.getInstance().getRatingHelper().initRating(player);
-
-                    vitimOptional.ifPresent(vitim -> {
-                        vitim.increaseDeaths();
-                        vitim.resetStreaks();
-                        TheJpsPit.getInstance().getRatingHelper().initRating(vitim);
-                        database.updateUserData(vitim);
-
-                        player.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
-                            .replaceAll("%player%", entity.getCustomName())
-                            .replaceAll("%rating%", vitim.getRating() + "%")
-                        );
-                    });
-                }
-            }
-        }
-        event.getDrops().clear();
-        event.setDroppedExp(0);
     }
 
     @EventHandler
