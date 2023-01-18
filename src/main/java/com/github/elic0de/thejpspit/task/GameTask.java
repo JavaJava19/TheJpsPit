@@ -3,11 +3,13 @@ package com.github.elic0de.thejpspit.task;
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.nms.PacketManager;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+import de.themoep.minedown.MineDown;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -57,29 +59,9 @@ public class GameTask {
                             if (nearbyEntity instanceof Player) packetRecipients.add((Player) nearbyEntity);
                     }
 
-                    final Location finalSpawnLocation = spawnLocation;
-
                     // Queue packet sending.
                     pit.getServer().getScheduler().runTaskAsynchronously(pit,
                         () -> {
-                            summonAndQueueBountyDeletion(
-                                TheJpsPit.getInstance().getPacketManager(),
-                                player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
-                                100 * streaks,
-                                packetRecipients
-                            );
-                            summonAndQueueBountyDeletion(
-                                TheJpsPit.getInstance().getPacketManager(),
-                                player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
-                                100 * streaks,
-                                packetRecipients
-                            );
-                            summonAndQueueBountyDeletion(
-                                TheJpsPit.getInstance().getPacketManager(),
-                                player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
-                                100 * streaks,
-                                packetRecipients
-                            );
                             summonAndQueueBountyDeletion(
                                 TheJpsPit.getInstance().getPacketManager(),
                                 player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
@@ -90,15 +72,14 @@ public class GameTask {
                     );
                 }
             }
-        }.runTaskTimer(pit, 0, 20);
+        }.runTaskTimer(pit, 0, 5);
     }
 
     private void summonAndQueueBountyDeletion(PacketManager packetManager, Location location,
         long cost, List<Player> packetRecipients) {
 
         //Create the entity
-        final Object indicatorEntity = packetManager.buildEntityArmorStand(location,
-            String.valueOf(cost));
+        final Object indicatorEntity = packetManager.buildEntityArmorStand(location, ChatColor.GOLD + "" +cost);
 
         //Create the packets
         final Object entitySpawnPacket = packetManager.buildEntitySpawnPacket(indicatorEntity);
@@ -110,13 +91,36 @@ public class GameTask {
             packetManager.sendPacket(entityMetadataPacket, recipient);
         }
 
-        pit.getServer().getScheduler().runTaskLaterAsynchronously(pit, () -> {
-            //Create the destroy packet
-            final Object entityDestroyPacket = packetManager.buildEntityDestroyPacket(indicatorEntity);
+        final double startY = location.getY();
+        final double speed = 0.15;
+        final int[] tick = {0};
+        final double[] dy = new double[1];
+        final double duration = 10;
 
-            //Send the destroy packet
-            for (final Player recipient : packetRecipients) packetManager.sendPacket(entityDestroyPacket, recipient);
-        }, (long) (.5 * 20));
+        pit.getServer().getScheduler().runTaskTimerAsynchronously(pit, runnable -> {
+            //Create the destroy packet
+
+            final Object entityDestroyPacket = packetManager.buildEntityDestroyPacket(indicatorEntity);
+            dy[0] = 1;
+
+            location.setY(startY + dy[0]);
+            final Object teleportPacket = packetManager.buildTeleportPacket(indicatorEntity, location);
+            for (final Player recipient : packetRecipients) {
+                packetManager.sendPacket(teleportPacket, recipient);
+            }
+            dy[0] += speed;
+
+            tick[0]++;
+            if (tick[0] > duration) {
+                //Send the destroy packet
+                for (final Player recipient : packetRecipients) {
+                    //packetManager.sendPacket(teleportPacket, recipient);
+                    packetManager.sendPacket(entityDestroyPacket, recipient);
+                }
+                runnable.cancel();
+            }
+
+        }, 0, 1);
     }
 
 

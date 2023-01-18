@@ -8,6 +8,7 @@ import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +50,11 @@ public class EventListener implements Listener {
         Object packet = packetManager.buildScoreboardTeam(player);
         packetManager.sendPacket(packet, player);
 
-        plugin.getPitPreferences().ifPresent(pitPreferences -> player.teleport(pitPreferences.getSpawn().orElse(player.getLocation())));
+        /*plugin.getPitPreferences().ifPresent(pitPreferences -> {
+            final Location location = pitPreferences.getSpawn().get();
+
+            if (location != null) player.teleport(location);
+        });*/
         if (userData.isEmpty()) {
             plugin.getDatabase().createPitPlayer(player);
             PitPlayerManager.registerUser(new PitPlayer(player));
@@ -163,6 +168,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
+        /*final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
+        pitPlayer.increaseStreaks();*/
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }

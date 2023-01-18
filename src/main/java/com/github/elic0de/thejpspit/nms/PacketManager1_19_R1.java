@@ -4,14 +4,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.scores.Scoreboard;
@@ -106,14 +109,15 @@ public final class PacketManager1_19_R1 implements PacketManager {
             sc.setAccessible(true);
             collisionRule.setAccessible(true);
             collisionRule.set(packetPlayOutScoreTeamB, "never");
-            return sc.newInstance("", 0, Optional.of(packetPlayOutScoreTeamB), Arrays.asList(player.getName()));
+            return sc.newInstance("", 0, Optional.of(packetPlayOutScoreTeamB),
+                List.of(player.getName()));
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create entity metadata packet", e);
         }
     }
 
     private Constructor<?> getConstructor(Class<?> clazz, int numParams) {
-        return Arrays.stream((Constructor[])clazz.getDeclaredConstructors()).filter(constructor -> (constructor.getParameterCount() == numParams)).findFirst().orElse(null);
+        return Arrays.stream(clazz.getDeclaredConstructors()).filter(constructor -> (constructor.getParameterCount() == numParams)).findFirst().orElse(null);
     }
 
     @NotNull
@@ -156,7 +160,19 @@ public final class PacketManager1_19_R1 implements PacketManager {
             armorStand.setCustomNameVisible(true);
             armorStand.setCustomName(name);
 
+
             return entityArmorStand;
+        } catch (final ReflectiveOperationException e) {
+            throw new NMSAccessException("Failed to create new entity armor stand", e);
+        }
+    }
+
+    public Object buildTeleportPacket(@NotNull Object entity, Location loc) {
+        try {
+            final ArmorStand armorStand = (ArmorStand) this.entityGetBukkitEntityMethod.invoke(entity);
+            armorStand.teleport(loc);
+
+            return new PacketPlayOutEntityTeleport((Entity) entity);
         } catch (final ReflectiveOperationException e) {
             throw new NMSAccessException("Failed to create new entity armor stand", e);
         }
