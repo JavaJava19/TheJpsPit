@@ -1,12 +1,15 @@
 package com.github.elic0de.thejpspit.villager.villagers;
 
+import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.gui.ShopMenu;
+import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.villager.VillagerNPC;
 import org.bukkit.entity.Player;
 
 public class ShopVillager extends VillagerNPC {
     @Override
     public String getId() {
-        return "Shop";
+        return "shop";
     }
 
     @Override
@@ -16,6 +19,6 @@ public class ShopVillager extends VillagerNPC {
 
     @Override
     protected void onClick(Player clickedPlayer) {
-        //@TODO implements
+        ShopMenu.create(TheJpsPit.getInstance(), "ショップ").show(PitPlayerManager.getPitPlayer(clickedPlayer));
     }
 }

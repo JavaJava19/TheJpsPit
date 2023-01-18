@@ -18,6 +18,10 @@ public class VillagerNPCManager {
         villagerNPCMap.clear();
     }
 
+    public static VillagerNPC getVillagerNPC(String id) {
+        return villagerNPCMap.get(id);
+    }
+
     public static VillagerNPC getVillagerNPC(Villager villager) {
         final String npcId = villager.getPersistentDataContainer().get(VillagerNPC.npcIdKey, PersistentDataType.STRING);
         return villagerNPCMap.get(npcId);

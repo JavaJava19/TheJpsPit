@@ -11,6 +11,11 @@ import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.hook.Hook;
 import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
+import com.github.elic0de.thejpspit.item.ItemManager;
+import com.github.elic0de.thejpspit.item.items.ItemDiamondBoots;
+import com.github.elic0de.thejpspit.item.items.ItemDiamondChestPlate;
+import com.github.elic0de.thejpspit.item.items.ItemDiamondSword;
+import com.github.elic0de.thejpspit.item.items.ItemObsidian;
 import com.github.elic0de.thejpspit.listener.CombatTagger;
 import com.github.elic0de.thejpspit.listener.EventListener;
 import com.github.elic0de.thejpspit.network.PluginMessageReceiver;
@@ -22,19 +27,22 @@ import com.github.elic0de.thejpspit.queue.QueueManager;
 import com.github.elic0de.thejpspit.task.QueueTask;
 import com.github.elic0de.thejpspit.util.KillAssistHelper;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
+import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
+import com.github.elic0de.thejpspit.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public final class TheJpsPit extends JavaPlugin {
 
@@ -77,7 +85,7 @@ public final class TheJpsPit extends JavaPlugin {
             getLogger().log(Level.INFO, "Successfully established a connection to the database");
         } else {
             throw new RuntimeException("Failed to establish a connection to the database. " +
-                "Please check the supplied database credentials in the config file");
+                    "Please check the supplied database credentials in the config file");
         }
 
         assistKillHelper = new KillAssistHelper();
@@ -90,10 +98,10 @@ public final class TheJpsPit extends JavaPlugin {
         //queueTask = new QueueTask();
 
         getServer().getMessenger()
-            .registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID,
-                new PluginMessageReceiver());
+                .registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID,
+                        new PluginMessageReceiver());
         getServer().getMessenger()
-            .registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
+                .registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
 
         registerCommands();
         registerListener();
@@ -105,6 +113,9 @@ public final class TheJpsPit extends JavaPlugin {
             //world.setGameRule(GameRule., true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
+
+        createItems();
+        createNPCs();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             final Optional<PitPlayer> userData = database.getPitPlayer(player);
@@ -170,6 +181,17 @@ public final class TheJpsPit extends JavaPlugin {
         }
     }
 
+    private void createItems() {
+        ItemManager.register(new ItemDiamondSword());
+        ItemManager.register(new ItemDiamondChestPlate());
+        ItemManager.register(new ItemDiamondBoots());
+        ItemManager.register(new ItemObsidian());
+    }
+
+    private void createNPCs() {
+        VillagerNPCManager.register(new ShopVillager());
+    }
+
     @Override
     public void onDisable() {
         pitPreferences.ifPresent(preferences -> database.updatePitPreferences(preferences));
@@ -209,9 +231,9 @@ public final class TheJpsPit extends JavaPlugin {
 
     private <T extends Hook> Optional<T> getHook(Class<T> hookClass) {
         return getHooks().stream()
-            .filter(hook -> hookClass.isAssignableFrom(hook.getClass()))
-            .map(hookClass::cast)
-            .findFirst();
+                .filter(hook -> hookClass.isAssignableFrom(hook.getClass()))
+                .map(hookClass::cast)
+                .findFirst();
     }
 
     public Optional<EconomyHook> getEconomyHook() {
@@ -225,6 +247,7 @@ public final class TheJpsPit extends JavaPlugin {
     public Database getDatabase() {
         return database;
     }
+
     public KillRatingHelper getRatingHelper() {
         return ratingHelper;
     }
