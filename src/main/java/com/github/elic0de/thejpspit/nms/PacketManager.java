@@ -78,6 +78,9 @@ public interface PacketManager {
     @NotNull
     Object buildEntityArmorStand(@NotNull Location location, @NotNull String name) throws IllegalArgumentException;
 
+    @NotNull
+    Object buildScoreboardTeam(@NotNull Player player) throws IllegalArgumentException;
+
     /**
      * Queues a new packet in the packet queue of a player.
      * This method will not flush the packet queue, the passed packet will hence be published to the player in the next

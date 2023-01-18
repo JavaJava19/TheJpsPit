@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.listener;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.gui.ServerQueueMenu;
+import com.github.elic0de.thejpspit.nms.PacketManager;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import java.util.Optional;
@@ -43,6 +44,12 @@ public class EventListener implements Listener {
 
         final Player player = event.getPlayer();
         final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
+
+        final PacketManager packetManager = TheJpsPit.getInstance().getPacketManager();
+        Object packet = packetManager.buildScoreboardTeam(player);
+        packetManager.sendPacket(packet, player);
+
+        plugin.getPitPreferences().ifPresent(pitPreferences -> player.teleport(pitPreferences.getSpawn().orElse(player.getLocation())));
         if (userData.isEmpty()) {
             plugin.getDatabase().createPitPlayer(player);
             PitPlayerManager.registerUser(new PitPlayer(player));
@@ -56,7 +63,6 @@ public class EventListener implements Listener {
         if (updateNeeded) {
             plugin.getDatabase().updateUserData(pitPlayer);
         }
-        plugin.getPitPreferences().ifPresent(pitPreferences -> player.teleport(pitPreferences.getSpawn().orElse(player.getLocation())));
     }
 
     @EventHandler
