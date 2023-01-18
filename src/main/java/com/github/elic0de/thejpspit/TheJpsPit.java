@@ -31,13 +31,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import org.bukkit.scoreboard.Team.Option;
-import org.bukkit.scoreboard.Team.OptionStatus;
+
+
 
 public final class TheJpsPit extends JavaPlugin {
 
@@ -51,8 +48,6 @@ public final class TheJpsPit extends JavaPlugin {
     private QueueTask queueTask;
     private List<Hook> hooks = new ArrayList<>();
 
-    private Scoreboard scoreboard;
-    private Team team;
     private Optional<PitPreferences> pitPreferences;
 
     private PacketManager packetManager;
@@ -89,7 +84,6 @@ public final class TheJpsPit extends JavaPlugin {
         ratingHelper = new KillRatingHelper(0);
         queueManager = new QueueManager();
 
-        optionScoreboard();
         setPreferences();
         setPacketManager();
 
@@ -131,19 +125,6 @@ public final class TheJpsPit extends JavaPlugin {
         });
     }
 
-    public void addPitTeam(Player player) {
-        team.addEntry(player.getName());
-    }
-
-    public void removePitTeam(Player player) {
-        team.removeEntry(player.getName());
-    }
-
-    private void optionScoreboard() {
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        team = scoreboard.registerNewTeam("pit");
-        team.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
-    }
 
     private void setPreferences() {
         final Optional<PitPreferences> preferences = database.getPitPreferences();

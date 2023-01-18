@@ -24,7 +24,6 @@ public class Game {
         pitPlayers.add(player);
         player.addItem();
         player.getBoard().updateLines();
-        pit.addPitTeam(player.getPlayer());
         player.updateDisplayName();
         player.setLastDamager(null);
     }
@@ -32,7 +31,6 @@ public class Game {
     public void leave(PitPlayer player) {
         pit.getDatabase().updateUserData(player);
         pitPlayers.remove(player);
-        pit.removePitTeam(player.getPlayer());
     }
 
     public void death(PitPlayer player) {
