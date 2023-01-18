@@ -9,6 +9,7 @@ import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
 import org.bukkit.entity.Player;
 
 @CommandAlias("pit|tjp|p")
@@ -39,5 +40,11 @@ public class PitCommand extends BaseCommand {
     @CommandPermission("tjp.spawn")
     public void onSetSpawn(Player player) {
         pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setSpawn(player.getLocation()));
+    }
+
+    @Subcommand("shop")
+    @CommandPermission("tjp.shop")
+    public void onCreateShop(Player player) {
+        VillagerNPCManager.getVillagerNPC("shop").spawnAt(player.getWorld(), player.getLocation());
     }
 }

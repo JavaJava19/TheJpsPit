@@ -5,35 +5,26 @@ import com.github.elic0de.thejpspit.gui.ServerQueueMenu;
 import com.github.elic0de.thejpspit.nms.PacketManager;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
-import java.math.BigDecimal;
-import java.util.Optional;
+import com.github.elic0de.thejpspit.villager.VillagerNPC;
+import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Optional;
 
 public class EventListener implements Listener {
 
@@ -166,29 +157,14 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPickUp(EntityPickupItemEvent event) {
-        if (event.getEntityType() != EntityType.PLAYER) return;
-        final Player player = (Player) event.getEntity();
-        final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
-
-        // 金の延べ棒だったらコインを追加する
-        if (event.getItem().getItemStack().getType() == Material.GOLD_INGOT) {
-            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(0)));
-            return;
-        }
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
     public void onXpGain(PlayerExpChangeEvent event) {
         event.setAmount(0);
     }
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
-        final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
-        pitPlayer.increaseStreaks();
+        /*final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
+        pitPlayer.increaseStreaks();*/
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
@@ -211,6 +187,16 @@ public class EventListener implements Listener {
 
         ServerQueueMenu.create(plugin, "サーバーキュー").show(PitPlayerManager.getPitPlayer(player));
 
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        if (!(entity instanceof Villager villager)) return;
+        VillagerNPC villagerNPC = VillagerNPCManager.getVillagerNPC(villager);
+        if (villagerNPC == null) return;
+        villagerNPC.click(event.getPlayer());
         event.setCancelled(true);
     }
 }
