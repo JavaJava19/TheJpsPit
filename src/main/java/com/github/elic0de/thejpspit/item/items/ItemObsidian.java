@@ -25,4 +25,9 @@ public class ItemObsidian extends PitItem {
     public int getRequiredLevel() {
         return 0;
     }
+
+    @Override
+    public String getName() {
+        return "§a黒曜石 §fx10";
+    }
 }

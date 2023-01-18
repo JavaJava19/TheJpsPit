@@ -6,6 +6,7 @@ import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.item.PitItem;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
+import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.entity.Player;
@@ -35,31 +36,35 @@ public class ShopMenu {
         return new ShopMenu(plugin, title);
     }
 
-    private StaticGuiElement getItemElement(char slotChar, PitItem pitItem) {
-        return new StaticGuiElement(slotChar, pitItem.getShopItem(), click -> {
-            if (click.getWhoClicked() instanceof Player) return true;
-            if (TheJpsPit.getInstance().getEconomyHook().isEmpty()) return true;
+    private DynamicGuiElement getItemElement(char slotChar, PitItem pitItem) {
+        return new DynamicGuiElement(slotChar, (viewer) -> {
+            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer((Player) viewer);
+            return new StaticGuiElement(slotChar, pitItem.getShopItem(), click -> {
+                if (TheJpsPit.getInstance().getEconomyHook().isEmpty()) {
+                    TheJpsPit.getInstance().getLogger().warning("経済プラグインが見つかりませんでした");
+                    return true;
+                }
 
-            final Player player = (Player) click.getWhoClicked();
-            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
-            final Inventory inventory = player.getInventory();
-            final EconomyHook economyHook = TheJpsPit.getInstance().getEconomyHook().get();
+                final Player player = pitPlayer.getPlayer();
+                final Inventory inventory = player.getInventory();
+                final EconomyHook economyHook = TheJpsPit.getInstance().getEconomyHook().get();
 
-            if (!economyHook.hasMoney(pitPlayer, BigDecimal.valueOf(pitItem.getPrice()))) {
-                player.sendMessage("&c【PIT】所持金が足りません！");
+                if (!economyHook.hasMoney(pitPlayer, BigDecimal.valueOf(pitItem.getPrice()))) {
+                    pitPlayer.sendMessage("&c【PIT】所持金が足りません！");
+                    return true;
+                }
+
+                if (inventory.firstEmpty() == -1) {
+                    pitPlayer.sendMessage("&c【PIT】インベントリが満杯で購入できません！");
+                    return true;
+                }
+
+                economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(pitItem.getPrice()));
+                inventory.addItem(pitItem.getItemStack());
+                player.updateInventory();
+
                 return true;
-            }
-
-            if (inventory.firstEmpty() == -1) {
-                player.sendMessage("&c【PIT】インベントリが満杯で購入できません！");
-                return true;
-            }
-
-            economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(pitItem.getPrice()));
-            inventory.addItem(pitItem.getItemStack());
-            player.updateInventory();
-
-            return true;
+            }, pitItem.getLore());
         });
     }
 

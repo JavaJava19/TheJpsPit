@@ -14,7 +14,7 @@ public class ShopVillager extends VillagerNPC {
 
     @Override
     public String getName() {
-        return "&e&lショップ";
+        return "§e§lショップ";
     }
 
     @Override

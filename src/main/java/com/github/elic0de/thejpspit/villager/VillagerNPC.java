@@ -29,6 +29,8 @@ public abstract class VillagerNPC {
         villager.setCustomNameVisible(true);
         villager.setCustomName(getName());
         villager.getPersistentDataContainer().set(npcIdKey, PersistentDataType.STRING, getId());
+        villager.setAI(false);
+        villager.setInvulnerable(true);
         return villager;
     }
 

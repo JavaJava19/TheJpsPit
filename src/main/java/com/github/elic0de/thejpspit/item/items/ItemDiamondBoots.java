@@ -25,4 +25,9 @@ public class ItemDiamondBoots extends PitItem {
     public int getRequiredLevel() {
         return 0;
     }
+
+    @Override
+    public String getName() {
+        return "§aダイヤモンドの靴";
+    }
 }
