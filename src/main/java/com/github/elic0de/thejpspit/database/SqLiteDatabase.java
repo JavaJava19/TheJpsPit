@@ -333,7 +333,7 @@ public class SqLiteDatabase extends Database {
                 UPDATE `%pit_preferences%`
                 SET `preferences` = ?
                 """))) {
-            statement.setBytes(2, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
+            statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
             statement.executeUpdate();
         } catch (SQLException e) {
             getLogger().log(Level.SEVERE, "Failed to update preferences in table", e);
