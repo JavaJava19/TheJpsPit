@@ -49,7 +49,7 @@ public class Game {
 
         final long streaks = player.getStreaks();
 
-        if (streaks > 5) {
+        if (streaks > 4) {
             broadcast("&c【PIT】&a%killer%&7が&c%vitim%の&c%streaks%ストリーク&7を止めました！"
                 .replaceAll("%killer%", killer.getName())
                 .replaceAll("%vitim%", player.getName())
@@ -57,7 +57,7 @@ public class Game {
             );
             TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(player,
                 BigDecimal.valueOf(streaks * 100)));
-            killer.sendMessage(streaks * 100 + "の懸賞金がもらえます");
+            killer.sendMessage(streaks * 100 + "の懸賞金をあたえました");
         }
 
         player.increaseDeaths();
