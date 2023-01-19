@@ -161,8 +161,10 @@ public class PitPlayer {
     }
 
     public void updateDisplayName() {
-        player.setDisplayName("[" + Levels.getPlayerLevel(this) + "]" + " " + getName());
-        player.setPlayerListName("[" + Levels.getPlayerLevel(this) + "]" + " " + getName());
+        final int level = Levels.getPlayerLevel(this);
+        final ChatColor color = Levels.getPlayerLevelColor(this);
+        player.setDisplayName("[" + color + level + ChatColor.RESET + "]" + " " + getName());
+        player.setPlayerListName("[" + color + Levels.getPlayerLevel(this) + ChatColor.RESET + "]" + " " + getName());
     }
 
     public Player getPlayer() {

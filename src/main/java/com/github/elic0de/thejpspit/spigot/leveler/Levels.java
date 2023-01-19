@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.bukkit.ChatColor;
 
 public class Levels {
 
@@ -11,23 +12,23 @@ public class Levels {
 
     static {
         initialize(
-            "1,15",
-            "10,30",
-            "20,50",
-            "30,75",
-            "40,125",
-            "50,250",
-            "60,600",
-            "70,800",
-            "80,900",
-            "90,1000"
+            "1,15," + ChatColor.GRAY.name(),
+            "10,30," + ChatColor.BLUE.name(),
+            "20,50," + ChatColor.DARK_AQUA.name(),
+            "30,75," + ChatColor.DARK_GREEN.name(),
+            "40,125," + ChatColor.GREEN.name(),
+            "50,250," + ChatColor.YELLOW.name(),
+            "60,600," + ChatColor.GOLD.name(),
+            "70,800," + ChatColor.RED.name(),
+            "80,900," + ChatColor.DARK_RED.name(),
+            "90,1000," + ChatColor.AQUA.name()
         );
     }
 
     private static void initialize(String... texts) {
         Arrays.stream(texts)
             .map(text -> text.split(","))
-            .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1])))
+            .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1]), ChatColor.valueOf(data[2])))
             .forEach(LEVELS::add);
 
         // TODO
@@ -81,5 +82,17 @@ public class Levels {
             }
         }
         return 0;
+    }
+
+    public static ChatColor getPlayerLevelColor(PitPlayer player) {
+        final List<Integer> requirements = LEVELS.stream().map(Level::getNeededXP)
+            .toList();
+        int maxLevel = requirements.size();
+        for (int i = 0; i < maxLevel; i++) {
+            if (player.getXp() < requirements.get(i)) {
+                return LEVELS.get(i).getLevelColor();
+            }
+        }
+        return LEVELS.get(maxLevel).getLevelColor();
     }
 }

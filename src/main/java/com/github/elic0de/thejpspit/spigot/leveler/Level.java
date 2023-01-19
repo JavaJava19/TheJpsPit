@@ -1,13 +1,18 @@
 package com.github.elic0de.thejpspit.spigot.leveler;
 
+import org.bukkit.ChatColor;
+
 public class Level {
 
     private final int lev;
     private final int neededXP;
 
-    public Level(int lev, int neededXP) {
+    private final ChatColor levelColor;
+
+    public Level(int lev, int neededXP, ChatColor color) {
         this.lev = lev;
         this.neededXP = neededXP;
+        this.levelColor = color;
     }
 
     public int nextLevel() {
@@ -24,5 +29,9 @@ public class Level {
 
     public int getNeededXP() {
         return neededXP;
+    }
+
+    public ChatColor getLevelColor() {
+        return levelColor;
     }
 }
