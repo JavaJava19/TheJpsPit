@@ -4,7 +4,6 @@ import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.spigot.queue.QueueManager;
-import com.github.elic0de.thejpspit.spigot.queue.QueueServerType;
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
