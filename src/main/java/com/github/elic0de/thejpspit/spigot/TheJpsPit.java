@@ -16,6 +16,7 @@ import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondBoots;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondChestPlate;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondSword;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
+import com.github.elic0de.thejpspit.spigot.listener.BlockPlaceListener;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
@@ -103,7 +104,7 @@ public final class TheJpsPit extends JavaPlugin {
                 .registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
 
         registerCommands();
-        registerListener();
+        registerListeners();
         registerHooks();
 
         loadHooks();
@@ -168,9 +169,10 @@ public final class TheJpsPit extends JavaPlugin {
         commandManager.registerCommand(new SpawnCommand());
     }
 
-    private void registerListener() {
+    private void registerListeners() {
         new EventListener();
         new CombatTagger();
+        new BlockPlaceListener();
     }
 
     private void registerHooks() {
@@ -199,8 +201,10 @@ public final class TheJpsPit extends JavaPlugin {
             database.terminate();
         }
         game.getTask().stop();
-
         queueTask.stop();
+
+        // 置かれたブロックを削除
+        BlockPlaceListener.removeBlocks();
 
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         getServer().getMessenger().unregisterIncomingPluginChannel(this);
