@@ -32,9 +32,10 @@ public class KillAssistHelper implements Listener {
             for (UUID uuid : pitPlayers.get(pitPlayer.getUniqueId()).keySet()) {
                 final Player player = Bukkit.getPlayer(uuid);
                 if (player == null) continue;
+                if (pitPlayer.getName().equalsIgnoreCase(player.getName())) continue;
                 final double damaged = pitPlayers.get(pitPlayer.getUniqueId()).get(uuid);
                 final int assistPer = (int) round(damaged/totalDamage * 100);
-                pitPlayer.sendMessage("アシストキル [%per%]% %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName));
+                pitPlayer.sendMessage("アシストキル [%per%%] %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName));
             }
             pitPlayers.get(pitPlayer.getUniqueId()).clear();
          }
