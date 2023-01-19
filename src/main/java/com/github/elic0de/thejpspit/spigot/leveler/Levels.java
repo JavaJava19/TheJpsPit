@@ -33,18 +33,13 @@ public class Levels {
 
         // TODO
         Level level = LEVELS.get(0);
-        for (int i = 0; i < LEVELS.get(LEVELS.size() - 1).getLevel() + 10; i++) {
-            if (level == null) {
-                continue;
-            }
-            if (LEVELS.get(level.nextLevel()) != null) {
-                continue;
-            }
-            final int nextLevel = level.nextLevel();
+        for (int i = 1; i < LEVELS.get(LEVELS.size() - 1).getLevel() + 10; i++) {
             final int neededXp = level.getNeededXP();
+            final ChatColor color = level.getLevelColor();
 
-            LEVELS.add(new Level(nextLevel, neededXp));
-            level = LEVELS.get(nextLevel);
+            if (LEVELS.get(i) != null) {
+                level = LEVELS.get(i);
+            } else LEVELS.add(new Level(i, neededXp, color));
         }
     }
 
