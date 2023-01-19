@@ -12,10 +12,7 @@ import com.github.elic0de.thejpspit.spigot.hook.EconomyHook;
 import com.github.elic0de.thejpspit.spigot.hook.Hook;
 import com.github.elic0de.thejpspit.spigot.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.spigot.item.ItemManager;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondBoots;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondChestPlate;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondSword;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
+import com.github.elic0de.thejpspit.spigot.item.items.*;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
@@ -185,6 +182,7 @@ public final class TheJpsPit extends JavaPlugin {
         ItemManager.register(new ItemDiamondChestPlate());
         ItemManager.register(new ItemDiamondBoots());
         ItemManager.register(new ItemObsidian());
+        ItemManager.register(new ItemVividSword());
     }
 
     private void createNPCs() {

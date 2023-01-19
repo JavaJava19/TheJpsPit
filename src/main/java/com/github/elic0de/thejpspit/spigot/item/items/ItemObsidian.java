@@ -1,10 +1,10 @@
 package com.github.elic0de.thejpspit.spigot.item.items;
 
-import com.github.elic0de.thejpspit.spigot.item.PitItem;
+import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemObsidian extends PitItem {
+public class ItemObsidian extends PitItemEntry {
 
     @Override
     public String getId() {
@@ -12,7 +12,7 @@ public class ItemObsidian extends PitItem {
     }
 
     @Override
-    public ItemStack getItemStack() {
+    public ItemStack getRawItemStack() {
         return new ItemStack(Material.OBSIDIAN, 10);
     }
 

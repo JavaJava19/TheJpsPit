@@ -7,6 +7,8 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
+import com.github.elic0de.thejpspit.spigot.item.ItemManager;
+import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
@@ -46,5 +48,13 @@ public class PitCommand extends BaseCommand {
     @CommandPermission("tjp.shop")
     public void onCreateShop(Player player) {
         VillagerNPCManager.getVillagerNPC("shop").spawnAt(player.getWorld(), player.getLocation());
+    }
+
+    @Subcommand("item")
+    @CommandPermission("tjp.item")
+    public void onGetItem(Player player, String itemId) {
+        final PitItemEntry entry = ItemManager.getPitItemEntry(itemId);
+        if (entry == null) return;
+        player.getInventory().addItem(entry.getItemStack());
     }
 }
