@@ -67,8 +67,7 @@ public class ServerQueueMenu {
                 desc,
                 " ",
                 "&7必要なプレイヤー: &a" + queueManager.getNeededPlayer(serverName),
-                isQueued ? "&cクリックしてキャンセルする" : "&eクリックしてキューを追加",
-                "&c現在利用できません"
+                isQueued ? "&cクリックしてキャンセルする" : "&eクリックしてキューを追加"
             );
         });
     }
