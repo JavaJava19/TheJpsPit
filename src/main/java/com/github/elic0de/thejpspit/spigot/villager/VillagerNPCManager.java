@@ -3,6 +3,7 @@ package com.github.elic0de.thejpspit.spigot.villager;
 import org.bukkit.entity.Villager;
 import org.bukkit.persistence.PersistentDataType;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,12 +19,18 @@ public class VillagerNPCManager {
         villagerNPCMap.clear();
     }
 
+    @Nullable
     public static VillagerNPC getVillagerNPC(String id) {
         return villagerNPCMap.get(id);
     }
 
+    @Nullable
     public static VillagerNPC getVillagerNPC(Villager villager) {
-        final String npcId = villager.getPersistentDataContainer().get(VillagerNPC.npcIdKey, PersistentDataType.STRING);
-        return villagerNPCMap.get(npcId);
+        String npcId = villager.getPersistentDataContainer().get(VillagerNPC.npcIdKey, PersistentDataType.STRING);
+        return getVillagerNPC(npcId);
+    }
+
+    public static boolean isVillagerNPC(Villager villager) {
+        return villager.getPersistentDataContainer().get(VillagerNPC.npcIdKey, PersistentDataType.STRING) != null;
     }
 }

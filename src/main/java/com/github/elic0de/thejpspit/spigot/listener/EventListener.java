@@ -2,6 +2,9 @@ package com.github.elic0de.thejpspit.spigot.listener;
 
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.gui.ServerQueueMenu;
+import com.github.elic0de.thejpspit.spigot.item.IUsable;
+import com.github.elic0de.thejpspit.spigot.item.ItemManager;
+import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
 import com.github.elic0de.thejpspit.spigot.nms.PacketManager;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
@@ -24,6 +27,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class EventListener implements Listener {
@@ -180,11 +184,16 @@ public class EventListener implements Listener {
         if (event.getItem() == null) {
             return;
         }
-        if (event.getItem().getType() != Material.NETHER_STAR) {
+        if (event.getItem().getType() == Material.NETHER_STAR) {
+            ServerQueueMenu.create(plugin, "サーバーキュー").show(PitPlayerManager.getPitPlayer(player));
+        } else if (ItemManager.isPitItem(event.getItem())) {
+            PitItemEntry pitItemEntry = Objects.requireNonNull(ItemManager.getPitItemEntry(event.getItem()));
+            if (pitItemEntry instanceof IUsable usablePitItem) {
+                usablePitItem.use(event.getPlayer());
+            }
+        } else {
             return;
         }
-
-        ServerQueueMenu.create(plugin, "サーバーキュー").show(PitPlayerManager.getPitPlayer(player));
 
         event.setCancelled(true);
     }
@@ -193,9 +202,10 @@ public class EventListener implements Listener {
     public void on(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Villager villager)) return;
-        VillagerNPC villagerNPC = VillagerNPCManager.getVillagerNPC(villager);
-        if (villagerNPC == null) return;
-        villagerNPC.click(event.getPlayer());
-        event.setCancelled(true);
+        if (VillagerNPCManager.isVillagerNPC(villager)) {
+            VillagerNPC villagerNPC = Objects.requireNonNull(VillagerNPCManager.getVillagerNPC(villager));
+            villagerNPC.click(event.getPlayer());
+            event.setCancelled(true);
+        }
     }
 }

@@ -12,11 +12,7 @@ import com.github.elic0de.thejpspit.spigot.hook.EconomyHook;
 import com.github.elic0de.thejpspit.spigot.hook.Hook;
 import com.github.elic0de.thejpspit.spigot.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.spigot.item.ItemManager;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondBoots;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondChestPlate;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondSword;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
-import com.github.elic0de.thejpspit.spigot.listener.BlockPlaceListener;
+import com.github.elic0de.thejpspit.spigot.item.items.*;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
@@ -104,7 +100,7 @@ public final class TheJpsPit extends JavaPlugin {
                 .registerOutgoingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID);
 
         registerCommands();
-        registerListeners();
+        registerListener();
         registerHooks();
 
         loadHooks();
@@ -169,10 +165,9 @@ public final class TheJpsPit extends JavaPlugin {
         commandManager.registerCommand(new SpawnCommand());
     }
 
-    private void registerListeners() {
+    private void registerListener() {
         new EventListener();
         new CombatTagger();
-        new BlockPlaceListener();
     }
 
     private void registerHooks() {
@@ -187,6 +182,7 @@ public final class TheJpsPit extends JavaPlugin {
         ItemManager.register(new ItemDiamondChestPlate());
         ItemManager.register(new ItemDiamondBoots());
         ItemManager.register(new ItemObsidian());
+        ItemManager.register(new ItemVividSword());
     }
 
     private void createNPCs() {
@@ -201,10 +197,8 @@ public final class TheJpsPit extends JavaPlugin {
             database.terminate();
         }
         game.getTask().stop();
-        queueTask.stop();
 
-        // 置かれたブロックを削除
-        BlockPlaceListener.removeBlocks();
+        queueTask.stop();
 
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         getServer().getMessenger().unregisterIncomingPluginChannel(this);

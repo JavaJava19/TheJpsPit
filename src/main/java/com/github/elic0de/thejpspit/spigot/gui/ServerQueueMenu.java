@@ -4,7 +4,6 @@ import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.spigot.queue.QueueManager;
-import com.github.elic0de.thejpspit.spigot.queue.QueueServerType;
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -67,8 +66,7 @@ public class ServerQueueMenu {
                 desc,
                 " ",
                 "&7必要なプレイヤー: &a" + queueManager.getNeededPlayer(serverName),
-                isQueued ? "&cクリックしてキャンセルする" : "&eクリックしてキューを追加",
-                "&c現在利用できません"
+                isQueued ? "&cクリックしてキャンセルする" : "&eクリックしてキューを追加"
             );
         });
     }
