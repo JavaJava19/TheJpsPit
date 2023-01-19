@@ -1,6 +1,7 @@
 name: TheJpsPit
 version: '${project.version}'
-main: com.github.elic0de.thejpspit.TheJpsPit
+main: com.github.elic0de.thejpspit.spigot.TheJpsPit
 api-version: 1.19
+author: 'Elic0de#0342'
 softdepend:
   - Vault
