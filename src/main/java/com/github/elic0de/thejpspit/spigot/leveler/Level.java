@@ -7,11 +7,14 @@ public class Level {
     private final int lev;
     private final int neededXP;
 
+    private final int totalXp;
+
     private final ChatColor levelColor;
 
-    public Level(int lev, int neededXP, ChatColor color) {
+    public Level(int lev, int neededXP, int totalXp , ChatColor color) {
         this.lev = lev;
         this.neededXP = neededXP;
+        this.totalXp = totalXp;
         this.levelColor = color;
     }
 
@@ -25,6 +28,10 @@ public class Level {
 
     public int getLevel() {
         return lev;
+    }
+
+    public int getTotalXp() {
+        return totalXp;
     }
 
     public int getNeededXP() {

@@ -70,8 +70,7 @@ public final class PacketManager1_19_R1 implements PacketManager {
                 getCBClass("entity.CraftEntity").getMethod("getHandle"),
                 getMojangClass("world.entity.Entity").getMethod("getBukkitEntity"),
                 getCBClass("CraftWorld").getMethod("getHandle"),
-                getMojangClass("server.network.PlayerConnection")
-                    .getMethod("a", getMojangClass("network.protocol.Packet")),
+                getMojangClass("server.network.PlayerConnection").getMethod("a", getMojangClass("network.protocol.Packet")),
                 getMojangClass("server.level.EntityPlayer").getField("b")
             );
         } catch (ReflectiveOperationException e) {

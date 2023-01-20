@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -35,8 +36,8 @@ public class PitPlayer {
         new ItemStack(Material.IRON_LEGGINGS),
         new ItemStack(Material.IRON_CHESTPLATE)
     };
+    private int level;
     private long kills;
-
     private long streaks;
     private long bestStreaks;
     private long deaths;
@@ -44,7 +45,6 @@ public class PitPlayer {
     private double bestRating;
     private double xp;
     private final FastBoard board;
-
     private PitPlayer lastDamager;
 
     public PitPlayer(Player player) {
@@ -60,6 +60,7 @@ public class PitPlayer {
         this.xp = 0;
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
+        this.level = Levels.getPlayerLevel(this);
     }
 
     public PitPlayer(Player player, long kills, long streaks, long bestStreaks, long deaths, double rating, double bestRating, double xp) {
@@ -75,6 +76,7 @@ public class PitPlayer {
         this.xp = xp;
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
+        this.level = Levels.getPlayerLevel(this);
     }
 
     public void addItem() {
@@ -153,18 +155,18 @@ public class PitPlayer {
     }
 
     private void updateXpBar() {
-        final float xp = Levels.getPlayerNeededXP(this);
-        final float neededXp = Levels.getLevelNeededXP(this);
-        final int level = Levels.getPlayerLevel(this);
+        // TODO 一時保存しておく
+        final float xp = Levels.getPlayerNeededXP(level, (int) this.xp);
+        final float totalXp = Levels.getLevelTotalXP(level);
+
         player.setLevel(level);
-        player.setExp((neededXp - xp)/neededXp);
+        player.setExp((totalXp - xp)/totalXp);
     }
 
     public void updateDisplayName() {
-        final int level = Levels.getPlayerLevel(this);
-        final ChatColor color = Levels.getPlayerLevelColor(this);
+        final ChatColor color = Levels.getPlayerLevelColor(level);
         player.setDisplayName("[" + color + level + ChatColor.RESET + "]" + " " + getName());
-        player.setPlayerListName("[" + color + Levels.getPlayerLevel(this) + ChatColor.RESET + "]" + " " + getName());
+        player.setPlayerListName("[" + color + level + ChatColor.RESET + "]" + " " + getName());
     }
 
     public Player getPlayer() {
@@ -182,6 +184,10 @@ public class PitPlayer {
     public PitPlayer getKiller() {
         if (player.getKiller() == null) return lastDamager;
         return PitPlayerManager.getPitPlayer(player.getKiller());
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public long getKills() {
@@ -242,8 +248,17 @@ public class PitPlayer {
 
     public void increaseXP() {
         this.xp++;
+
+        // レベルアップ
+        if (Levels.getPlayerNeededXP(level, (int) xp) == 0) {
+            final int nextLevel = level + 1;
+            final int previousLevel = this.level;
+            this.level = nextLevel;
+            player.sendTitle("§b§lLEVEL UP!", previousLevel + " → " + nextLevel, 20,40, 20);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+            updateDisplayName();
+        }
         updateXpBar();
-        updateDisplayName();
     }
 
     public void increaseHealth() {

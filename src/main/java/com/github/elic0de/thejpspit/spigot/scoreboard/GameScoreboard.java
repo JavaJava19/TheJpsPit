@@ -48,8 +48,9 @@ public class GameScoreboard {
             "",
             "&ejapanpvpserver.net"
         ).map(s ->
-            s.replaceAll("%level%", Levels.getPlayerLevel(player) + "")
-                .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player) + "")
+            s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
+                .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
+                    (int) player.getXp()) + "")
                 .replaceAll("%rating%", player.getRating() + "%")
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")

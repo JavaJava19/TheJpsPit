@@ -132,16 +132,21 @@ public class EventListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player vitim) {
+            if (event.getCause() == DamageCause.VOID) {
+                plugin.getGame().death(PitPlayerManager.getPitPlayer(vitim));
+                return;
+            }
             if (event.getDamager() instanceof Player damager) {
                 final PitPlayer victimPitPlayer = PitPlayerManager.getPitPlayer(vitim);
                 final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(damager);
-                if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                    event.setCancelled(true);
-                    return;
+                switch (event.getCause()) {
+                    case FALL -> {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    case PROJECTILE -> event.setDamage(event.getDamage() - (event.getDamage() / 0.8));
                 }
-                if (event.getCause() == DamageCause.PROJECTILE) {
-                    event.setDamage(event.getDamage() - (event.getDamage() / 0.8));
-                }
+
                 pitPlayer.showHealth(victimPitPlayer);
                 victimPitPlayer.setLastDamager(pitPlayer);
             }
@@ -166,8 +171,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
-        /*final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
-        pitPlayer.increaseStreaks();*/
+        final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
+        pitPlayer.increaseXP();
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
