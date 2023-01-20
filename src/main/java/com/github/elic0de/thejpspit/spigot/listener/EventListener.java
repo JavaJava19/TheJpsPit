@@ -171,8 +171,8 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
-        final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
-        pitPlayer.increaseXP();
+        /*final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
+        pitPlayer.increaseXP();*/
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
