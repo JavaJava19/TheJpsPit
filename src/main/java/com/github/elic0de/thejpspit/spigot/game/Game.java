@@ -55,9 +55,8 @@ public class Game {
                 .replaceAll("%vitim%", player.getName())
                 .replaceAll("%streaks%", streaks + "")
             );
-            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(player,
-                BigDecimal.valueOf(streaks * 100)));
-            killer.sendMessage(streaks * 100 + "の懸賞金をあたえました");
+            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(killer, BigDecimal.valueOf(50)));
+            killer.sendMessage(50 + "JP+");
         }
 
         player.increaseDeaths();
