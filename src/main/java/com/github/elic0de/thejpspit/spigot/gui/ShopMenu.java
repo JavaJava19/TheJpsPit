@@ -10,6 +10,7 @@ import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
 import java.math.BigDecimal;
@@ -38,6 +39,7 @@ public class ShopMenu {
         return new DynamicGuiElement(pitItemEntry.getSlotChar(), (viewer) -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer((Player) viewer);
             return new StaticGuiElement(pitItemEntry.getSlotChar(), pitItemEntry.getItemStack(), click -> {
+                if (click.getType() == ClickType.DOUBLE_CLICK) return true;
                 if (TheJpsPit.getInstance().getEconomyHook().isEmpty()) {
                     TheJpsPit.getInstance().getLogger().warning("経済プラグインが見つかりませんでした");
                     return true;
