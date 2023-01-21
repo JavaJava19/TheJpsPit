@@ -2,7 +2,6 @@ package com.github.elic0de.thejpspit.spigot.network;
 
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
-import com.github.elic0de.thejpspit.spigot.queue.QueueServerType;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -36,7 +35,6 @@ public class PluginMessageReceiver implements PluginMessageListener {
         if (!channel.equals(BUNGEE_CHANNEL_ID)) {
             return;
         }
-
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         if (!in.readUTF().equals("TheJpsPit:response")) return;
 
@@ -44,9 +42,9 @@ public class PluginMessageReceiver implements PluginMessageListener {
         int length = in.readInt();
         for (int i = 0; i < length; i++) networkInformation.put(in.readUTF(), in.readInt());
 
-        networkInformation.forEach((s, integer) -> TheJpsPit.getInstance().getQueueManager()
-            .updateQueue(s, integer));
-
+        networkInformation.forEach((s, integer) -> {
+            TheJpsPit.getInstance().getQueueManager()
+                .updateQueue(s, integer);
+        });
     }
-
 }

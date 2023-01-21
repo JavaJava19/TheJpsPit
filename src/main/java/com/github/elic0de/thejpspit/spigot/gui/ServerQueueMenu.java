@@ -29,7 +29,7 @@ public class ServerQueueMenu {
         this.menu.setFiller(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1));
         // Add pagination handling
         this.menu.addElement(
-            queueButton('x', "wool", new ItemStack(Material.PINK_WOOL),
+            queueButton('x', "lobby", new ItemStack(Material.PINK_WOOL),
                 "CatchTheWool", "&7相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
         this.menu.addElement(
             queueButton('y', "battle", new ItemStack(Material.COBBLESTONE),

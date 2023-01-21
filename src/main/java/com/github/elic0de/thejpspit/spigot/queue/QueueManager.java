@@ -16,27 +16,20 @@ public class QueueManager {
     private final Map<PitPlayer, String> queuedPlayers = new HashMap<>();
     private final Map<String, Integer> servers = new HashMap<>();
 
-    private final int MIN_PLAYER_SIZE = 6;
+    private final int MIN_PLAYER_SIZE = 2;
 
     public void checkQueue() {
         PluginMessageReceiver.sendServerPlayerCount();
         if (servers.isEmpty()) return;
 
-        servers.forEach((severName, onlinePlayers) -> {
-            final int playerSize = (int) queuedPlayers.values().stream().filter(
-                severName::equalsIgnoreCase).count();
-
-            if (MIN_PLAYER_SIZE < playerSize + onlinePlayers) {
-                sendServer(severName);
-            }
+        servers.forEach((s, integer) -> {
+            if (getNeededPlayer(s) == 0) sendServer(s);
         });
-
-
     }
 
     public void addQueue(PitPlayer player, String serverName) {
         cancelQueue(player);
-
+        queuedPlayers.remove(player);
         queuedPlayers.put(player, serverName);
 
         checkQueue();
@@ -65,10 +58,12 @@ public class QueueManager {
 
     public int getNeededPlayer(String serverName) {
         if (servers.isEmpty()) {
-            return 6;
+            return MIN_PLAYER_SIZE;
         }
-        final int playerSize = (int) queuedPlayers.values().stream().filter(
+        int totalPlayers = 0;
+        if (servers.containsKey(serverName)) totalPlayers = servers.get(serverName);
+        totalPlayers = totalPlayers + (int) queuedPlayers.values().stream().filter(
             serverName::equalsIgnoreCase).count();
-        return Math.max(0, 6 - (queuedPlayers.size() + playerSize));
+        return Math.max(0, MIN_PLAYER_SIZE - totalPlayers);
     }
 }

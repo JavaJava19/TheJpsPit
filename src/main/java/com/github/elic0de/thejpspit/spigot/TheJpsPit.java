@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -106,7 +107,7 @@ public final class TheJpsPit extends JavaPlugin {
         loadHooks();
 
         Bukkit.getWorlds().forEach(world -> {
-            //world.setGameRule(GameRule., true);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
 
