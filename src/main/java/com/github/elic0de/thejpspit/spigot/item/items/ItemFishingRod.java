@@ -5,21 +5,21 @@ import com.github.elic0de.thejpspit.spigot.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemDiamondChestPlate extends PitItemEntry {
+public class ItemFishingRod extends PitItemEntry {
 
     @Override
     public String getId() {
-        return "diamond_chestplate";
+        return "fishing_rod";
     }
 
     @Override
     public ItemStack getRawItemStack() {
-        return ItemUtil.withUnbreakable(new ItemStack(Material.DIAMOND_CHESTPLATE));
+        return ItemUtil.withUnbreakable(new ItemStack(Material.FISHING_ROD));
     }
 
     @Override
     public int getPrice() {
-        return 500;
+        return 200;
     }
 
     @Override
@@ -29,11 +29,11 @@ public class ItemDiamondChestPlate extends PitItemEntry {
 
     @Override
     public String getName() {
-        return "§aダイヤのチェストプレート";
+        return "§a釣り竿";
     }
 
     @Override
     public char getSlotChar() {
-        return 'C';
+        return 'f';
     }
 }

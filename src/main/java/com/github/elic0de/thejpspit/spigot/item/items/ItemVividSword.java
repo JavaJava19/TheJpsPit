@@ -57,4 +57,9 @@ public class ItemVividSword extends PitItemEntry implements Listener {
     public String getName() {
         return "§aかっこいい剣";
     }
+
+    @Override
+    public char getSlotChar() {
+        return 'v';
+    }
 }

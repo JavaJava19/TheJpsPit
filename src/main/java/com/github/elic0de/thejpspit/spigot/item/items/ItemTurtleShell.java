@@ -5,35 +5,43 @@ import com.github.elic0de.thejpspit.spigot.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemDiamondChestPlate extends PitItemEntry {
+import java.util.Arrays;
+import java.util.List;
+
+public class ItemTurtleShell extends PitItemEntry {
 
     @Override
     public String getId() {
-        return "diamond_chestplate";
+        return "turtle_shell";
     }
 
     @Override
     public ItemStack getRawItemStack() {
-        return ItemUtil.withUnbreakable(new ItemStack(Material.DIAMOND_CHESTPLATE));
+        return ItemUtil.withUnbreakable(new ItemStack(Material.TURTLE_HELMET));
     }
 
     @Override
     public int getPrice() {
-        return 500;
+        return 198000;
     }
 
     @Override
     public int getRequiredLevel() {
-        return 0;
+        return 30;
     }
 
     @Override
     public String getName() {
-        return "§aダイヤのチェストプレート";
+        return "§6GUCCIのヘルメット";
     }
 
     @Override
     public char getSlotChar() {
-        return 'C';
+        return 't';
+    }
+
+    @Override
+    public List<String> getRawLore() {
+        return Arrays.asList("§7言わずと知れた高級ブランド", "§7防御力はあまりない");
     }
 }

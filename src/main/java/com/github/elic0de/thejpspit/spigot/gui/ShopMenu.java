@@ -18,28 +18,26 @@ public class ShopMenu {
 
     private static final String[] MENU_LAYOUT = {
             "         ",
-            "  1234   ",
-            "         ",
+            " SCBoftc ",
+            " vu      ",
+            "         "
     };
 
     private final InventoryGui menu;
 
     private ShopMenu(TheJpsPit plugin, String title) {
         this.menu = new InventoryGui(plugin, title, MENU_LAYOUT);
-        this.menu.addElement(getItemElement('1', ItemManager.getPitItemEntry("diamond_sword")));
-        this.menu.addElement(getItemElement('2', ItemManager.getPitItemEntry("diamond_chestplate")));
-        this.menu.addElement(getItemElement('3', ItemManager.getPitItemEntry("diamond_boots")));
-        this.menu.addElement(getItemElement('4', ItemManager.getPitItemEntry("obsidian")));
+        ItemManager.getAllEntry().stream().map(this::getItemElement).forEach(this.menu::addElement);
     }
 
     public static ShopMenu create(TheJpsPit plugin, String title) {
         return new ShopMenu(plugin, title);
     }
 
-    private DynamicGuiElement getItemElement(char slotChar, PitItemEntry pitItemEntry) {
-        return new DynamicGuiElement(slotChar, (viewer) -> {
+    private DynamicGuiElement getItemElement(PitItemEntry pitItemEntry) {
+        return new DynamicGuiElement(pitItemEntry.getSlotChar(), (viewer) -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer((Player) viewer);
-            return new StaticGuiElement(slotChar, pitItemEntry.getItemStack(), click -> {
+            return new StaticGuiElement(pitItemEntry.getSlotChar(), pitItemEntry.getItemStack(), click -> {
                 if (TheJpsPit.getInstance().getEconomyHook().isEmpty()) {
                     TheJpsPit.getInstance().getLogger().warning("経済プラグインが見つかりませんでした");
                     return true;

@@ -31,4 +31,9 @@ public class ItemDiamondBoots extends PitItemEntry {
     public String getName() {
         return "§aダイヤモンドの靴";
     }
+
+    @Override
+    public char getSlotChar() {
+        return 'B';
+    }
 }

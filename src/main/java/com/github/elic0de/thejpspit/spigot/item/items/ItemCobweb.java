@@ -1,25 +1,24 @@
 package com.github.elic0de.thejpspit.spigot.item.items;
 
 import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
-import com.github.elic0de.thejpspit.spigot.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemDiamondChestPlate extends PitItemEntry {
+public class ItemCobweb extends PitItemEntry {
 
     @Override
     public String getId() {
-        return "diamond_chestplate";
+        return "cobweb";
     }
 
     @Override
     public ItemStack getRawItemStack() {
-        return ItemUtil.withUnbreakable(new ItemStack(Material.DIAMOND_CHESTPLATE));
+        return new ItemStack(Material.COBWEB, 5);
     }
 
     @Override
     public int getPrice() {
-        return 500;
+        return 200;
     }
 
     @Override
@@ -29,11 +28,11 @@ public class ItemDiamondChestPlate extends PitItemEntry {
 
     @Override
     public String getName() {
-        return "§aダイヤのチェストプレート";
+        return "§aクモの巣";
     }
 
     @Override
     public char getSlotChar() {
-        return 'C';
+        return 'c';
     }
 }

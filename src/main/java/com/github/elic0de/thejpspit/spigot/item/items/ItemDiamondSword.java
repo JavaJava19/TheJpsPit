@@ -31,4 +31,9 @@ public class ItemDiamondSword extends PitItemEntry {
     public String getName() {
         return "§aダイヤ剣";
     }
+
+    @Override
+    public char getSlotChar() {
+        return 'S';
+    }
 }

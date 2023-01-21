@@ -184,6 +184,10 @@ public final class TheJpsPit extends JavaPlugin {
         ItemManager.register(new ItemDiamondBoots());
         ItemManager.register(new ItemObsidian());
         ItemManager.register(new ItemVividSword());
+        ItemManager.register(new ItemCobweb());
+        ItemManager.register(new ItemFishingRod());
+        ItemManager.register(new ItemTurtleShell());
+        ItemManager.register(new ItemUltimateSword());
     }
 
     private void createNPCs() {

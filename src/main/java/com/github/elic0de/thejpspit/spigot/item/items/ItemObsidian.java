@@ -18,7 +18,7 @@ public class ItemObsidian extends PitItemEntry {
 
     @Override
     public int getPrice() {
-        return 3000;
+        return 50;
     }
 
     @Override
@@ -29,5 +29,10 @@ public class ItemObsidian extends PitItemEntry {
     @Override
     public String getName() {
         return "§a黒曜石 §fx10";
+    }
+
+    @Override
+    public char getSlotChar() {
+        return 'o';
     }
 }

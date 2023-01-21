@@ -7,6 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class PitItemEntry {
@@ -23,6 +25,12 @@ public abstract class PitItemEntry {
 
     public abstract String getName();
 
+    public abstract char getSlotChar();
+
+    public List<String> getRawLore() {
+        return new ArrayList<>();
+    }
+
     public final ItemStack getItemStack() {
         ItemStack itemStack = this.getRawItemStack().clone();
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -36,11 +44,14 @@ public abstract class PitItemEntry {
     }
 
     public String[] getLore() {
-        return new String[]{
-                getName(),
-                String.format("必要レベル: §e%d", this.getRequiredLevel()),
-                String.format("値段: §e%d", this.getPrice())
-        };
+        return new ArrayList<String>() {
+            {
+                add(getName());
+                addAll(getRawLore());
+                add(String.format("§f必要レベル: §e%d", getRequiredLevel()));
+                add(String.format("§f値段: §e%d", getPrice()));
+            }
+        }.toArray(String[]::new);
     }
 
     protected boolean isEntryOf(ItemStack itemStack) {

@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class ItemManager {
@@ -32,6 +33,10 @@ public class ItemManager {
     public static PitItemEntry getPitItemEntry(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         return itemMeta == null ? null : getPitItemEntry(itemMeta.getPersistentDataContainer().get(PitItemEntry.itemIdKey, PersistentDataType.STRING));
+    }
+
+    public static Collection<PitItemEntry> getAllEntry() {
+        return pitItemMap.values();
     }
 
     public static boolean isPitItem(ItemStack itemStack) {
