@@ -129,12 +129,17 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event) {
+    public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player vitim) {
             if (event.getCause() == DamageCause.VOID) {
-                plugin.getGame().death(PitPlayerManager.getPitPlayer(vitim));
-                return;
+                vitim.setHealth(0);
             }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player vitim) {
             if (event.getDamager() instanceof Player damager) {
                 final PitPlayer victimPitPlayer = PitPlayerManager.getPitPlayer(vitim);
                 final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(damager);
