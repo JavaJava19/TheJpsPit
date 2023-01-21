@@ -19,6 +19,6 @@ public class SpawnCommand extends BaseCommand {
             pitPlayer.sendMessage("&cあなたは戦闘中です");
             return;
         }
-        pit.getPitPreferences().ifPresent(pitPreferences -> player.teleport(pitPreferences.getSpawn().orElse(player.getLocation())));
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.getSpawn().ifPresent(location -> player.teleport(location.getLocation())));
     }
 }

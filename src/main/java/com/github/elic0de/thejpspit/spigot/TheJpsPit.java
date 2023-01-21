@@ -196,7 +196,6 @@ public final class TheJpsPit extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        pitPreferences.ifPresent(preferences -> database.updatePitPreferences(preferences));
         // Plugin shutdown logic
         if (database != null) {
             database.terminate();

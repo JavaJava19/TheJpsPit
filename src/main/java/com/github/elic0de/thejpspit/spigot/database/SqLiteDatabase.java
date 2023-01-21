@@ -171,7 +171,7 @@ public class SqLiteDatabase extends Database {
         try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
                 SELECT `preferences`
                 FROM `%pit_preferences%`
-                LIMIT 1"""))) {
+                """))) {
             final ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 final String preferences = new String(resultSet.getBytes("preferences"), StandardCharsets.UTF_8);

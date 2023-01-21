@@ -11,6 +11,7 @@ import com.github.elic0de.thejpspit.spigot.item.ItemManager;
 import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
+import com.github.elic0de.thejpspit.spigot.util.LocationData;
 import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
 import org.bukkit.entity.Player;
 
@@ -41,7 +42,9 @@ public class PitCommand extends BaseCommand {
     @Subcommand("set spawn")
     @CommandPermission("tjp.spawn")
     public void onSetSpawn(Player player) {
-        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setSpawn(player.getLocation()));
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setSpawn(LocationData.at(player.getLocation())));
+        PitPlayerManager.getPitPlayer(player).sendMessage("&cスポーン地点を設定しました");
+        pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
     }
 
     @Subcommand("shop")

@@ -12,6 +12,7 @@ import com.github.elic0de.thejpspit.spigot.villager.VillagerNPC;
 import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -48,11 +49,11 @@ public class EventListener implements Listener {
         Object packet = packetManager.buildScoreboardTeam(player);
         packetManager.sendPacket(packet, player);
 
-        /*plugin.getPitPreferences().ifPresent(pitPreferences -> {
-            final Location location = pitPreferences.getSpawn().get();
+        plugin.getPitPreferences().ifPresent(pitPreferences -> {
+            final Location location = pitPreferences.getSpawn().get().getLocation();
 
             if (location != null) player.teleport(location);
-        });*/
+        });
         if (userData.isEmpty()) {
             plugin.getDatabase().createPitPlayer(player);
             PitPlayerManager.registerUser(new PitPlayer(player));
