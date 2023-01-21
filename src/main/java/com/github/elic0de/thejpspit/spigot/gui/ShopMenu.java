@@ -57,6 +57,11 @@ public class ShopMenu {
                     return true;
                 }
 
+                if (pitPlayer.getLevel() < pitItemEntry.getRequiredLevel()) {
+                    pitPlayer.sendMessage("&c【PIT】レベルが足りません！");
+                    return true;
+                }
+
                 economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(pitItemEntry.getPrice()));
                 inventory.addItem(pitItemEntry.getItemStack());
                 player.updateInventory();
