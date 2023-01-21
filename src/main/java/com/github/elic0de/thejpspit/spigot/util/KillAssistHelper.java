@@ -3,13 +3,16 @@ package com.github.elic0de.thejpspit.spigot.util;
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
-import java.util.HashMap;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.lang.Math.round;
 
@@ -21,23 +24,24 @@ public class KillAssistHelper implements Listener {
         Bukkit.getPluginManager().registerEvents(this, TheJpsPit.getInstance());
     }
 
-    public void death(PitPlayer pitPlayer) {
-        if (pitPlayers.containsKey(pitPlayer.getUniqueId())) {
-            final String KillerName = pitPlayer.getKiller().getName();
+    public void death(PitPlayer victim) {
+        if (pitPlayers.containsKey(victim.getUniqueId())) {
+            final Map<UUID, Double> damagerMap = Collections.unmodifiableMap(pitPlayers.get(victim.getUniqueId()));
             double totalDamage = 0D;
-            for (Double damage : pitPlayers.get(pitPlayer.getUniqueId()).values()) {
+            for (Double damage : damagerMap.values()) {
                 totalDamage += damage;
             }
-            for (UUID uuid : pitPlayers.get(pitPlayer.getUniqueId()).keySet()) {
+            for (UUID uuid : damagerMap.keySet()) {
                 final Player player = Bukkit.getPlayer(uuid);
                 if (player == null) continue;
-                if (pitPlayer.getName().equalsIgnoreCase(player.getName())) continue;
-                final double damaged = pitPlayers.get(pitPlayer.getUniqueId()).get(uuid);
-                final int assistPer = (int) round(damaged/totalDamage * 100);
-                pitPlayer.sendMessage("アシストキル [%per%%] %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", KillerName));
+                final PitPlayer damager = PitPlayerManager.getPitPlayer(player);
+                if (victim.getName().equalsIgnoreCase(damager.getName())) continue;
+                final double damaged = damagerMap.get(uuid);
+                final int assistPer = (int) round(damaged / totalDamage * 100);
+                damager.sendMessage("アシストキル [%per%%] %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", victim.getName()));
             }
-            pitPlayers.get(pitPlayer.getUniqueId()).clear();
-         }
+            pitPlayers.get(victim.getUniqueId()).clear();
+        }
     }
 
     @EventHandler
@@ -49,7 +53,7 @@ public class KillAssistHelper implements Listener {
 
                 if (pitPlayers.containsKey(victimPitPlayer.getUniqueId())) {
                     final HashMap<UUID, Double> damages = pitPlayers.get(victimPitPlayer.getUniqueId());
-                    final double damage = damages.getOrDefault(pitPlayer.getPlayer(),0D);
+                    final double damage = damages.getOrDefault(pitPlayer.getPlayer().getUniqueId(), 0D);
                     final double totalDamage = damage + event.getDamage();
                     damages.put(pitPlayer.getUniqueId(), totalDamage);
                     return;
