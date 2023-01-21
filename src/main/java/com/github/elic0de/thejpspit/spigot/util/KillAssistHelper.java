@@ -36,6 +36,7 @@ public class KillAssistHelper implements Listener {
                 if (player == null) continue;
                 final PitPlayer damager = PitPlayerManager.getPitPlayer(player);
                 if (victim.getName().equalsIgnoreCase(damager.getName())) continue;
+                if (damager.getName().equalsIgnoreCase(victim.getKiller().getName() == null ? "" : victim.getKiller().getName())) continue;
                 final double damaged = damagerMap.get(uuid);
                 final int assistPer = (int) round(damaged / totalDamage * 100);
                 damager.sendMessage("アシストキル [%per%%] %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", victim.getName()));
