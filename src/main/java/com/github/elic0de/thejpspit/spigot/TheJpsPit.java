@@ -12,12 +12,18 @@ import com.github.elic0de.thejpspit.spigot.hook.EconomyHook;
 import com.github.elic0de.thejpspit.spigot.hook.Hook;
 import com.github.elic0de.thejpspit.spigot.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.spigot.item.ItemManager;
-import com.github.elic0de.thejpspit.spigot.item.items.*;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemCobweb;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondBoots;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondChestPlate;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondSword;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemFishingRod;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemTurtleShell;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemUltimateSword;
+import com.github.elic0de.thejpspit.spigot.item.items.ItemVividSword;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
-import com.github.elic0de.thejpspit.spigot.nms.PacketManager;
-import com.github.elic0de.thejpspit.spigot.nms.PacketManager1_19_R1;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.spigot.queue.QueueManager;
@@ -28,19 +34,15 @@ import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
 import com.github.elic0de.thejpspit.spigot.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheJpsPit extends JavaPlugin {
 
@@ -55,8 +57,6 @@ public final class TheJpsPit extends JavaPlugin {
     private List<Hook> hooks = new ArrayList<>();
 
     private Optional<PitPreferences> pitPreferences;
-
-    private PacketManager packetManager;
 
     public static TheJpsPit getInstance() {
         return instance;
@@ -92,7 +92,7 @@ public final class TheJpsPit extends JavaPlugin {
         queueTask = new QueueTask();
 
         setPreferences();
-        setPacketManager();
+        //setPacketManager();
 
         getServer().getMessenger()
                 .registerIncomingPluginChannel(this, PluginMessageReceiver.BUNGEE_CHANNEL_ID,
@@ -144,7 +144,7 @@ public final class TheJpsPit extends JavaPlugin {
         this.pitPreferences = preferences;
     }
 
-    private void setPacketManager() {
+/*    private void setPacketManager() {
         final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].trim();
         PacketManager packetManager;
         switch (serverVersion) {
@@ -155,7 +155,7 @@ public final class TheJpsPit extends JavaPlugin {
                 throw new RuntimeException("Failed to create version specific server accessor");
         }
         this.packetManager = packetManager;
-    }
+    }*/
 
     private void registerCommands() {
         PaperCommandManager commandManager = new PaperCommandManager(this);
@@ -265,9 +265,6 @@ public final class TheJpsPit extends JavaPlugin {
         return pitPreferences;
     }
 
-    public PacketManager getPacketManager() {
-        return packetManager;
-    }
 
     public Gson getGson() {
         return Converters.registerOffsetDateTime(new GsonBuilder().excludeFieldsWithoutExposeAnnotation()).create();

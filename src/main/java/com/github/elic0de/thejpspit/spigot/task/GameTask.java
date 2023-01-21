@@ -1,13 +1,11 @@
 package com.github.elic0de.thejpspit.spigot.task;
 
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
-import com.github.elic0de.thejpspit.spigot.nms.PacketManager;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -58,20 +56,20 @@ public class GameTask {
                     }
 
                     // Queue packet sending.
-                    pit.getServer().getScheduler().runTaskAsynchronously(pit,
+                    /*pit.getServer().getScheduler().runTaskAsynchronously(pit,
                         () -> summonAndQueueBountyDeletion(
                             TheJpsPit.getInstance().getPacketManager(),
                             player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
                             100 * streaks,
                             packetRecipients
                         )
-                    );
+                    );*/
                 }
             }
         }.runTaskTimer(pit, 0, 5);
     }
 
-    private void summonAndQueueBountyDeletion(PacketManager packetManager, Location location,
+    /*private void summonAndQueueBountyDeletion(PacketManager packetManager, Location location,
         long cost, List<Player> packetRecipients) {
 
         //Create the entity
@@ -117,7 +115,7 @@ public class GameTask {
             }
 
         }, 0, 1);
-    }
+    }*/
 
 
     public void stop() {

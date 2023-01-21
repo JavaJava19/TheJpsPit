@@ -1,7 +1,6 @@
 package com.github.elic0de.thejpspit.spigot.leveler;
 
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,7 @@ import org.bukkit.ChatColor;
 
 public class Levels {
 
-    private final static HashMap<Integer,Level> LEVELS = new HashMap();
+    private final static HashMap<Integer,Level> LEVELS = new HashMap<>();
 
     static {
         initialize(
