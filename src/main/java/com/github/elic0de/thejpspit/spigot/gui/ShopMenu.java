@@ -19,8 +19,8 @@ public class ShopMenu {
 
     private static final String[] MENU_LAYOUT = {
             "         ",
-            " SCBoftc ",
-            " vu      ",
+            " SCBofLc ",
+            " tvu     ",
             "         "
     };
 
