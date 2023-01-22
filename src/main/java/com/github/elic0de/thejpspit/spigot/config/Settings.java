@@ -14,7 +14,7 @@ public class Settings {
     private String githubToken = "";
 
 
-    @YamlKey("waiting")
+    @YamlKey("scoreboard")
     private List<String> scoreboard = Arrays.asList(
         "",
         "レベル: [%level%]",
