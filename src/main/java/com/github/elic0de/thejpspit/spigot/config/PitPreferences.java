@@ -21,6 +21,10 @@ public class PitPreferences {
     @SerializedName("amount_reward")
     private int amountReward;
 
+    @Expose
+    @SerializedName("damage_amount")
+    private double damageAmount;
+
     public static PitPreferences getDefaults() {
         final Location location = Bukkit.getWorlds().stream().findAny().get().getSpawnLocation();
         return new PitPreferences(LocationData.at(location.getX(), location.getY(), location.getZ(), location.getWorld()));
@@ -30,6 +34,7 @@ public class PitPreferences {
         this.spawn = spawn;
         this.amountRegenHealth = 1;
         this.amountReward = 10;
+        this.damageAmount = .5;
     }
 
     public Optional<LocationData> getSpawn() {
@@ -54,5 +59,13 @@ public class PitPreferences {
 
     public void setAmountReward(int amountReward) {
         this.amountReward = amountReward;
+    }
+
+    public double getDamageAmount() {
+        return damageAmount;
+    }
+
+    public void setDamageAmount(double damageAmount) {
+        this.damageAmount = damageAmount;
     }
 }

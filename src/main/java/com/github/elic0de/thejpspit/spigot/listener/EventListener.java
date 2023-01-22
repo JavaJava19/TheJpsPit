@@ -160,7 +160,7 @@ public class EventListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    case PROJECTILE -> event.setDamage(event.getDamage() - (event.getDamage() * .8));
+                    case PROJECTILE -> plugin.getPitPreferences().ifPresent(pitPreferences -> event.setDamage(pitPreferences.getDamageAmount()));
                 }
 
                 pitPlayer.showHealth(victimPitPlayer);

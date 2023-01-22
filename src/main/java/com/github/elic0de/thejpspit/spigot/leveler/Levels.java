@@ -15,7 +15,7 @@ public class Levels {
         initialize();
     }
 
-    private static void initialize() {
+    public static void initialize() {
         Arrays.stream(TheJpsPit.getInstance().getSettings().getLevel().toArray(new String[0]))
             .map(text -> text.split(","))
             .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1]),Integer.parseInt(data[2]), ChatColor.valueOf(data[3])))
@@ -30,7 +30,7 @@ public class Levels {
             int totalXp = level.getNeededXP();
             for (int i = 1; i < 10; i++){
                 final int nextLevel = l + i;
-                if (LEVELS.containsKey(nextLevel)) continue;
+                //if (LEVELS.containsKey(nextLevel)) continue;
                 totalXp += neededXp;
                 addedLevels.put(nextLevel, new Level(nextLevel, neededXp, neededXp * nextLevel, color));
             }

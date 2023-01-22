@@ -63,6 +63,14 @@ public class PitCommand extends BaseCommand {
         player.sendMessage("変更しました");
     }
 
+    @Subcommand("set arrowDamage")
+    @CommandPermission("tjp.arrow")
+    public void onArrowDamage(Player player, double amount) {
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setDamageAmount(amount));
+        pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
+        player.sendMessage("変更しました");
+    }
+
     @Subcommand("shop")
     @CommandPermission("tjp.shop")
     public void onCreateShop(Player player) {

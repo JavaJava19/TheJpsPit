@@ -14,6 +14,7 @@ import com.github.elic0de.thejpspit.spigot.hook.EconomyHook;
 import com.github.elic0de.thejpspit.spigot.hook.Hook;
 import com.github.elic0de.thejpspit.spigot.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.spigot.item.ItemManager;
+import com.github.elic0de.thejpspit.spigot.leveler.Levels;
 import com.github.elic0de.thejpspit.spigot.listener.BlockPlaceListener;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
@@ -81,6 +82,7 @@ public final class TheJpsPit extends JavaPlugin {
 
     public void reload() {
         loadConfig();
+        Levels.initialize();
     }
 
     @Override
