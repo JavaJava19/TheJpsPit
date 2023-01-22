@@ -9,6 +9,9 @@ import net.william278.annotaml.YamlKey;
 @YamlFile
 public class Queues {
 
+    @YamlKey("min_players")
+    private Map<String, Integer> minPlayers = Map.of("serverName", 6);
+
     private List<String> menuLayout = List.of(
         "         ",
         "  x y z  ",
@@ -32,5 +35,9 @@ public class Queues {
 
     public Map<String, List<String>> getServers() {
         return servers;
+    }
+
+    public Map<String, Integer> getMinPlayers() {
+        return minPlayers;
     }
 }

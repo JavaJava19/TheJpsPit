@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.spigot.queue;
 
+import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import java.util.HashMap;
@@ -12,8 +13,6 @@ public class QueueManager {
     private final Map<String, Integer> servers = new HashMap<>();
 
     private final Map<PitPlayer, String> commands = new HashMap<>();
-
-    private final int MIN_PLAYER_SIZE = 2;
 
     public void checkQueue() {
         PluginMessageReceiver.sendServerPlayerCount();
@@ -56,6 +55,7 @@ public class QueueManager {
     }
 
     public int getNeededPlayer(String serverName) {
+        final int MIN_PLAYER_SIZE = TheJpsPit.getInstance().getQueues().getMinPlayers().getOrDefault(serverName, 6);
         if (servers.isEmpty()) {
             return MIN_PLAYER_SIZE;
         }
