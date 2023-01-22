@@ -55,6 +55,14 @@ public class PitCommand extends BaseCommand {
         player.sendMessage("変更しました");
     }
 
+    @Subcommand("set killcoin")
+    @CommandPermission("tjp.regen")
+    public void onKillCoin(Player player, int amount) {
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setAmountReward(amount));
+        pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
+        player.sendMessage("変更しました");
+    }
+
     @Subcommand("shop")
     @CommandPermission("tjp.shop")
     public void onCreateShop(Player player) {

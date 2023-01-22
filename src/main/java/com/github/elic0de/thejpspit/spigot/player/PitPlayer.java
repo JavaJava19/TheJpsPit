@@ -103,7 +103,9 @@ public class PitPlayer {
 
         inventory.addItem(new ItemStack(Material.GOLDEN_APPLE));
         player.updateInventory();
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, BigDecimal.valueOf(10)));
+        TheJpsPit.getInstance().getPitPreferences().ifPresent(pitPreferences -> {
+            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, BigDecimal.valueOf(pitPreferences.getAmountReward())));
+        });
     }
 
     public void showHealth(PitPlayer targetPit) {
