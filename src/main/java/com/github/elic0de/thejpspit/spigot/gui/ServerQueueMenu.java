@@ -7,33 +7,39 @@ import com.github.elic0de.thejpspit.spigot.queue.QueueManager;
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class ServerQueueMenu {
 
-    private static final String[] MENU_LAYOUT = {
-        "         ",
-        "  x y z  ",
-        "         ",
-        "    c    ",
-    };
-
     private final InventoryGui menu;
 
     private ServerQueueMenu(TheJpsPit plugin, String title) {
+        final String[] MENU_LAYOUT = plugin.getQueues().getMenuLayout().toArray(new String[0]);
         this.menu = new InventoryGui(plugin, title, MENU_LAYOUT);
 
         // Add filler items
         this.menu.setFiller(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1));
         // Add pagination handling
-        this.menu.addElement(
-            queueButton('x', "lobby", new ItemStack(Material.PINK_WOOL),
-                "CatchTheWool", "&7相手陣地にある羊毛を自分陣地へ持ち帰れ！"));
-        this.menu.addElement(
-            queueButton('y', "battle", new ItemStack(Material.COBBLESTONE),
-                "BattleCastle", "&7自分のコアを守りつつ相手のコアを破壊せよ！！"));
+
+        final Map<String, List<String>> queues = plugin.getQueues().getServers();
+
+        queues.forEach((s, info) -> {
+            if (info.size() != 5) return;
+            final String serverName = info.get(0);
+            final String name = info.get(1);
+            final String description = info.get(2);
+            final String icon = info.get(3).toUpperCase(Locale.ROOT);
+            final String command = info.get(4);
+            final Material material = Material.getMaterial(icon);
+            this.menu.addElement(
+                queueButton(String.valueOf(s).charAt(0), serverName, command, new ItemStack(material == null ? Material.BARRIER : material),
+                    name, description));
+        });
         this.menu.addElement(statusButton());
         this.menu.addElement(closeButton());
     }
@@ -46,7 +52,7 @@ public class ServerQueueMenu {
         menu.show(player.getPlayer());
     }
 
-    private DynamicGuiElement queueButton(char symbol, String serverName, ItemStack itemStack,
+    private DynamicGuiElement queueButton(char symbol, String serverName, String command , ItemStack itemStack,
         String title, String desc) {
         return new DynamicGuiElement(symbol, (viewer) -> {
             final QueueManager queueManager = TheJpsPit.getInstance().getQueueManager();
@@ -57,7 +63,7 @@ public class ServerQueueMenu {
                     if (isQueued) {
                         queueManager.cancelQueue(pitPlayer);
                     } else {
-                        queueManager.addQueue(pitPlayer, serverName);
+                        queueManager.addQueue(pitPlayer, serverName, command);
                     }
                     click.getGui().draw();
                     return true;

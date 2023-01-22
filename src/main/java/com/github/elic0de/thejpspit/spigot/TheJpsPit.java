@@ -5,6 +5,7 @@ import com.fatboyindustrial.gsonjavatime.Converters;
 import com.github.elic0de.thejpspit.spigot.command.PitCommand;
 import com.github.elic0de.thejpspit.spigot.command.SpawnCommand;
 import com.github.elic0de.thejpspit.spigot.config.PitPreferences;
+import com.github.elic0de.thejpspit.spigot.config.Queues;
 import com.github.elic0de.thejpspit.spigot.config.Settings;
 import com.github.elic0de.thejpspit.spigot.database.Database;
 import com.github.elic0de.thejpspit.spigot.database.SqLiteDatabase;
@@ -45,6 +46,7 @@ public final class TheJpsPit extends JavaPlugin {
 
     private static TheJpsPit instance;
     private Settings settings;
+    private Queues queues;
     private Game game;
     private Database database;
     private KillRatingHelper ratingHelper;
@@ -67,8 +69,9 @@ public final class TheJpsPit extends JavaPlugin {
 
     private void loadConfig() throws RuntimeException {
         try {
-            this.settings = Annotaml.create(new File(getDataFolder(), "config.yml"), Settings.class)
-                .get();
+            this.settings = Annotaml.create(new File(getDataFolder(), "config.yml"), Settings.class).get();
+            this.queues = Annotaml.create(new File(getDataFolder(), "queues.yml"), Queues.class).get();
+
         } catch (IOException | InvocationTargetException | InstantiationException |
                  IllegalAccessException e) {
             getLogger().log(Level.SEVERE, "Failed to load configuration files", e);
@@ -225,6 +228,10 @@ public final class TheJpsPit extends JavaPlugin {
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public Queues getQueues() {
+        return queues;
     }
 
     private List<Hook> getHooks() {

@@ -2,19 +2,16 @@ package com.github.elic0de.thejpspit.spigot.queue;
 
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class QueueManager {
 
     private final Map<PitPlayer, String> queuedPlayers = new HashMap<>();
     private final Map<String, Integer> servers = new HashMap<>();
+
+    private final Map<PitPlayer, String> commands = new HashMap<>();
 
     private final int MIN_PLAYER_SIZE = 2;
 
@@ -23,15 +20,14 @@ public class QueueManager {
         if (servers.isEmpty()) return;
 
         servers.forEach((s, integer) -> {
-            if (getNeededPlayer(s) == 0) sendServer(s);
+            if (getNeededPlayer(s) == 0) executeCommand(s);
         });
     }
 
-    public void addQueue(PitPlayer player, String serverName) {
-        cancelQueue(player);
+    public void addQueue(PitPlayer player, String serverName, String command) {
         queuedPlayers.remove(player);
         queuedPlayers.put(player, serverName);
-
+        commands.put(player, command);
         checkQueue();
     }
 
@@ -49,10 +45,13 @@ public class QueueManager {
         return queuedServerName.equals(serverName);
     }
 
-    private void sendServer(String serverName) {
+    private void executeCommand(String serverName) {
         for (PitPlayer player : queuedPlayers.keySet()) {
             if (!Objects.equals(queuedPlayers.get(player), serverName)) return;
-            PluginMessageReceiver.changeServer(player, serverName);
+            final String command = commands.getOrDefault(player,"");
+            if (command.equals("")) return;
+            player.getPlayer().performCommand(command);
+            cancelQueue(player);
         }
     }
 
