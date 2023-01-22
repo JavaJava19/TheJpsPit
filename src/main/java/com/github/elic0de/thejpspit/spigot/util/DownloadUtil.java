@@ -41,6 +41,7 @@ public class DownloadUtil {
             con.setReadTimeout(15000);
 
             final JsonObject json = JsonParser.parseReader(new InputStreamReader(con.getInputStream())).getAsJsonObject();
+            final String tagName = json.get("tag_name").getAsString();
 
             if (json.has("assets")) {
                 final JsonArray assets = json.get("assets").getAsJsonArray();
@@ -54,7 +55,7 @@ public class DownloadUtil {
                     urlConnection.setRequestProperty("Accept", "application/octet-stream");
 
                     player.sendMessage(
-                        ChatColor.GREEN + "[TheJpsPit] " + ASSETS_NAME + " をダウンロードします");
+                        ChatColor.GREEN + "[TheJpsPit] " + ASSETS_NAME + " " + tagName + " をダウンロードします");
 
                     new BukkitRunnable() {
                         @Override
