@@ -56,10 +56,6 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
         final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
 
-        /*final PacketManager packetManager = TheJpsPit.getInstance().getPacketManager();
-        Object packet = packetManager.buildScoreboardTeam(player);
-        packetManager.sendPacket(packet, player);*/
-
         plugin.getPitPreferences().ifPresent(pitPreferences -> {
             final Location location = pitPreferences.getSpawn().get().getLocation();
 
