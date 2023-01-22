@@ -261,12 +261,6 @@ public class PitPlayer {
         updateXpBar();
     }
 
-    public void increaseHealth() {
-        if (player.isDead()) return;
-        player.setHealth(Math.min(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(),
-            player.getHealth() + 2));
-    }
-
     public void setLastDamager(PitPlayer player) {
         this.lastDamager = player;
     }
