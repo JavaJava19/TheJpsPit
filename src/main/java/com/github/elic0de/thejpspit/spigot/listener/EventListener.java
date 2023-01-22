@@ -177,7 +177,7 @@ public class EventListener implements Listener {
 
         if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
             // 10%
-            event.setAmount(event.getAmount()* .1);
+            event.setAmount(event.getAmount() - (event.getAmount() / 0.8));
         }
     }
 
