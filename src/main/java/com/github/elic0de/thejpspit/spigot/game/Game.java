@@ -7,6 +7,7 @@ import com.github.elic0de.thejpspit.spigot.task.GameTask;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.Location;
 
 public class Game {
 
@@ -35,6 +36,13 @@ public class Game {
 
     public void death(PitPlayer player) {
         final PitPlayer killer = player.getKiller();
+
+        // 死んだらテレポートをさせる
+        pit.getPitPreferences().ifPresent(pitPreferences -> {
+            final Location location = pitPreferences.getSpawn().get().getLocation();
+
+            if (location != null) player.getPlayer().teleport(location);
+        });
 
         if (killer == null) {
             player.increaseDeaths();
