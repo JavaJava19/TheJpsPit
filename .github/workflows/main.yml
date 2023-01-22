@@ -23,4 +23,4 @@ jobs:
         tag_name: release-v${{ github.run_number }}
         files:
           - 'target/*.jar'
-          - '!target/original-*.jar'
+          - 'target/!original-*.jar'
