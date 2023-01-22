@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.spigot.leveler;
 
+import com.github.elic0de.thejpspit.spigot.TheJpsPit;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,22 +12,11 @@ public class Levels {
     private final static HashMap<Integer,Level> LEVELS = new HashMap<>();
 
     static {
-        initialize(
-            "1,15,15," + ChatColor.GRAY.name(),
-            "10,30,300," + ChatColor.BLUE.name(),
-            "20,50,1000," + ChatColor.DARK_AQUA.name(),
-            "30,75,2250," + ChatColor.DARK_GREEN.name(),
-            "40,125,5000," + ChatColor.GREEN.name(),
-            "50,250,12500," + ChatColor.YELLOW.name(),
-            "60,600,36000," + ChatColor.GOLD.name(),
-            "70,800,56000," + ChatColor.RED.name(),
-            "80,900,72000," + ChatColor.DARK_RED.name(),
-            "90,1000,90000," + ChatColor.AQUA.name()
-        );
+        initialize();
     }
 
-    private static void initialize(String... texts) {
-        Arrays.stream(texts)
+    private static void initialize() {
+        Arrays.stream(TheJpsPit.getInstance().getSettings().getLevel().toArray(new String[0]))
             .map(text -> text.split(","))
             .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1]),Integer.parseInt(data[2]), ChatColor.valueOf(data[3])))
             .forEach(level -> LEVELS.put(level.getLevel(), level));
@@ -37,12 +27,12 @@ public class Levels {
             final int neededXp = level.getNeededXP();
             final ChatColor color = level.getLevelColor();
 
-            int totalXp = level.getTotalXp();
+            int totalXp = level.getNeededXP();
             for (int i = 1; i < 10; i++){
                 final int nextLevel = l + i;
                 if (LEVELS.containsKey(nextLevel)) continue;
                 totalXp += neededXp;
-                addedLevels.put(nextLevel, new Level(nextLevel, neededXp, totalXp, color));
+                addedLevels.put(nextLevel, new Level(nextLevel, neededXp, neededXp * nextLevel, color));
             }
         }
         LEVELS.putAll(addedLevels);
