@@ -12,6 +12,7 @@ import com.github.elic0de.thejpspit.spigot.item.PitItemEntry;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayer;
 import com.github.elic0de.thejpspit.spigot.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.spigot.util.LocationData;
+import com.github.elic0de.thejpspit.spigot.util.DownloadUtil;
 import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
 import org.bukkit.entity.Player;
 
@@ -59,5 +60,18 @@ public class PitCommand extends BaseCommand {
         final PitItemEntry entry = ItemManager.getPitItemEntry(itemId);
         if (entry == null) return;
         player.getInventory().addItem(entry.getItemStack());
+    }
+
+    @Subcommand("download")
+    @CommandPermission("tjp.download")
+    public void onDownload(Player player) {
+        DownloadUtil.download(player);
+    }
+
+    @Subcommand("reload")
+    @CommandPermission("tjp.reload")
+    public void onReload(Player player) {
+        TheJpsPit.getInstance().reload();
+        player.sendMessage("リロードしました");
     }
 }
