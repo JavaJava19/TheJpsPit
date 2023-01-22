@@ -36,8 +36,7 @@ public abstract class PitItemEntry {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.getPersistentDataContainer().set(itemIdKey, PersistentDataType.STRING, this.getId());
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_DESTROYS);
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;
