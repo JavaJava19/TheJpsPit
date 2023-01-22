@@ -33,21 +33,7 @@ public class GameScoreboard {
         }
 
         String finalCoin = coin;
-        return Stream.of(
-            "",
-            "レベル: [%level%]",
-            "JP: [%coins%]",
-            "",
-            "K/Dレート: &c%rating%",
-            "最高レート: &b%bestRating%",
-            "",
-            "次のレベルまで：&a%neededXp%",
-            "",
-            "連続キル数: &a%streaks%",
-            "最高連続キル数: &a%bestStreaks%",
-            "",
-            "&ejapanpvpserver.net"
-        ).map(s ->
+        return TheJpsPit.getInstance().getSettings().getScoreboard().stream().map(s ->
             s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
                     (int) player.getXp()) + "")
