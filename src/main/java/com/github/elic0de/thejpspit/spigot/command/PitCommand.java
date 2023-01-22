@@ -43,8 +43,16 @@ public class PitCommand extends BaseCommand {
     @CommandPermission("tjp.spawn")
     public void onSetSpawn(Player player) {
         pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setSpawn(LocationData.at(player.getLocation())));
-        PitPlayerManager.getPitPlayer(player).sendMessage("&cスポーン地点を設定しました");
         pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
+        PitPlayerManager.getPitPlayer(player).sendMessage("&cスポーン地点を設定しました");
+    }
+
+    @Subcommand("set regen")
+    @CommandPermission("tjp.regen")
+    public void onRegen(Player player, int amount) {
+        pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setAmountRegenHealth(amount));
+        pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
+        player.sendMessage("変更しました");
     }
 
     @Subcommand("shop")

@@ -171,13 +171,11 @@ public class EventListener implements Listener {
 
     @EventHandler
     private void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-
-        // 20 ticks に1 amount
-        if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
-            event.setAmount(event.getAmount() - (event.getAmount() * .8));
+        if (event.getEntity() instanceof Player) {
+            if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
+                TheJpsPit.getInstance().getPitPreferences().ifPresent(
+                    pitPreferences -> event.setAmount(pitPreferences.getAmountRegenHealth()));
+            }
         }
     }
 
