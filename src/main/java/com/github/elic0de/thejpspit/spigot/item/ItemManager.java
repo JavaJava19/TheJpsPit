@@ -50,15 +50,16 @@ public class ItemManager {
     }
 
     public static void createItems() {
-        ItemManager.register(new ItemDiamondSword());
-        ItemManager.register(new ItemDiamondChestPlate());
-        ItemManager.register(new ItemDiamondBoots());
-        ItemManager.register(new ItemObsidian());
-        ItemManager.register(new ItemVividSword());
-        ItemManager.register(new ItemCobweb());
-        ItemManager.register(new ItemFishingRod());
-        ItemManager.register(new ItemTurtleShell());
-        ItemManager.register(new ItemUltimateSword());
-        ItemManager.register(new ItemLavaBucket());
+        register(new ItemDiamondSword());
+        register(new ItemDiamondChestPlate());
+        register(new ItemDiamondBoots());
+        register(new ItemObsidian());
+        register(new ItemVividSword());
+        register(new ItemCobweb());
+        register(new ItemFishingRod());
+        register(new ItemTurtleShell());
+        register(new ItemUltimateSword());
+        register(new ItemLavaBucket());
+        register(new ItemEnderPearl());
     }
 }
