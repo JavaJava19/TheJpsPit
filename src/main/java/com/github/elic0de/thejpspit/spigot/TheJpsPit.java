@@ -5,6 +5,7 @@ import com.fatboyindustrial.gsonjavatime.Converters;
 import com.github.elic0de.thejpspit.spigot.command.PitCommand;
 import com.github.elic0de.thejpspit.spigot.command.SpawnCommand;
 import com.github.elic0de.thejpspit.spigot.config.PitPreferences;
+import com.github.elic0de.thejpspit.spigot.config.Settings;
 import com.github.elic0de.thejpspit.spigot.database.Database;
 import com.github.elic0de.thejpspit.spigot.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.spigot.game.Game;
@@ -21,6 +22,7 @@ import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemTurtleShell;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemUltimateSword;
 import com.github.elic0de.thejpspit.spigot.item.items.ItemVividSword;
+import com.github.elic0de.thejpspit.spigot.listener.BlockPlaceListener;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
 import com.github.elic0de.thejpspit.spigot.network.PluginMessageReceiver;
@@ -34,11 +36,15 @@ import com.github.elic0de.thejpspit.spigot.villager.VillagerNPCManager;
 import com.github.elic0de.thejpspit.spigot.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
+import net.william278.annotaml.Annotaml;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.plugin.PluginManager;
@@ -47,6 +53,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class TheJpsPit extends JavaPlugin {
 
     private static TheJpsPit instance;
+    private Settings settings;
     private Game game;
     private Database database;
     private KillRatingHelper ratingHelper;
@@ -67,9 +74,25 @@ public final class TheJpsPit extends JavaPlugin {
         instance = this;
     }
 
+    private void loadConfig() throws RuntimeException {
+        try {
+            this.settings = Annotaml.create(new File(getDataFolder(), "config.yml"), Settings.class)
+                .get();
+        } catch (IOException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
+            getLogger().log(Level.SEVERE, "Failed to load configuration files", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void reload() {
+        loadConfig();
+    }
+
     @Override
     public void onEnable() {
         // Initialize TheJpsPit
+        this.loadConfig();
         saveConfig();
         final AtomicBoolean initialized = new AtomicBoolean(true);
         game = new Game();
@@ -169,6 +192,7 @@ public final class TheJpsPit extends JavaPlugin {
     private void registerListener() {
         new EventListener();
         new CombatTagger();
+        new BlockPlaceListener();
     }
 
     private void registerHooks() {
@@ -207,6 +231,9 @@ public final class TheJpsPit extends JavaPlugin {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         getServer().getMessenger().unregisterIncomingPluginChannel(this);
 
+        //　置かれたブロックを削除
+        BlockPlaceListener.removeBlocks();
+
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
@@ -215,6 +242,10 @@ public final class TheJpsPit extends JavaPlugin {
             }
         });
         Bukkit.getScheduler().cancelTasks(this);
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 
     private List<Hook> getHooks() {
