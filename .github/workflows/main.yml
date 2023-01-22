@@ -17,10 +17,11 @@ jobs:
         java-version: 16
     - name: Mavenを使ってビルド
       run: mvn --batch-mode --update-snapshots verify
+    - name: original-*.jarを削除
+      run:  rm target/original-*.jar
     - name: パッケージをビルドの成果物としてリリース
       uses: softprops/action-gh-release@v1
       with:
         tag_name: release-v${{ github.run_number }}
         files: |
-          target/!original-*.jar
           target/*.jar
