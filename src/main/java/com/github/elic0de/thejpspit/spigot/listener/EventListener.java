@@ -160,7 +160,7 @@ public class EventListener implements Listener {
                         event.setCancelled(true);
                         return;
                     }
-                    case PROJECTILE -> event.setDamage(event.getDamage() - (event.getDamage() / 0.8));
+                    case PROJECTILE -> event.setDamage(event.getDamage() - (event.getDamage() * .8));
                 }
 
                 pitPlayer.showHealth(victimPitPlayer);
@@ -175,9 +175,9 @@ public class EventListener implements Listener {
             return;
         }
 
+        // 20 ticks に1 amount
         if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
-            // 10%
-            event.setAmount(event.getAmount() - (event.getAmount() / 0.8));
+            event.setAmount(event.getAmount() - (event.getAmount() * .8));
         }
     }
 
