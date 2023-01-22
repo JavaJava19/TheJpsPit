@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -154,17 +155,16 @@ public class EventListener implements Listener {
             if (event.getDamager() instanceof Player damager) {
                 final PitPlayer victimPitPlayer = PitPlayerManager.getPitPlayer(vitim);
                 final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(damager);
-                switch (event.getCause()) {
-                    case FALL -> {
-                        damager.stopAllSounds();
-                        event.setCancelled(true);
-                        return;
-                    }
-                    case PROJECTILE -> plugin.getPitPreferences().ifPresent(pitPreferences -> event.setDamage(pitPreferences.getDamageAmount()));
+                if (event.getCause() == DamageCause.FALL) {
+                    damager.stopAllSounds();
+                    event.setCancelled(true);
+                    return;
                 }
-
                 pitPlayer.showHealth(victimPitPlayer);
                 victimPitPlayer.setLastDamager(pitPlayer);
+            }
+            if (event.getDamager() instanceof Arrow) {
+                plugin.getPitPreferences().ifPresent(pitPreferences -> event.setDamage(pitPreferences.getDamageAmount()));
             }
         }
     }
