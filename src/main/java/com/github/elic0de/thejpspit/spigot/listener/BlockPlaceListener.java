@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,13 +34,29 @@ public class BlockPlaceListener implements Listener {
 
         pit.getServer().getScheduler().runTaskLater(pit, runnable -> {
             if (replacedStates.contains(replacedState)) {
-                replacedState.update();
+                replacedState.update(true);
+                replacedStates.remove(replacedState);
+            }
+        }, (15 * 20));
+    }
+
+    @EventHandler
+    public void on(PlayerBucketEmptyEvent event) {
+        final Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE) return;
+        final BlockState replacedState = event.getBlock().getState();
+
+        replacedStates.add(replacedState);
+
+        pit.getServer().getScheduler().runTaskLater(pit, runnable -> {
+            if (replacedStates.contains(replacedState)) {
+                replacedState.update(true);
                 replacedStates.remove(replacedState);
             }
         }, (15 * 20));
     }
 
     public static void restoreBlocks() {
-        replacedStates.forEach(BlockState::update);
+        replacedStates.forEach(b -> b.update(true));
     }
 }
