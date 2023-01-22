@@ -13,15 +13,6 @@ import com.github.elic0de.thejpspit.spigot.hook.EconomyHook;
 import com.github.elic0de.thejpspit.spigot.hook.Hook;
 import com.github.elic0de.thejpspit.spigot.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.spigot.item.ItemManager;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemCobweb;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondBoots;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondChestPlate;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemDiamondSword;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemFishingRod;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemObsidian;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemTurtleShell;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemUltimateSword;
-import com.github.elic0de.thejpspit.spigot.item.items.ItemVividSword;
 import com.github.elic0de.thejpspit.spigot.listener.BlockPlaceListener;
 import com.github.elic0de.thejpspit.spigot.listener.CombatTagger;
 import com.github.elic0de.thejpspit.spigot.listener.EventListener;
@@ -134,7 +125,7 @@ public final class TheJpsPit extends JavaPlugin {
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
 
-        createItems();
+        ItemManager.createItems();
         createNPCs();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
@@ -202,18 +193,6 @@ public final class TheJpsPit extends JavaPlugin {
         }
     }
 
-    private void createItems() {
-        ItemManager.register(new ItemDiamondSword());
-        ItemManager.register(new ItemDiamondChestPlate());
-        ItemManager.register(new ItemDiamondBoots());
-        ItemManager.register(new ItemObsidian());
-        ItemManager.register(new ItemVividSword());
-        ItemManager.register(new ItemCobweb());
-        ItemManager.register(new ItemFishingRod());
-        ItemManager.register(new ItemTurtleShell());
-        ItemManager.register(new ItemUltimateSword());
-    }
-
     private void createNPCs() {
         VillagerNPCManager.register(new ShopVillager());
     }
@@ -232,7 +211,7 @@ public final class TheJpsPit extends JavaPlugin {
         getServer().getMessenger().unregisterIncomingPluginChannel(this);
 
         //　置かれたブロックを削除
-        BlockPlaceListener.removeBlocks();
+        BlockPlaceListener.restoreBlocks();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);

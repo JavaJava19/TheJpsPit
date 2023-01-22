@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.spigot.item;
 
 import com.github.elic0de.thejpspit.spigot.TheJpsPit;
+import com.github.elic0de.thejpspit.spigot.item.items.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,5 +47,18 @@ public class ItemManager {
         } else {
             return itemMeta.getPersistentDataContainer().get(PitItemEntry.itemIdKey, PersistentDataType.STRING) != null;
         }
+    }
+
+    public static void createItems() {
+        ItemManager.register(new ItemDiamondSword());
+        ItemManager.register(new ItemDiamondChestPlate());
+        ItemManager.register(new ItemDiamondBoots());
+        ItemManager.register(new ItemObsidian());
+        ItemManager.register(new ItemVividSword());
+        ItemManager.register(new ItemCobweb());
+        ItemManager.register(new ItemFishingRod());
+        ItemManager.register(new ItemTurtleShell());
+        ItemManager.register(new ItemUltimateSword());
+        ItemManager.register(new ItemLavaBucket());
     }
 }
