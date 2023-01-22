@@ -56,7 +56,7 @@ public class PitCommand extends BaseCommand {
     }
 
     @Subcommand("set killcoin")
-    @CommandPermission("tjp.regen")
+    @CommandPermission("tjp.killcoin")
     public void onKillCoin(Player player, int amount) {
         pit.getPitPreferences().ifPresent(pitPreferences -> pitPreferences.setAmountReward(amount));
         pit.getPitPreferences().ifPresent(preferences -> pit.getDatabase().updatePitPreferences(preferences));
