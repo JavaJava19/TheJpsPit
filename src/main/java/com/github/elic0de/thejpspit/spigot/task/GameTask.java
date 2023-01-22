@@ -25,11 +25,11 @@ public class GameTask {
             @Override
             public void run() {
                 pit.getGame().getScoreboard().update();
-                repeats.getAndIncrement();
+                /*repeats.getAndIncrement();
                 if (repeats.get() >= 5) {
                     pit.getGame().getPitPlayers().forEach(PitPlayer::increaseHealth);
                     repeats.set(0);
-                }
+                }*/
                 // TODO クラス分ける
                 for (PitPlayer pitPlayer : pit.getGame().getPitPlayers()) {
                     final long streaks = pitPlayer.getStreaks();
