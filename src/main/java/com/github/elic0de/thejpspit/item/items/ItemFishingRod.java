@@ -24,7 +24,7 @@ public class ItemFishingRod extends PitItemEntry {
 
     @Override
     public int getRequiredLevel() {
-        return 0;
+        return 5;
     }
 
     @Override
