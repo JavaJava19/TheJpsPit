@@ -8,6 +8,7 @@ import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.config.Settings;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
+import com.github.elic0de.thejpspit.hook.PlaceholderHook;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.CombatTagger;
 import com.github.elic0de.thejpspit.player.PitPlayer;
@@ -25,6 +26,7 @@ import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
 import com.github.elic0de.thejpspit.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.clip.placeholderapi.configuration.PlaceholderAPIConfig;
 import net.william278.annotaml.Annotaml;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -179,6 +181,9 @@ public final class TheJpsPit extends JavaPlugin {
         final PluginManager plugins = Bukkit.getPluginManager();
         if (plugins.getPlugin("Vault") != null) {
             this.registerHook(new VaultEconomyHook(this));
+        }
+        if (plugins.getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderHook().register();
         }
     }
 
