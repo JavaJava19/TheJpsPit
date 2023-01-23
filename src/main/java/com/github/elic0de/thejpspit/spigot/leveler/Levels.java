@@ -14,11 +14,10 @@ public class Levels {
     static {
         initialize();
     }
-
     public static void initialize() {
         Arrays.stream(TheJpsPit.getInstance().getSettings().getLevel().toArray(new String[0]))
             .map(text -> text.split(","))
-            .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1]),Integer.parseInt(data[2]), ChatColor.valueOf(data[3])))
+            .map(data -> new Level(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]), ChatColor.valueOf(data[3])))
             .forEach(level -> LEVELS.put(level.getLevel(), level));
 
         final HashMap<Integer,Level> addedLevels = new HashMap<>();
@@ -26,29 +25,16 @@ public class Levels {
             final int l = level.getLevel();
             final int neededXp = level.getNeededXP();
             final ChatColor color = level.getLevelColor();
-
-            int totalXp = level.getNeededXP();
+            int totalXp = level.getTotalXp();
             for (int i = 1; i < 10; i++){
                 final int nextLevel = l + i;
-                //if (LEVELS.containsKey(nextLevel)) continue;
+                if (LEVELS.containsKey(nextLevel)) continue;
                 totalXp += neededXp;
-                addedLevels.put(nextLevel, new Level(nextLevel, neededXp, neededXp * nextLevel, color));
+                addedLevels.put(nextLevel, new Level(nextLevel, neededXp, totalXp, color));
             }
         }
         LEVELS.putAll(addedLevels);
     }
-
-/*    public static int getPlayerLevel(int playerLevel) {
-        if (LEVELS.containsKey(playerLevel)) {
-            final Level level = LEVELS.get(playerLevel);
-            return level.getLevel();
-        }
-        if (LEVELS.containsKey(LEVELS.size() - 1)) {
-            final int maxLevel = LEVELS.get(LEVELS.size() - 1).getLevel();
-            return maxLevel;
-        }
-        return 0;
-    }*/
 
     public static int getPlayerLevel(PitPlayer player) {
         final List<Integer> requirements = LEVELS.values().stream().map(Level::getTotalXp)
