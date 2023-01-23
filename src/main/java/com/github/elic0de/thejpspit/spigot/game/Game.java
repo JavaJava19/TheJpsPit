@@ -30,8 +30,8 @@ public class Game {
     }
 
     public void leave(PitPlayer player) {
-        pit.getDatabase().updateUserData(player);
         pitPlayers.remove(player);
+        pit.getDatabase().updateUserData(player);
     }
 
     public void death(PitPlayer player) {
@@ -63,8 +63,10 @@ public class Game {
                 .replaceAll("%vitim%", player.getName())
                 .replaceAll("%streaks%", streaks + "")
             );
-            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(killer, BigDecimal.valueOf(50)));
-            killer.sendMessage(50 + "JP+");
+            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> {
+                economyHook.giveMoney(killer, BigDecimal.valueOf(50));
+                killer.sendMessage(50 + "JP+");
+            });
         }
 
         player.increaseDeaths();
