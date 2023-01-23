@@ -2,7 +2,6 @@ package com.github.elic0de.thejpspit.item;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.item.items.*;
-import com.github.elic0de.thejpspit.spigot.item.items.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
