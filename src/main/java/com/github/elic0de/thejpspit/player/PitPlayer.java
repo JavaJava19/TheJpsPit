@@ -244,7 +244,10 @@ public class PitPlayer {
     public void increaseStreaks() {
         this.streaks ++;
 
-        if (streaks % 5 == 0) TheJpsPit.getInstance().getGame().streakBroadcast(player.getName() + "&aが連続で&c" + streaks + "&aキルしています！" );
+        if (streaks % 5 == 0) {
+            TheJpsPit.getInstance().getCosmeticManager().onStreak(this);
+            TheJpsPit.getInstance().getGame().streakBroadcast(player.getName() + "&aが連続で&c" + streaks + "&aキルしています！" );
+        }
 
         if (bestStreaks < streaks) {
             this.bestStreaks = streaks;

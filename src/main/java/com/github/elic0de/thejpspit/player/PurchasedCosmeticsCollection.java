@@ -3,11 +3,18 @@ package com.github.elic0de.thejpspit.player;
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.cosmetics.AbstractCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.Cosmetic;
+import com.github.elic0de.thejpspit.cosmetics.type.AuraCosmetic;
+import com.github.elic0de.thejpspit.cosmetics.type.DeathCosmetic;
+import com.github.elic0de.thejpspit.cosmetics.type.KillCosmetic;
+import com.github.elic0de.thejpspit.cosmetics.type.StreakCosmetic;
+import com.github.elic0de.thejpspit.cosmetics.type.TrailCosmetic;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,18 +30,29 @@ public class PurchasedCosmeticsCollection {
 
     @Expose
     @SerializedName("selected_id")
-    private String selectedCosmeticId = "";
+    private Map<String, String> selectedCosmeticId = new HashMap<>();
 
+
+
+    // todo:もっといいやりかたがあるはずなので教えてください
     public void selectCosmetic(AbstractCosmetic cosmetic) {
-        this.selectedCosmeticId = cosmetic.getId();
+        final String key = getKey(cosmetic);
+        if (key == null) return;
+        this.selectedCosmeticId.put(key, cosmetic.getId());
     }
 
-    public void unSelectCosmetic() {
-        this.selectedCosmeticId = "";
+    public void unSelectCosmetic(AbstractCosmetic cosmetic) {
+        final String key = getKey(cosmetic);
+        selectedCosmeticId.put(key, "");
+        //this.selectedCosmeticId.containsValue()
     }
 
     public boolean isSelectedCosmetic(AbstractCosmetic cosmetic) {
-        return this.selectedCosmeticId.equals(cosmetic.getId());
+        final String key = getKey(cosmetic);
+        if (key == null) return false;
+        if (selectedCosmeticId.containsKey(key))
+            return this.selectedCosmeticId.get(key) == cosmetic.getId();
+        return false;
     }
 
     public boolean canBuy(PitPlayer pitPlayer, AbstractCosmetic cosmetic){
@@ -52,4 +70,14 @@ public class PurchasedCosmeticsCollection {
         return cosmeticsId.contains(cosmetic.getId());
     }
 
+
+    private String getKey(AbstractCosmetic cosmetic) {
+        String key = null;
+        if (cosmetic instanceof KillCosmetic) key = "kill";
+        if (cosmetic instanceof DeathCosmetic) key = "death";
+        if (cosmetic instanceof StreakCosmetic) key = "streak";
+        if (cosmetic instanceof TrailCosmetic) key = "trail";
+        if (cosmetic instanceof AuraCosmetic) key = "aura";
+        return key;
+    }
 }

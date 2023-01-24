@@ -26,6 +26,7 @@ public class GameTask {
             @Override
             public void run() {
                 pit.getGame().getScoreboard().update();
+
                 /*repeats.getAndIncrement();
                 if (repeats.get() >= 5) {
                     pit.getGame().getPitPlayers().forEach(PitPlayer::increaseHealth);
@@ -33,6 +34,7 @@ public class GameTask {
                 }*/
                 // TODO クラス分ける
                 for (PitPlayer pitPlayer : pit.getGame().getPitPlayers()) {
+                    TheJpsPit.getInstance().getCosmeticManager().onAura(pitPlayer);
                     final long streaks = pitPlayer.getStreaks();
                     if (streaks < 5) continue;
                     final Player player = pitPlayer.getPlayer();

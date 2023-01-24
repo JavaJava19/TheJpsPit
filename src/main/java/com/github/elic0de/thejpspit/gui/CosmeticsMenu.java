@@ -81,7 +81,7 @@ public class CosmeticsMenu {
                     final PurchasedCosmeticsCollection cosmeticsCollection = preferences.getCosmeticsCollection();
                     if (hasCosmetic.get()) {
                         if (isSelected.get()) {
-                            cosmeticsCollection.unSelectCosmetic();
+                            cosmeticsCollection.unSelectCosmetic(cosmetic);
                             return;
                         }
                         cosmeticsCollection.selectCosmetic(cosmetic);
