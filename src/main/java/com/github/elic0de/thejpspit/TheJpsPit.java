@@ -7,33 +7,27 @@ import com.github.elic0de.thejpspit.command.PitCommand;
 import com.github.elic0de.thejpspit.command.SpawnCommand;
 import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.config.Settings;
+import com.github.elic0de.thejpspit.cosmetics.CosmeticManager;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
-import com.github.elic0de.thejpspit.hook.PlaceholderHook;
-import com.github.elic0de.thejpspit.leveler.Levels;
-import com.github.elic0de.thejpspit.listener.CombatTagger;
-import com.github.elic0de.thejpspit.player.PitPlayer;
-import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.hook.Hook;
+import com.github.elic0de.thejpspit.hook.PlaceholderHook;
 import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.item.ItemManager;
+import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.BlockPlaceListener;
+import com.github.elic0de.thejpspit.listener.CombatTagger;
 import com.github.elic0de.thejpspit.listener.EventListener;
+import com.github.elic0de.thejpspit.player.PitPlayer;
+import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.util.KillAssistHelper;
 import com.github.elic0de.thejpspit.util.KillRatingHelper;
 import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
 import com.github.elic0de.thejpspit.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.clip.placeholderapi.configuration.PlaceholderAPIConfig;
-import net.william278.annotaml.Annotaml;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +36,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
+import net.william278.annotaml.Annotaml;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheJpsPit extends JavaPlugin {
 
@@ -55,6 +54,8 @@ public final class TheJpsPit extends JavaPlugin {
     private List<Hook> hooks = new ArrayList<>();
 
     private Optional<PitPreferences> pitPreferences;
+
+    private CosmeticManager cosmeticManager;
 
     public static TheJpsPit getInstance() {
         return instance;
@@ -100,6 +101,7 @@ public final class TheJpsPit extends JavaPlugin {
                     "Please check the supplied database credentials in the config file");
         }
 
+        cosmeticManager = new CosmeticManager();
         assistKillHelper = new KillAssistHelper();
         ratingHelper = new KillRatingHelper(0);
 
@@ -112,13 +114,13 @@ public final class TheJpsPit extends JavaPlugin {
 
         loadHooks();
 
+        ItemManager.createItems();
+        createNPCs();
+
         Bukkit.getWorlds().forEach(world -> {
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
-
-        ItemManager.createItems();
-        createNPCs();
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             final Optional<PitPlayer> userData = database.getPitPlayer(player);
@@ -264,6 +266,9 @@ public final class TheJpsPit extends JavaPlugin {
         return pitPreferences;
     }
 
+    public CosmeticManager getCosmeticManager() {
+        return cosmeticManager;
+    }
 
     public Gson getGson() {
         return Converters.registerOffsetDateTime(new GsonBuilder().excludeFieldsWithoutExposeAnnotation()).create();

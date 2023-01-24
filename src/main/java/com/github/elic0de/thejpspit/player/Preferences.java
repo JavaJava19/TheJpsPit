@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.player;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class Preferences {
 
@@ -17,14 +18,23 @@ public class Preferences {
     @SerializedName("streaks_message")
     private boolean streaksMessage;
 
+    @Expose
+    @SerializedName("cosmeticsCollection")
+    private final PurchasedCosmeticsCollection cosmeticsCollection;
+
     public Preferences() {
         this.killMessage = true;
         this.deathMessage = true;
         this.streaksMessage = true;
+        this.cosmeticsCollection = new PurchasedCosmeticsCollection();
     }
 
     public static Preferences getDefaults() {
         return new Preferences();
+    }
+
+    public PurchasedCosmeticsCollection getCosmeticsCollection() {
+        return cosmeticsCollection;
     }
 
     public boolean isKillMessage() {

@@ -99,6 +99,7 @@ public class Game {
                 );
             }
         });
+        pit.getCosmeticManager().onProcess(player);
 
         player.setLastDamager(null);
         pit.getDatabase().updateUserData(player);
