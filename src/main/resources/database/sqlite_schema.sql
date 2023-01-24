@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `%players_table%`
     `rating`            integer     NOT NULL DEFAULT 0,
     `bestRating`        integer     NOT NULL DEFAULT 0,
     `xp`                integer     NOT NULL DEFAULT 0,
+    `preferences`       longblob    NOT NULL,
 
     PRIMARY KEY (`uuid`)
 );

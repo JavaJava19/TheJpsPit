@@ -145,10 +145,5 @@
             <version>2.0.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>xyz.xenondevs</groupId>
-            <artifactId>particle</artifactId>
-            <version>1.8.1</version>
-        </dependency>
     </dependencies>
 </project>
