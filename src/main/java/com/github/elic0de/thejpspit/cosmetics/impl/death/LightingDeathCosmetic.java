@@ -7,7 +7,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import org.bukkit.Material;
 
 // todo:多分 typoみす
-@CosmeticData(id = "light", name = "雷", description = "うるさい", icon = Material.WATER, coin = 50)
+@CosmeticData(id = "light", name = "雷", description = "うるさい", icon = Material.ARROW, coin = 50)
 public class LightingDeathCosmetic extends Cosmetic implements DeathCosmetic {
 
     @Override
