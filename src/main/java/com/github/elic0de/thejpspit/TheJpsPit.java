@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit;
 
 import co.aikar.commands.PaperCommandManager;
 import com.fatboyindustrial.gsonjavatime.Converters;
+import com.github.elic0de.thejpspit.command.PitChatCommand;
 import com.github.elic0de.thejpspit.command.PitCommand;
 import com.github.elic0de.thejpspit.command.SpawnCommand;
 import com.github.elic0de.thejpspit.config.PitPreferences;
@@ -134,7 +135,6 @@ public final class TheJpsPit extends JavaPlugin {
             if (updateNeeded) {
                 database.updateUserData(pitPlayer);
             }
-
         });
     }
 
@@ -169,6 +169,7 @@ public final class TheJpsPit extends JavaPlugin {
 
         commandManager.registerCommand(new PitCommand());
         commandManager.registerCommand(new SpawnCommand());
+        commandManager.registerCommand(new PitChatCommand());
     }
 
     private void registerListener() {

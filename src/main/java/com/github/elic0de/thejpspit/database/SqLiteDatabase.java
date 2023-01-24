@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
+import com.github.elic0de.thejpspit.player.Preferences;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,7 +142,7 @@ public class SqLiteDatabase extends Database {
     public Optional<PitPlayer> getPitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
             formatStatementTables("""
-                    SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`
+                    SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`, `preferences`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
 
@@ -149,6 +150,7 @@ public class SqLiteDatabase extends Database {
 
             final ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                final String preferences = new String(resultSet.getBytes("preferences"), StandardCharsets.UTF_8);
                 return Optional.of(new PitPlayer(Bukkit.getPlayer(uuid),
                     resultSet.getLong("kills"),
                     resultSet.getLong("streaks"),
@@ -156,7 +158,8 @@ public class SqLiteDatabase extends Database {
                     resultSet.getLong("deaths"),
                     resultSet.getDouble("rating"),
                     resultSet.getDouble("bestRating"),
-                    resultSet.getDouble("xp")
+                    resultSet.getDouble("xp"),
+                    Optional.of(plugin.getGson().fromJson(preferences, Preferences.class))
                 ));
             }
         } catch (SQLException e) {
@@ -247,11 +250,12 @@ public class SqLiteDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 formatStatementTables("""
-                                    INSERT INTO `%players_table%` (`uuid`,`username`)
-                                    VALUES (?,?);"""))) {
+                                    INSERT INTO `%players_table%` (`uuid`,`username`,`preferences`)
+                                    VALUES (?,?,?);"""))) {
 
                 statement.setString(1, player.getUniqueId().toString());
                 statement.setString(2, player.getName());
+                statement.setBytes(3, plugin.getGson().toJson(Preferences.getDefaults()).getBytes(StandardCharsets.UTF_8));
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -283,7 +287,7 @@ public class SqLiteDatabase extends Database {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 formatStatementTables("""
                     UPDATE `%players_table%`
-                    SET `kills`=?, `streaks`=?, `bestStreaks`=?, `deaths`=?, `rating`=?, `bestRating`=?, `xp`=?
+                    SET `kills`=?, `streaks`=?, `bestStreaks`=?, `deaths`=?, `rating`=?, `bestRating`=?, `xp`=?, `preferences`=?
                     WHERE `uuid`=?"""))) {
 
                 statement.setLong(1, player.getKills());
@@ -293,7 +297,8 @@ public class SqLiteDatabase extends Database {
                 statement.setDouble(5, player.getRating());
                 statement.setDouble(6, player.getBestRating());
                 statement.setDouble(7, player.getXp());
-                statement.setString(8, player.getUniqueId().toString());
+                statement.setBytes(8, plugin.getGson().toJson(player.getPreferences().get()).getBytes(StandardCharsets.UTF_8));
+                statement.setString(9, player.getUniqueId().toString());
                 statement.executeUpdate();
             }
 

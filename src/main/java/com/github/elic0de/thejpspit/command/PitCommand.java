@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.gui.PitChatMenu;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.item.PitItemEntry;
 import com.github.elic0de.thejpspit.player.PitPlayer;

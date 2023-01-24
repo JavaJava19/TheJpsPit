@@ -59,7 +59,7 @@ public class Game {
         final long streaks = player.getStreaks();
 
         if (streaks > 4) {
-            broadcast("&c【PIT】&a%killer%&7が&c%vitim%の&c%streaks%ストリーク&7を止めました！"
+            streakBroadcast("&c【PIT】&a%killer%&7が&c%vitim%の&c%streaks%ストリーク&7を止めました！"
                 .replaceAll("%killer%", killer.getName())
                 .replaceAll("%vitim%", player.getName())
                 .replaceAll("%streaks%", streaks + "")
@@ -83,22 +83,34 @@ public class Game {
 
         pit.getAssistKillHelper().death(player);
 
-        player.sendMessage("&c【PIT】%player%に倒されました(KDレート:%rating%)"
-            .replaceAll("%player%", killer.getName())
-            .replaceAll("%rating%", killer.getRating() + "%")
-        );
-        killer.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
-            .replaceAll("%player%", player.getName())
-            .replaceAll("%rating%", player.getRating() + "%")
-        );
+        player.getPreferences().ifPresent(preferences -> {
+            if (preferences.isDeathMessage()) {
+                player.sendMessage("&c【PIT】%player%に倒されました(KDレート:%rating%)"
+                    .replaceAll("%player%", killer.getName())
+                    .replaceAll("%rating%", killer.getRating() + "%")
+                );
+            }
+        });
+        killer.getPreferences().ifPresent(preferences -> {
+            if (preferences.isKillMessage()) {
+                killer.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
+                    .replaceAll("%player%", player.getName())
+                    .replaceAll("%rating%", player.getRating() + "%")
+                );
+            }
+        });
 
         player.setLastDamager(null);
         pit.getDatabase().updateUserData(player);
     }
 
-    public void broadcast(String message) {
+    public void streakBroadcast(String message) {
         for (PitPlayer pitPlayer : getPitPlayers()) {
-            pitPlayer.sendMessage(message);
+            pitPlayer.getPreferences().ifPresent(preferences -> {
+                if (preferences.isStreaksMessage()) {
+                    pitPlayer.sendMessage(message);
+                }
+            });
         }
     }
 

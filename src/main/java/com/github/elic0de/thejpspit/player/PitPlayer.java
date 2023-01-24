@@ -1,5 +1,6 @@
 package com.github.elic0de.thejpspit.player;
 
+import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.TheJpsPit;
@@ -7,6 +8,7 @@ import com.github.elic0de.thejpspit.util.ShowHealth;
 import de.themoep.minedown.MineDown;
 import fr.mrmicky.fastboard.FastBoard;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.bukkit.ChatColor;
@@ -45,6 +47,8 @@ public class PitPlayer {
     private final FastBoard board;
     private PitPlayer lastDamager;
 
+    private Optional<Preferences> preferences;
+
     public PitPlayer(Player player) {
         this.player = player;
         this.name = player.getName();
@@ -59,9 +63,10 @@ public class PitPlayer {
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
         this.level = Levels.getPlayerLevel(this);
+        this.preferences = Optional.of(Preferences.getDefaults());
     }
 
-    public PitPlayer(Player player, long kills, long streaks, long bestStreaks, long deaths, double rating, double bestRating, double xp) {
+    public PitPlayer(Player player, long kills, long streaks, long bestStreaks, long deaths, double rating, double bestRating, double xp, Optional<Preferences> preferences) {
         this.player = player;
         this.name = player.getName();
         this.uuid = player.getUniqueId();
@@ -75,6 +80,7 @@ public class PitPlayer {
         this.board = new FastBoard(player);
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
         this.level = Levels.getPlayerLevel(this);
+        this.preferences = preferences;
     }
 
     public void addItem() {
@@ -101,9 +107,7 @@ public class PitPlayer {
 
         inventory.addItem(new ItemStack(Material.GOLDEN_APPLE));
         player.updateInventory();
-        TheJpsPit.getInstance().getPitPreferences().ifPresent(pitPreferences -> {
-            TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, BigDecimal.valueOf(pitPreferences.getAmountReward())));
-        });
+        TheJpsPit.getInstance().getPitPreferences().ifPresent(pitPreferences -> TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, BigDecimal.valueOf(pitPreferences.getAmountReward()))));
     }
 
     public void showHealth(PitPlayer targetPit) {
@@ -229,6 +233,10 @@ public class PitPlayer {
         return board;
     }
 
+    public Optional<Preferences> getPreferences() {
+        return preferences;
+    }
+
     public void increaseKills() {
         this.kills++;
     }
@@ -236,7 +244,7 @@ public class PitPlayer {
     public void increaseStreaks() {
         this.streaks ++;
 
-        if (streaks % 5 == 0) TheJpsPit.getInstance().getGame().broadcast(player.getName() + "&aが連続で&c" + streaks + "&aキルしています！" );
+        if (streaks % 5 == 0) TheJpsPit.getInstance().getGame().streakBroadcast(player.getName() + "&aが連続で&c" + streaks + "&aキルしています！" );
 
         if (bestStreaks < streaks) {
             this.bestStreaks = streaks;
@@ -248,16 +256,8 @@ public class PitPlayer {
 
     public void increaseXP() {
         this.xp++;
-
         // レベルアップ
-        if (Levels.getPlayerNeededXP(level, (int) xp) == 0) {
-            final int nextLevel = level + 1;
-            final int previousLevel = this.level;
-            this.level = nextLevel;
-            player.sendTitle("§b§lLEVEL UP!", previousLevel + " → " + nextLevel, 20,40, 20);
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
-            updateDisplayName();
-        }
+        if (Levels.getPlayerNeededXP(level, (int) xp) == 0) levelUp();
         updateXpBar();
     }
 
@@ -267,5 +267,14 @@ public class PitPlayer {
 
     public void resetStreaks() {
         streaks = 0;
+    }
+
+    public void levelUp() {
+        final int nextLevel = level + 1;
+        final int previousLevel = this.level;
+        this.level = nextLevel;
+        player.sendTitle("§b§lLEVEL UP!", previousLevel + " → " + nextLevel, 20,40, 20);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        updateDisplayName();
     }
 }
