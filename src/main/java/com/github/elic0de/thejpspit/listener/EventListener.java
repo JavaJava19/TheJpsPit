@@ -187,7 +187,6 @@ public class EventListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onXpGain(PlayerExpChangeEvent event) {
         event.setAmount(0);
