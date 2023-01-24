@@ -100,7 +100,7 @@ public class Game {
                 );
             }
         });
-        pit.getCosmeticManager().onKill(killer);
+        pit.getCosmeticManager().onKill(killer, player);
         pit.getCosmeticManager().onDeath(player);
 
         player.setLastDamager(null);

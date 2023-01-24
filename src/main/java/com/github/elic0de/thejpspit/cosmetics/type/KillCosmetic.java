@@ -5,6 +5,6 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 
 public interface KillCosmetic extends AbstractCosmetic {
 
-    default void onKill(PitPlayer player) {
+    default void onKill(PitPlayer player, PitPlayer target) {
     }
 }

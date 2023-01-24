@@ -8,17 +8,18 @@ import org.bukkit.Material;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
-@CosmeticData(id = "Fire", name = "ファイやー", description = "足元が焦げて..", slot = 'F', icon = Material.BLACK_BANNER, coin = 50)
-public class FireCosmetic extends Cosmetic implements KillCosmetic {
+@CosmeticData(id = "bloodkill", name = "あか", description = "あかかかかｋ", icon = Material.RED_DYE, coin = 50)
+public class BloodKillCosmetic extends Cosmetic implements KillCosmetic {
 
     @Override
     public void onKill(PitPlayer player, PitPlayer target) {
         if (canExecute(player)) {
-            new ParticleBuilder(ParticleEffect.FLAME, target.getPlayer().getLocation())
-                .setAmount(10)
+            new ParticleBuilder(ParticleEffect.REDSTONE, target.getPlayer().getLocation())
+                .setAmount(15)
                 .setOffsetY(1f)
                 .setSpeed(0.1f)
                 .display();
         }
     }
 }
+

@@ -2,6 +2,7 @@ package com.github.elic0de.thejpspit.cosmetics;
 
 import com.github.elic0de.thejpspit.cosmetics.impl.death.BloodDeathCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.impl.death.CatCosmetic;
+import com.github.elic0de.thejpspit.cosmetics.impl.kill.BloodKillCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.impl.kill.FireCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.DeathCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.KillCosmetic;
@@ -19,6 +20,7 @@ public class CosmeticManager {
     public CosmeticManager() {
         killCosmetics = new ImmutableClassToInstanceMap.Builder<KillCosmetic>()
             .put(FireCosmetic.class, new FireCosmetic())
+            .put(BloodKillCosmetic.class, new BloodKillCosmetic())
             .build();
 
         deathCosmetics = new ImmutableClassToInstanceMap.Builder<DeathCosmetic>()
@@ -32,9 +34,9 @@ public class CosmeticManager {
             .build();
     }
 
-    public void onKill(PitPlayer player) {
+    public void onKill(PitPlayer player, PitPlayer target) {
         for (KillCosmetic cosmetic : killCosmetics.values()) {
-            cosmetic.onKill(player);
+            cosmetic.onKill(player, target);
         }
     }
 
