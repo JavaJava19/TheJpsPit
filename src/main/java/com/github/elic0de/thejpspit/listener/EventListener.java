@@ -183,8 +183,9 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void on(PlayerInteractEvent event) {
+        // todo:debug mode 追加する
         /*final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(event.getPlayer());
-        pitPlayer.increaseXP();*/
+        pitPlayer.increaseKills();*/
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
