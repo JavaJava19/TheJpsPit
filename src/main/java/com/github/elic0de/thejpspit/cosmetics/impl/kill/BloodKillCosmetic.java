@@ -22,4 +22,3 @@ public class BloodKillCosmetic extends Cosmetic implements KillCosmetic {
         }
     }
 }
-
