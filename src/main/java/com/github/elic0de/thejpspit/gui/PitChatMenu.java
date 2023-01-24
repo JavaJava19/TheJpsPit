@@ -86,44 +86,6 @@ public class PitChatMenu {
         );
     }
 
-    private DynamicGuiElement getItemElement(PitItemEntry pitItemEntry) {
-        return new DynamicGuiElement(pitItemEntry.getSlotChar(), (viewer) -> {
-            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer((Player) viewer);
-            return new StaticGuiElement(pitItemEntry.getSlotChar(), pitItemEntry.getItemStack(), click -> {
-                if (click.getType() == ClickType.DOUBLE_CLICK) return true;
-                if (TheJpsPit.getInstance().getEconomyHook().isEmpty()) {
-                    TheJpsPit.getInstance().getLogger().warning("経済プラグインが見つかりませんでした");
-                    return true;
-                }
-
-                final Player player = pitPlayer.getPlayer();
-                final Inventory inventory = player.getInventory();
-                final EconomyHook economyHook = TheJpsPit.getInstance().getEconomyHook().get();
-
-                if (!economyHook.hasMoney(pitPlayer, BigDecimal.valueOf(pitItemEntry.getPrice()))) {
-                    pitPlayer.sendMessage("&c【PIT】所持金が足りません！");
-                    return true;
-                }
-
-                if (inventory.firstEmpty() == -1) {
-                    pitPlayer.sendMessage("&c【PIT】インベントリが満杯で購入できません！");
-                    return true;
-                }
-
-                if (pitPlayer.getLevel() < pitItemEntry.getRequiredLevel()) {
-                    pitPlayer.sendMessage("&c【PIT】レベルが足りません！");
-                    return true;
-                }
-
-                economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(pitItemEntry.getPrice()));
-                inventory.addItem(pitItemEntry.getItemStack());
-                player.updateInventory();
-
-                return true;
-            }, pitItemEntry.getLore());
-        });
-    }
-
     public static PitChatMenu create(TheJpsPit plugin, String title) {
         return new PitChatMenu(plugin, title);
     }
