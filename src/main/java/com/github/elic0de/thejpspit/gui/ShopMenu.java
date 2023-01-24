@@ -23,7 +23,7 @@ public class ShopMenu {
             "         ",
             " SCBofLc ",
             " tvueG   ",
-            "     s   "
+            "    s    "
     };
 
     private final InventoryGui menu;
