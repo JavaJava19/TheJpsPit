@@ -61,5 +61,6 @@ public class ItemManager {
         register(new ItemUltimateSword());
         register(new ItemLavaBucket());
         register(new ItemEnderPearl());
+        register(new ItemEnchantedGoldenApple());
     }
 }

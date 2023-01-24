@@ -20,7 +20,7 @@ public class ShopMenu {
     private static final String[] MENU_LAYOUT = {
             "         ",
             " SCBofLc ",
-            " tvue    ",
+            " tvueG   ",
             "         "
     };
 

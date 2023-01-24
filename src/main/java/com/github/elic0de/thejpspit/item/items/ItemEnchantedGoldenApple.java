@@ -1,20 +1,19 @@
 package com.github.elic0de.thejpspit.item.items;
 
 import com.github.elic0de.thejpspit.item.PitItemEntry;
-import com.github.elic0de.thejpspit.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemFishingRod extends PitItemEntry {
+public class ItemEnchantedGoldenApple extends PitItemEntry {
 
     @Override
     public String getId() {
-        return "fishing_rod";
+        return "enchanted_golden_apple";
     }
 
     @Override
     public ItemStack getRawItemStack() {
-        return ItemUtil.withUnbreakable(new ItemStack(Material.FISHING_ROD));
+        return new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
     }
 
     @Override
@@ -24,16 +23,16 @@ public class ItemFishingRod extends PitItemEntry {
 
     @Override
     public int getRequiredLevel() {
-        return 5;
+        return 0;
     }
 
     @Override
     public String getName() {
-        return "§a釣り竿";
+        return "上位金りんご";
     }
 
     @Override
     public char getSlotChar() {
-        return 'f';
+        return 'G';
     }
 }
