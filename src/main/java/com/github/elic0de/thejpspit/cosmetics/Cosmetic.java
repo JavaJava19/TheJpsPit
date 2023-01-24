@@ -2,15 +2,15 @@ package com.github.elic0de.thejpspit.cosmetics;
 
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.bukkit.Material;
 
 public class Cosmetic implements AbstractCosmetic {
 
-
     private String cosmeticId;
     private String cosmeticName;
-
     private String cosmeticDescription;
-
+    private Character slot;
+    private Material material;
     private double coin;
 
     public Cosmetic() {
@@ -21,6 +21,8 @@ public class Cosmetic implements AbstractCosmetic {
             this.cosmeticId = cosmeticData.id();
             this.cosmeticName = cosmeticData.name();
             this.cosmeticDescription = cosmeticData.description();
+            this.slot = cosmeticData.slot();
+            this.material = cosmeticData.icon();
             this.coin = cosmeticData.coin();
         }
     }
@@ -42,6 +44,14 @@ public class Cosmetic implements AbstractCosmetic {
 
     public String getDescription() {
         return cosmeticDescription;
+    }
+
+    public Character getSlot() {
+        return slot;
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 
     public double getCoin() {

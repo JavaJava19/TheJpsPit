@@ -1,5 +1,7 @@
 package com.github.elic0de.thejpspit.cosmetics;
 
+import org.bukkit.Material;
+
 public interface AbstractCosmetic {
 
     // todo: slot charの追加, material
@@ -8,6 +10,10 @@ public interface AbstractCosmetic {
     String getName();
 
     String getDescription();
+
+    Character getSlot();
+
+    Material getMaterial();
 
     double getCoin();
 }

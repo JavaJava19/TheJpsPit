@@ -1,6 +1,7 @@
 package com.github.elic0de.thejpspit.player;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.cosmetics.AbstractCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.Cosmetic;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.google.gson.annotations.Expose;
@@ -24,7 +25,7 @@ public class PurchasedCosmeticsCollection {
     @SerializedName("selected_id")
     private String selectedCosmeticId = "";
 
-    public void selectCosmetic(Cosmetic cosmetic) {
+    public void selectCosmetic(AbstractCosmetic cosmetic) {
         this.selectedCosmeticId = cosmetic.getId();
     }
 
@@ -32,22 +33,22 @@ public class PurchasedCosmeticsCollection {
         this.selectedCosmeticId = "";
     }
 
-    public boolean isSelectedCosmetic(Cosmetic cosmetic) {
+    public boolean isSelectedCosmetic(AbstractCosmetic cosmetic) {
         return this.selectedCosmeticId.equals(cosmetic.getId());
     }
 
-    public boolean canBuy(PitPlayer pitPlayer, Cosmetic cosmetic){
+    public boolean canBuy(PitPlayer pitPlayer, AbstractCosmetic cosmetic){
         final AtomicBoolean canBuy = new AtomicBoolean(false);
         economyHook.ifPresent(economyHook -> canBuy.set(economyHook.hasMoney(pitPlayer, BigDecimal.valueOf(cosmetic.getCoin()))));
         return canBuy.get();
     }
 
-    public void buy(PitPlayer pitPlayer, Cosmetic cosmetic){
+    public void buy(PitPlayer pitPlayer, AbstractCosmetic cosmetic){
         economyHook.ifPresent(economyHook -> economyHook.takeMoney(pitPlayer, BigDecimal.valueOf(cosmetic.getCoin())));
         cosmeticsId.add(cosmetic.getId());
     }
 
-    public boolean has(Cosmetic cosmetic){
+    public boolean has(AbstractCosmetic cosmetic){
         return cosmeticsId.contains(cosmetic.getId());
     }
 

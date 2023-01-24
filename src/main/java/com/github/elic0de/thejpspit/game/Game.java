@@ -51,8 +51,9 @@ public class Game {
             player.resetStreaks();
 
             pit.getRatingHelper().initRating(player);
-
+            pit.getCosmeticManager().onDeath(player);
             player.sendMessage("&c【PIT】死亡しました");
+
             return;
         }
 
@@ -99,7 +100,8 @@ public class Game {
                 );
             }
         });
-        pit.getCosmeticManager().onProcess(player);
+        pit.getCosmeticManager().onKill(killer);
+        pit.getCosmeticManager().onDeath(player);
 
         player.setLastDamager(null);
         pit.getDatabase().updateUserData(player);
