@@ -27,7 +27,7 @@ public class Cosmetic implements AbstractCosmetic {
 
     public final boolean canExecute(PitPlayer player) {
         final AtomicBoolean canExecute = new AtomicBoolean(false);
-        player.getPreferences().ifPresent(preferences -> canExecute.set(preferences.getCosmeticsCollection().isSelectedCosmetic(cosmeticId)));
+        player.getPreferences().ifPresent(preferences -> canExecute.set(preferences.getCosmeticsCollection().isSelectedCosmetic(this)));
 
         return canExecute.get();
     }

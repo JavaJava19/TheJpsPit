@@ -24,8 +24,16 @@ public class PurchasedCosmeticsCollection {
     @SerializedName("selected_id")
     private String selectedCosmeticId = "";
 
-    public boolean isSelectedCosmetic(String cosmeticId) {
-        return this.selectedCosmeticId.equals(cosmeticId);
+    public void selectCosmetic(Cosmetic cosmetic) {
+        this.selectedCosmeticId = cosmetic.getId();
+    }
+
+    public void unSelectCosmetic() {
+        this.selectedCosmeticId = "";
+    }
+
+    public boolean isSelectedCosmetic(Cosmetic cosmetic) {
+        return this.selectedCosmeticId.equals(cosmetic.getId());
     }
 
     public boolean canBuy(PitPlayer pitPlayer, Cosmetic cosmetic){

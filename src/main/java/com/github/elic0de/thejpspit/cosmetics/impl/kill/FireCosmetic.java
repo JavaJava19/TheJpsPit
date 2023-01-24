@@ -7,7 +7,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
-@CosmeticData(id = "Fire", name = "ファイやー", coin = 50)
+@CosmeticData(id = "Fire", name = "ファイやー", description = "足元が焦げて..", coin = 50)
 public class FireCosmetic extends Cosmetic implements KillCosmetic {
 
     @Override
