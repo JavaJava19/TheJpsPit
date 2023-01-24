@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,6 +30,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -175,6 +177,16 @@ public class EventListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onProjectileShoot(ProjectileLaunchEvent event) {
+        Projectile target = event.getEntity();
+        if (target.getShooter() instanceof Player player) {
+            final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
+            TheJpsPit.getInstance().getCosmeticManager().onTrail(pitPlayer, target);
+        }
+    }
+
 
     @EventHandler
     public void onXpGain(PlayerExpChangeEvent event) {
