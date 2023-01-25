@@ -30,7 +30,7 @@ public class Settings {
     private int mySqlPort = 3306;
 
     @YamlKey("database.mysql.credentials.database")
-    private String mySqlDatabase = "HuskTowns";
+    private String mySqlDatabase = "Pit";
 
     @YamlKey("database.mysql.credentials.username")
     private String mySqlUsername = "root";
