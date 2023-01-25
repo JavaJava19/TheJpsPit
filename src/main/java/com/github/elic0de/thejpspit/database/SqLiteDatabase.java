@@ -7,7 +7,6 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.Preferences;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -30,11 +28,6 @@ public class SqLiteDatabase extends Database {
     private final File databaseFile;
     private Connection connection;
 
-    public SqLiteDatabase(TheJpsPit implementor) {
-        super(implementor);
-        this.databaseFile = new File(implementor.getDataFolder(), DATABASE_FILE_NAME);
-    }
-
     private Connection getConnection() throws SQLException {
         if (connection == null) {
             setConnection();
@@ -48,7 +41,7 @@ public class SqLiteDatabase extends Database {
         try {
             // Ensure that the database file exists
             if (databaseFile.createNewFile()) {
-                getLogger().log(Level.INFO, "Created the SQLite database file");
+                Bukkit.getLogger().log(Level.INFO, "Created the SQLite database file");
             }
 
             // Specify use of the JDBC SQLite driver
@@ -61,77 +54,40 @@ public class SqLiteDatabase extends Database {
             config.setSynchronous(SQLiteConfig.SynchronousMode.FULL);
 
             // Establish the connection
-            connection = DriverManager.getConnection(
-                "jdbc:sqlite:" + databaseFile.getAbsolutePath(),
-                config.toProperties());
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseFile.getAbsolutePath(), config.toProperties());
         } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "An exception occurred creating the database file", e);
+            Bukkit.getLogger().log(Level.SEVERE, "An exception occurred creating the database file", e);
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
-                "An SQL exception occurred initializing the SQLite database",
-                e);
+            Bukkit.getLogger().log(Level.SEVERE, "An SQL exception occurred initializing the SQLite database", e);
         } catch (ClassNotFoundException e) {
-            getLogger().log(Level.SEVERE, "Failed to load the necessary SQLite driver", e);
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to load the necessary SQLite driver", e);
         }
     }
 
-    @Override
-    public boolean initialize() {
-        try {
-            // Set up the connection
-            setConnection();
+    public SqLiteDatabase(TheJpsPit plugin) {
+        super(plugin, "sqlite_schema.sql");
+        this.databaseFile = new File(plugin.getDataFolder(), DATABASE_FILE_NAME);
+    }
 
-            // Prepare database schema; make tables if they don't exist
-            try {
-                // Load database schema CREATE statements from schema file
-                final String[] databaseSchema = getSchemaStatements();
-                try (Statement statement = getConnection().createStatement()) {
-                    for (String tableCreationStatement : databaseSchema) {
-                        statement.execute(tableCreationStatement);
-                    }
-                }
-                return true;
-            } catch (SQLException | IOException e) {
-                getLogger().log(Level.SEVERE,
-                    "An error occurred creating tables on the SQLite database: ",
-                    e);
+
+
+    @Override
+    public void initialize() throws RuntimeException {
+        // Establish connection
+        this.setConnection();
+
+        // Create tables
+        try (Statement statement = getConnection().createStatement()) {
+            for (String tableCreationStatement : getSchema()) {
+                statement.execute(tableCreationStatement);
             }
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "An unhandled exception occurred during database setup!",
-                e);
+            setLoaded(true);
+        } catch (SQLException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to create SQLite database tables");
+            setLoaded(false);
         }
-        return false;
     }
 
-    @Override
-    public CompletableFuture<Void> runScript(InputStream inputStream,
-        Map<String, String> replacements) {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                final String[] scriptString;
-                scriptString = new String[]{
-                    new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)};
-                replacements.forEach(
-                    (key, value) -> scriptString[0] = scriptString[0].replaceAll(key, value));
-                final boolean autoCommit = getConnection().getAutoCommit();
-
-                // Execute batched SQLite script
-                getConnection().setAutoCommit(false);
-                try (Statement statement = getConnection().createStatement()) {
-                    for (String statementString : scriptString[0].split(";")) {
-                        statement.addBatch(statementString);
-                    }
-                    statement.executeBatch();
-                }
-                getConnection().setAutoCommit(autoCommit);
-            } catch (IOException | SQLException e) {
-                getLogger().log(Level.SEVERE,
-                    "An exception occurred running script on the SQLite database",
-                    e);
-                throw new RuntimeException(e);
-            }
-        });
-    }
 
     @Override
     public Optional<PitPlayer> getPitPlayer(Player player) {
@@ -141,7 +97,7 @@ public class SqLiteDatabase extends Database {
     @Override
     public Optional<PitPlayer> getPitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
-            formatStatementTables("""
+            format("""
                     SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`, `preferences`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
@@ -163,7 +119,7 @@ public class SqLiteDatabase extends Database {
                 ));
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to fetch a player from uuid from the database", e);
         }
         return Optional.empty();
@@ -171,7 +127,7 @@ public class SqLiteDatabase extends Database {
 
     @Override
     public Optional<PitPreferences> getPitPreferences() {
-        try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+        try (PreparedStatement statement = getConnection().prepareStatement(format("""
                 SELECT `preferences`
                 FROM `%pit_preferences%`
                 """))) {
@@ -181,7 +137,7 @@ public class SqLiteDatabase extends Database {
                 return Optional.of(plugin.getGson().fromJson(preferences, PitPreferences.class));
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE, "Failed to fetch user data from table by UUID", e);
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to fetch user data from table by UUID", e);
         }
         return Optional.empty();
     }
@@ -189,7 +145,7 @@ public class SqLiteDatabase extends Database {
     @Override
     public Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid) {
         try (PreparedStatement statement = getConnection().prepareStatement(
-            formatStatementTables("""
+            format("""
                     SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`
                     FROM `%players_table%`
                     WHERE `uuid`=?"""))) {
@@ -209,7 +165,7 @@ public class SqLiteDatabase extends Database {
                 ));
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to fetch a player from uuid from the database", e);
         }
         return Optional.empty();
@@ -228,7 +184,7 @@ public class SqLiteDatabase extends Database {
                     WHERE `uuid`=?;
                     """;
                 try (PreparedStatement statement = getConnection().prepareStatement(
-                    formatStatementTables(test.replaceAll("%type%", type.name().toLowerCase())))) {
+                    format(test.replaceAll("%type%", type.name().toLowerCase())))) {
                     statement.setString(1, player.getUniqueId().toString());
 
                     final ResultSet resultSet = statement.executeQuery();
@@ -237,7 +193,7 @@ public class SqLiteDatabase extends Database {
                     }
                 }
             } catch (SQLException e) {
-                getLogger().log(Level.SEVERE,
+                Bukkit.getLogger().log(Level.SEVERE,
                     "Failed to fetch a player from uuid from the database", e);
             }
             return Optional.empty();
@@ -249,7 +205,7 @@ public class SqLiteDatabase extends Database {
         // Insert new player data into the database
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
-                formatStatementTables("""
+                format("""
                                     INSERT INTO `%players_table%` (`uuid`,`username`,`preferences`)
                                     VALUES (?,?,?);"""))) {
 
@@ -259,7 +215,7 @@ public class SqLiteDatabase extends Database {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to insert a player into the database", e);
         }
     }
@@ -268,7 +224,7 @@ public class SqLiteDatabase extends Database {
     public void createPitPreferences(PitPreferences pitPreferences) {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
-                formatStatementTables("""
+                format("""
                                     INSERT INTO `%pit_preferences%` (`preferences`)
                                     VALUES (?);"""))) {
 
@@ -276,7 +232,7 @@ public class SqLiteDatabase extends Database {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to insert a player into the database", e);
         }
     }
@@ -285,7 +241,7 @@ public class SqLiteDatabase extends Database {
     public void updateUserData(PitPlayer player) {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
-                formatStatementTables("""
+                format("""
                     UPDATE `%players_table%`
                     SET `kills`=?, `streaks`=?, `bestStreaks`=?, `deaths`=?, `rating`=?, `bestRating`=?, `xp`=?, `preferences`=?
                     WHERE `uuid`=?"""))) {
@@ -303,7 +259,7 @@ public class SqLiteDatabase extends Database {
             }
 
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to update user data for " + player.getName() + " on the database", e);
         }
     }
@@ -312,7 +268,7 @@ public class SqLiteDatabase extends Database {
     public void updateUserData(OfflinePitPlayer player) {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
-                formatStatementTables("""
+                format("""
                     UPDATE `%players_table%`
                     SET `kills`=?, `streaks`=?, `deaths`=?, `rating`=?, `xp`=?
                     WHERE `uuid`=?"""))) {
@@ -327,47 +283,45 @@ public class SqLiteDatabase extends Database {
             }
 
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE,
+            Bukkit.getLogger().log(Level.SEVERE,
                 "Failed to update user data for " + player.getUniqueId().toString() + " on the database", e);
         }
     }
 
     @Override
     public void updatePitPreferences(PitPreferences pitPreferences) {
-        try (PreparedStatement statement = getConnection().prepareStatement(formatStatementTables("""
+        try (PreparedStatement statement = getConnection().prepareStatement(format("""
                 UPDATE `%pit_preferences%`
                 SET `preferences` = ?
                 """))) {
             statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
             statement.executeUpdate();
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE, "Failed to update preferences in table", e);
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to update preferences in table", e);
         }
     }
 
     @Override
     public void deletePlayerData() {
         try (Connection connection = getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(formatStatementTables("""
+            try (PreparedStatement statement = connection.prepareStatement(format("""
                     DELETE FROM `%players_table%`
                     """))) {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            getLogger().log(Level.SEVERE, "Failed to delete playerData from table", e);
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to delete playerData from table", e);
         }
     }
 
     @Override
-    public void terminate() {
+    public void close() {
         try {
-            if (connection != null) {
-                if (!connection.isClosed()) {
-                    connection.close();
-                }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
             }
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING, "Failed to properly close the SQLite connection");
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to close connection", e);
         }
     }
 }

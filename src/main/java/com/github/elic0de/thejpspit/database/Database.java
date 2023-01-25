@@ -12,48 +12,48 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public abstract class Database {
 
-    protected final String playerTableName;
-    protected final String preferencesTableName;
 
     protected final TheJpsPit plugin;
+    private final String schemaFile;
+    private boolean loaded;
 
-    private final Logger logger;
-
-    protected Database(TheJpsPit implementor) {
-        this.plugin = implementor;
-        this.playerTableName = "player";
-        this.preferencesTableName = "preferences";
-        this.logger = implementor.getLogger();
+    protected Database(TheJpsPit plugin, String schemaFile) {
+        this.plugin = plugin;
+        this.schemaFile = "database/" + schemaFile;
     }
 
-    protected Logger getLogger() {
-        return logger;
+    protected final String[] getSchema() {
+        try (InputStream schemaStream = Objects.requireNonNull(plugin.getResource(schemaFile))) {
+            final String schema = new String(schemaStream.readAllBytes(), StandardCharsets.UTF_8);
+            return format(schema).split(";");
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to load database schema", e);
+        }
+        return new String[0];
     }
 
-    protected final String[] getSchemaStatements() throws IOException {
-        return formatStatementTables(
-            new String(
-                Objects.requireNonNull(plugin.getResource("database/sqlite_schema.sql"))
-                    .readAllBytes(),
-                StandardCharsets.UTF_8))
-            .split(";");
+    protected final String format( String statement) {
+        final Pattern pattern = Pattern.compile("%(\\w+)%");
+        final Matcher matcher = pattern.matcher(statement);
+        final StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            final Table table = Table.match(matcher.group(1));
+            matcher.appendReplacement(sb, plugin.getSettings().getTableName(table));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
-    protected final String formatStatementTables(String sql) {
-        return sql
-            .replaceAll("%pit_preferences%", preferencesTableName)
-            .replaceAll("%players_table%", playerTableName);
-    }
-
-    public abstract boolean initialize();
-
-    public abstract CompletableFuture<Void> runScript(InputStream inputStream,
-        Map<String, String> replacements);
+    public abstract void initialize() throws RuntimeException;
 
     public abstract void createPitPlayer(Player Player);
 
@@ -78,12 +78,52 @@ public abstract class Database {
 
     public abstract void deletePlayerData();
 
-    public abstract void terminate();
+    public abstract void close();
+
+    public boolean hasLoaded() {
+        return loaded;
+    }
+
+    protected void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
+
+    public enum Type {
+        MYSQL("MySQL"),
+        SQLITE("SQLite");
+        private final String displayName;
+
+        Type(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+
+    public enum Table {
+        USER_DATA("pit_users"),
+        PIT_DATA("pit_data");
+
+        private final String defaultName;
+
+        Table(String defaultName) {
+            this.defaultName = defaultName;
+        }
+
+        public static Database.Table match(String placeholder) throws IllegalArgumentException {
+            return Table.valueOf(placeholder.toUpperCase());
+        }
+
+        public String getDefaultName() {
+            return defaultName;
+        }
+    }
 
     public enum RankType {
         KILLS,
         DEATHS,
         RATING
     }
-
 }

@@ -6,6 +6,8 @@ import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 
+import de.themoep.minedown.MineDown;
+import de.themoep.minedown.MineDownParser;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

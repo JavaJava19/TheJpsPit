@@ -1,7 +1,11 @@
 package com.github.elic0de.thejpspit.config;
 
+import com.github.elic0de.thejpspit.database.Database;
+import com.github.elic0de.thejpspit.database.Database.Type;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import net.william278.annotaml.YamlComment;
 import net.william278.annotaml.YamlFile;
 import net.william278.annotaml.YamlKey;
@@ -14,6 +18,50 @@ public class Settings {
     @YamlComment("アクセストークンが漏洩すると、被害が広範囲に及ぶことになりますので公開しないでください")
     private String githubToken = "";
 
+    // Database settings
+    @YamlComment("Database connection settings")
+    @YamlKey("database.type")
+    private Database.Type databaseType = Database.Type.SQLITE;
+
+    @YamlKey("database.mysql.credentials.host")
+    private String mySqlHost = "localhost";
+
+    @YamlKey("database.mysql.credentials.port")
+    private int mySqlPort = 3306;
+
+    @YamlKey("database.mysql.credentials.database")
+    private String mySqlDatabase = "HuskTowns";
+
+    @YamlKey("database.mysql.credentials.username")
+    private String mySqlUsername = "root";
+
+    @YamlKey("database.mysql.credentials.password")
+    private String mySqlPassword = "pa55w0rd";
+
+    @YamlKey("database.mysql.credentials.parameters")
+    private String mySqlConnectionParameters = "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8";
+
+    @YamlComment("MySQL connection pool properties")
+    @YamlKey("database.mysql.connection_pool.size")
+    private int mySqlConnectionPoolSize = 10;
+
+    @YamlKey("database.mysql.connection_pool.idle")
+    private int mySqlConnectionPoolIdle = 10;
+
+    @YamlKey("database.mysql.connection_pool.lifetime")
+    private long mySqlConnectionPoolLifetime = 1800000;
+
+    @YamlKey("database.mysql.connection_pool.keepalive")
+    private long mySqlConnectionPoolKeepAlive = 30000;
+
+    @YamlKey("database.mysql.connection_pool.timeout")
+    private long mySqlConnectionPoolTimeout = 20000;
+
+    @YamlKey("database.table_names")
+    private Map<String, String> tableNames = Map.of(
+        Database.Table.USER_DATA.name().toLowerCase(), Database.Table.USER_DATA.getDefaultName(),
+        Database.Table.PIT_DATA.name().toLowerCase(), Database.Table.PIT_DATA.getDefaultName()
+    );
 
     @YamlKey("scoreboard")
     private List<String> scoreboard = Arrays.asList(
@@ -48,6 +96,58 @@ public class Settings {
 
     public String getGithubToken() {
         return githubToken;
+    }
+
+    public Type getDatabaseType() {
+        return databaseType;
+    }
+
+    public String getMySqlHost() {
+        return mySqlHost;
+    }
+
+    public int getMySqlPort() {
+        return mySqlPort;
+    }
+
+    public String getMySqlDatabase() {
+        return mySqlDatabase;
+    }
+
+    public String getMySqlUsername() {
+        return mySqlUsername;
+    }
+
+    public String getMySqlPassword() {
+        return mySqlPassword;
+    }
+
+    public String getMySqlConnectionParameters() {
+        return mySqlConnectionParameters;
+    }
+
+    public int getMySqlConnectionPoolSize() {
+        return mySqlConnectionPoolSize;
+    }
+
+    public int getMySqlConnectionPoolIdle() {
+        return mySqlConnectionPoolIdle;
+    }
+
+    public long getMySqlConnectionPoolLifetime() {
+        return mySqlConnectionPoolLifetime;
+    }
+
+    public long getMySqlConnectionPoolKeepAlive() {
+        return mySqlConnectionPoolKeepAlive;
+    }
+
+    public long getMySqlConnectionPoolTimeout() {
+        return mySqlConnectionPoolTimeout;
+    }
+
+    public String getTableName(Database.Table tableName) {
+        return Optional.ofNullable(tableNames.get(tableName.name().toLowerCase())).orElse(tableName.getDefaultName());
     }
 
     public List<String> getScoreboard() {

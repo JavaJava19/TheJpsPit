@@ -9,6 +9,7 @@ import com.github.elic0de.thejpspit.config.PitPreferences;
 import com.github.elic0de.thejpspit.config.Settings;
 import com.github.elic0de.thejpspit.cosmetics.CosmeticManager;
 import com.github.elic0de.thejpspit.database.Database;
+import com.github.elic0de.thejpspit.database.MySqlDatabase;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
@@ -84,21 +85,19 @@ public final class TheJpsPit extends JavaPlugin {
     @Override
     public void onEnable() {
         // Initialize TheJpsPit
-        this.loadConfig();
+        loadConfig();
+        // todo:これいる？↓
         saveConfig();
-        final AtomicBoolean initialized = new AtomicBoolean(true);
         game = new Game();
 
         this.hooks = new ArrayList<>();
 
-        this.database = new SqLiteDatabase(this);
-
-        initialized.set(this.database.initialize());
-        if (initialized.get()) {
-            getLogger().log(Level.INFO, "Successfully established a connection to the database");
-        } else {
-            throw new RuntimeException("Failed to establish a connection to the database. " +
-                    "Please check the supplied database credentials in the config file");
+        // Prepare the database and networking system
+        this.database = this.loadDatabase();
+        if (!database.hasLoaded()) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to load database! Please check your credentials! Disabling plugin...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         cosmeticManager = new CosmeticManager();
@@ -138,6 +137,16 @@ public final class TheJpsPit extends JavaPlugin {
                 database.updateUserData(pitPlayer);
             }
         });
+    }
+
+    private Database loadDatabase() throws RuntimeException {
+        final Database database = switch (getSettings().getDatabaseType()) {
+            case MYSQL -> new MySqlDatabase(this);
+            case SQLITE -> new SqLiteDatabase(this);
+        };
+        database.initialize();
+        Bukkit.getLogger().log(Level.INFO, "Successfully initialized the " + getSettings().getDatabaseType().getDisplayName() + " database");
+        return database;
     }
 
 
@@ -198,7 +207,7 @@ public final class TheJpsPit extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         if (database != null) {
-            database.terminate();
+            getDatabase().close();
         }
         game.getTask().stop();
 
