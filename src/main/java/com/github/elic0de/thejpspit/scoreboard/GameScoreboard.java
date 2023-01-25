@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -25,16 +26,7 @@ public class GameScoreboard {
     }
 
     public List<String> boardLines(PitPlayer player) {
-        final Optional<EconomyHook> optionalHook = TheJpsPit.getInstance().getEconomyHook();
-        String coin = "";
-        if (optionalHook.isPresent()) {
-            final EconomyHook economy = optionalHook.get();
-
-            coin = String.valueOf( economy.getBalance(player).intValue());
-        }
-
-        String finalCoin = coin;
-        return TheJpsPit.getInstance().getSettings().getScoreboard().stream().map(s ->
+        return TheJpsPit.getInstance().getSettings().getScoreboard().stream().map(s -> PlaceholderAPI.setPlaceholders(player.getPlayer(), s)).map(s ->
             s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
                     (int) player.getXp()) + "")
@@ -42,7 +34,6 @@ public class GameScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
-                .replaceAll("%coins%", finalCoin)
         ).collect(Collectors.toList());
     }
 

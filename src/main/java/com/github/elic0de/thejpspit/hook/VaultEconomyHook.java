@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.logging.Level;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetbrains.annotations.NotNull;
 
 public class VaultEconomyHook extends EconomyHook {
 
@@ -27,8 +28,7 @@ public class VaultEconomyHook extends EconomyHook {
         plugin.getLogger().log(Level.INFO, "Enabled Vault economy hook");
     }
 
-    @Override
-    public BigDecimal getBalance(PitPlayer player) {
+    private BigDecimal getBalance(@NotNull PitPlayer player) {
         return BigDecimal.valueOf(economy.getBalance(player.getPlayer()));
     }
 

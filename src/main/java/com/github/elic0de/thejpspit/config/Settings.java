@@ -19,7 +19,7 @@ public class Settings {
     private List<String> scoreboard = Arrays.asList(
         "",
         "レベル: [%level%]",
-        "JP: [%coins%]",
+        "JP: [%vault_eco_balance%]",
         "",
         "K/Dレート: &c%rating%",
         "最高レート: &b%bestRating%",
