@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `%players_table%`
+CREATE TABLE IF NOT EXISTS `%user_data%`
 (
     `uuid`              char(36)    NOT NULL UNIQUE,
     `username`          varchar(16) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `%players_table%`
     PRIMARY KEY (`uuid`)
 );
 
-CREATE TABLE IF NOT EXISTS `%pit_preferences%`
+CREATE TABLE IF NOT EXISTS `%pit_data%`
 (
     `id`   integer     NOT NULL PRIMARY KEY AUTOINCREMENT,
     `preferences` longblob    NOT NULL
