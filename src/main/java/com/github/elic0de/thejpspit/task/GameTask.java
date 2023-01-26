@@ -25,7 +25,7 @@ public class GameTask {
         bukkitTask = new BukkitRunnable() {
             @Override
             public void run() {
-                pit.getGame().getScoreboard().update();
+                //pit.getGame().getScoreboard().update();
 
                 /*repeats.getAndIncrement();
                 if (repeats.get() >= 5) {
@@ -34,6 +34,9 @@ public class GameTask {
                 }*/
                 // TODO クラス分ける
                 for (PitPlayer pitPlayer : pit.getGame().getPitPlayers()) {
+                    TheJpsPit.getInstance().getCosmeticManager().onAura(pitPlayer);
+                }
+                /*for (PitPlayer pitPlayer : pit.getGame().getPitPlayers()) {
                     TheJpsPit.getInstance().getCosmeticManager().onAura(pitPlayer);
                     final long streaks = pitPlayer.getStreaks();
                     if (streaks < 5) continue;
@@ -59,15 +62,15 @@ public class GameTask {
                     }
 
                     // Queue packet sending.
-                    /*pit.getServer().getScheduler().runTaskAsynchronously(pit,
+                    *//*pit.getServer().getScheduler().runTaskAsynchronously(pit,
                         () -> summonAndQueueBountyDeletion(
                             TheJpsPit.getInstance().getPacketManager(),
                             player.getLocation().add(random.nextDouble(0, 2) - 1d, random.nextDouble(0, 2), random.nextDouble(0, 2) - 1d),
                             100 * streaks,
                             packetRecipients
                         )
-                    );*/
-                }
+                    );*//*
+                }*/
             }
         }.runTaskTimer(pit, 0, 5);
     }
