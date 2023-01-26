@@ -21,7 +21,7 @@ jobs:
         java-version: '16'
         cache: 'maven'
     - name: pom.yml バージョン更新
-      run:  mvn versions:set -DnewVersion=${{ github.run_number }}
+      run:  mvn versions:set -DnewVersion=release-v${{ github.run_number }}
     - name: Mavenを使ってビルド
       run:  mvn -B package
     - name: original-*.jarを削除
