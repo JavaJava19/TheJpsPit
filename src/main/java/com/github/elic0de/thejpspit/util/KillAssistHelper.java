@@ -3,6 +3,7 @@ package com.github.elic0de.thejpspit.util;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.TheJpsPit;
+import java.math.BigDecimal;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +41,7 @@ public class KillAssistHelper implements Listener {
                 final double damaged = damagerMap.get(uuid);
                 final int assistPer = (int) round(damaged / totalDamage * 100);
                 damager.sendMessage("アシストキル [%per%%] %killedPlayer%".replaceAll("%per%", assistPer + "").replaceAll("%killedPlayer%", victim.getName()));
+                damager.giveCoin(BigDecimal.valueOf(10));
             }
             pitPlayers.get(victim.getUniqueId()).clear();
         }
