@@ -7,14 +7,12 @@ import com.github.elic0de.thejpspit.player.OfflinePitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.Preferences;
 import com.zaxxer.hikari.HikariDataSource;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
@@ -94,7 +92,7 @@ public class MySqlDatabase extends Database {
             }
             setLoaded(true);
         } catch (SQLException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to create MySQL database tables");
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to create MySQL database tables", e);
             setLoaded(false);
         }
     }
@@ -109,7 +107,7 @@ public class MySqlDatabase extends Database {
         try (PreparedStatement statement = getConnection().prepareStatement(
             format("""
                     SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`, `preferences`
-                    FROM `%players_table%`
+                    FROM `%user_data%`
                     WHERE `uuid`=?"""))) {
 
             statement.setString(1, uuid.toString());
@@ -139,7 +137,7 @@ public class MySqlDatabase extends Database {
     public Optional<PitPreferences> getPitPreferences() {
         try (PreparedStatement statement = getConnection().prepareStatement(format("""
                 SELECT `preferences`
-                FROM `%pit_preferences%`
+                FROM `%pit_data%`
                 """))) {
             final ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -157,7 +155,7 @@ public class MySqlDatabase extends Database {
         try (PreparedStatement statement = getConnection().prepareStatement(
             format("""
                     SELECT `kills`, `streaks`, `bestStreaks`, `deaths`, `rating`, `bestRating`, `xp`
-                    FROM `%players_table%`
+                    FROM `%user_data%`
                     WHERE `uuid`=?"""))) {
 
             statement.setString(1, uuid.toString());
@@ -190,7 +188,7 @@ public class MySqlDatabase extends Database {
                     FROM(SELECT `uuid`,
                     RANK()
                     OVER(ORDER BY %type% DESC)
-                    AS rank FROM `%players_table%`)
+                    AS rank FROM `%user_data%`)
                     WHERE `uuid`=?;
                     """;
                 try (PreparedStatement statement = getConnection().prepareStatement(
@@ -216,7 +214,7 @@ public class MySqlDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 format("""
-                                    INSERT INTO `%players_table%` (`uuid`,`username`,`preferences`)
+                                    INSERT INTO `%user_data%` (`uuid`,`username`,`preferences`)
                                     VALUES (?,?,?);"""))) {
 
                 statement.setString(1, player.getUniqueId().toString());
@@ -235,7 +233,7 @@ public class MySqlDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 format("""
-                                    INSERT INTO `%pit_preferences%` (`preferences`)
+                                    INSERT INTO `%pit_data%` (`preferences`)
                                     VALUES (?);"""))) {
 
                 statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
@@ -252,7 +250,7 @@ public class MySqlDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 format("""
-                    UPDATE `%players_table%`
+                    UPDATE `%user_data%`
                     SET `kills`=?, `streaks`=?, `bestStreaks`=?, `deaths`=?, `rating`=?, `bestRating`=?, `xp`=?, `preferences`=?
                     WHERE `uuid`=?"""))) {
 
@@ -279,7 +277,7 @@ public class MySqlDatabase extends Database {
         try {
             try (PreparedStatement statement = getConnection().prepareStatement(
                 format("""
-                    UPDATE `%players_table%`
+                    UPDATE `%user_data%`
                     SET `kills`=?, `streaks`=?, `deaths`=?, `rating`=?, `xp`=?
                     WHERE `uuid`=?"""))) {
 
@@ -301,7 +299,7 @@ public class MySqlDatabase extends Database {
     @Override
     public void updatePitPreferences(PitPreferences pitPreferences) {
         try (PreparedStatement statement = getConnection().prepareStatement(format("""
-                UPDATE `%pit_preferences%`
+                UPDATE `%pit_data%`
                 SET `preferences` = ?
                 """))) {
             statement.setBytes(1, plugin.getGson().toJson(pitPreferences).getBytes(StandardCharsets.UTF_8));
@@ -315,7 +313,7 @@ public class MySqlDatabase extends Database {
     public void deletePlayerData() {
         try (Connection connection = getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(format("""
-                    DELETE FROM `%players_table%`
+                    DELETE FROM `%user_data%`
                     """))) {
                 statement.executeUpdate();
             }
