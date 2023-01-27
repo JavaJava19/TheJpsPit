@@ -13,8 +13,8 @@ public class BloodKillCosmetic extends Cosmetic implements KillCosmetic {
     @Override
     public void onKill(PitPlayer player, PitPlayer target) {
         if (canExecute(player)) {
-            player.getPlayer().playEffect(player.getPlayer().getLocation().clone().add(0, 0.5, 0), Effect.STEP_SOUND, 152);
-            player.getPlayer().playEffect(player.getPlayer().getLocation().clone().add(0, 1, 0), Effect.STEP_SOUND, 152);
+            player.getPlayer().playEffect(player.getPlayer().getLocation().clone().add(0, 0.5, 0), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+            player.getPlayer().playEffect(player.getPlayer().getLocation().clone().add(0, 1, 0), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
         }
     }
 }
