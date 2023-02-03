@@ -24,7 +24,6 @@ public class CosmeticManager {
     ClassToInstanceMap<TrailCosmetic> trailCosmetics;
     ClassToInstanceMap<AuraCosmetic> auraCosmetics;
 
-
     public ClassToInstanceMap<AbstractCosmetic> allCosmetics;
 
     public CosmeticManager() {
