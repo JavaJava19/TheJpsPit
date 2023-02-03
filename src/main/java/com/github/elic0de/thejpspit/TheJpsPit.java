@@ -15,7 +15,7 @@ import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.hook.Hook;
 import com.github.elic0de.thejpspit.hook.PlaceholderHook;
-import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
+import com.github.elic0de.thejpspit.hook.TneEconomyHook;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.BlockPlaceListener;
@@ -35,7 +35,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import net.william278.annotaml.Annotaml;
 import org.bukkit.Bukkit;
@@ -191,8 +190,8 @@ public final class TheJpsPit extends JavaPlugin {
 
     private void registerHooks() {
         final PluginManager plugins = Bukkit.getPluginManager();
-        if (plugins.getPlugin("Vault") != null) {
-            this.registerHook(new VaultEconomyHook(this));
+        if (plugins.getPlugin("TheNewEconomy") != null) {
+            this.registerHook(new TneEconomyHook(this));
         }
         if (plugins.getPlugin("PlaceholderAPI") != null) {
             new PlaceholderHook().register();
