@@ -33,12 +33,12 @@ public class TneEconomyHook extends EconomyHook {
 
     @Override
     public void takeMoney(PitPlayer player, BigDecimal amount) {
-        tneAPI.getAccount(player.getUniqueId()).addHoldings(amount);
+        tneAPI.getAccount(player.getUniqueId()).removeHoldings(amount);
     }
 
     @Override
     public void giveMoney(PitPlayer player, BigDecimal amount) {
-        tneAPI.getAccount(player.getUniqueId()).removeHoldings(amount);
+        tneAPI.getAccount(player.getUniqueId()).addHoldings(amount);
     }
 
     @Override
