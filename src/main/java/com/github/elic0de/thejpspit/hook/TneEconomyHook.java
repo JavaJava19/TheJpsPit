@@ -22,8 +22,7 @@ public class TneEconomyHook extends EconomyHook {
         plugin.getLogger().log(Level.INFO, "Enabled Vault economy hook");
     }
 
-    private BigDecimal getBalance(@NotNull PitPlayer player) {
-        if (tneAPI.getAccount(player.getUniqueId()) == null) return BigDecimal.ZERO;
+    public BigDecimal getBalance(@NotNull PitPlayer player) {
         return tneAPI.getAccount(player.getUniqueId()).getHoldings(player.getPlayer().getWorld().getName());
     }
 

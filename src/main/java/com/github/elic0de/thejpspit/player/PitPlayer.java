@@ -1,22 +1,23 @@
 package com.github.elic0de.thejpspit.player;
 
-import com.github.elic0de.thejpspit.config.PitPreferences;
-import com.github.elic0de.thejpspit.database.Database;
-import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.database.Database;
+import com.github.elic0de.thejpspit.hook.EconomyHook;
+import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import de.themoep.minedown.MineDown;
 import fr.mrmicky.fastboard.FastBoard;
-import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 public class PitPlayer {
 
@@ -81,6 +82,14 @@ public class PitPlayer {
         this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
         this.level = Levels.getPlayerLevel(this);
         this.preferences = preferences;
+    }
+
+    public BigDecimal coins() {
+        if (TheJpsPit.getInstance().getEconomyHook().isPresent()) {
+            final EconomyHook hook = TheJpsPit.getInstance().getEconomyHook().get();
+            return hook.getBalance(this);
+        }
+        return BigDecimal.ZERO;
     }
 
     public void addItem() {
