@@ -25,7 +25,6 @@ public class GameTask {
         bukkitTask = new BukkitRunnable() {
             @Override
             public void run() {
-                pit.getGame().getScoreboard().update();
 
                 /*repeats.getAndIncrement();
                 if (repeats.get() >= 5) {

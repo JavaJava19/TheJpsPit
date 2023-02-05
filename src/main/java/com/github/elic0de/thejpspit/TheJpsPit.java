@@ -219,9 +219,7 @@ public final class TheJpsPit extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             final PitPlayer pitPlayer = PitPlayerManager.getPitPlayer(player);
             game.leave(pitPlayer);
-            if (pitPlayer.getBoard() != null) {
-                pitPlayer.getBoard().delete();
-            }
+            pitPlayer.getBoard().destoryScoreboard();
         });
         Bukkit.getScheduler().cancelTasks(this);
     }

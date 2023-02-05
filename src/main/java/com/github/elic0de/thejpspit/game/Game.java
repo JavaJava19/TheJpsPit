@@ -2,7 +2,6 @@ package com.github.elic0de.thejpspit.game;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.player.PitPlayer;
-import com.github.elic0de.thejpspit.scoreboard.GameScoreboard;
 import com.github.elic0de.thejpspit.task.GameTask;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -14,18 +13,15 @@ public class Game {
 
     private final TheJpsPit pit = TheJpsPit.getInstance();
     private final Set<PitPlayer> pitPlayers = new HashSet<>();
-    private final GameScoreboard scoreboard;
     private final GameTask task;
 
     public Game() {
-        this.scoreboard = new GameScoreboard();
         this.task = new GameTask();
     }
 
     public void join(PitPlayer player) {
         pitPlayers.add(player);
         player.addItem();
-        player.getBoard().updateLines();
         player.updateDisplayName();
         player.setLastDamager(null);
     }
@@ -119,10 +115,6 @@ public class Game {
 
     public Set<PitPlayer> getPitPlayers() {
         return pitPlayers;
-    }
-
-    public GameScoreboard getScoreboard() {
-        return scoreboard;
     }
 
     public GameTask getTask() {

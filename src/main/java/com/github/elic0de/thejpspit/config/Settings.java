@@ -63,23 +63,6 @@ public class Settings {
         Database.Table.PIT_DATA.name().toLowerCase(), Database.Table.PIT_DATA.getDefaultName()
     );
 
-    @YamlKey("scoreboard")
-    private List<String> scoreboard = Arrays.asList(
-        "",
-        "レベル: [%level%]",
-        "JP: [%coins%]",
-        "",
-        "K/Dレート: &c%rating%",
-        "最高レート: &b%bestRating%",
-        "",
-        "次のレベルまで：&a%neededXp%",
-        "",
-        "連続キル数: &a%streaks%",
-        "最高連続キル数: &a%bestStreaks%",
-        "",
-        "&ejapanpvpserver.net"
-    );
-
     @YamlKey("level")
     private List<String> level = Arrays.asList(
         "1,15,15," + ChatColor.GRAY.name(),
@@ -148,10 +131,6 @@ public class Settings {
 
     public String getTableName(Database.Table tableName) {
         return Optional.ofNullable(tableNames.get(tableName.name().toLowerCase())).orElse(tableName.getDefaultName());
-    }
-
-    public List<String> getScoreboard() {
-        return scoreboard;
     }
 
     public List<String> getLevel() {

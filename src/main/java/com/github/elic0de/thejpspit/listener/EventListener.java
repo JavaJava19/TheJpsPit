@@ -75,9 +75,7 @@ public class EventListener implements Listener {
 
         PitPlayerManager.unregisterUser(player);
         plugin.getGame().leave(player);
-        if (player.getBoard() != null) {
-            player.getBoard().delete();
-        }
+        player.getBoard().destoryScoreboard();
     }
 
     @EventHandler

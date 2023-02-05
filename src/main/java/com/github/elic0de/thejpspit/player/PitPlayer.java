@@ -4,6 +4,7 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.leveler.Levels;
+import com.github.elic0de.thejpspit.scoreboard.PitPlayerScoreboard;
 import com.github.elic0de.thejpspit.util.ShowHealth;
 import de.themoep.minedown.MineDown;
 import fr.mrmicky.fastboard.FastBoard;
@@ -45,7 +46,7 @@ public class PitPlayer {
     private double rating;
     private double bestRating;
     private double xp;
-    private final FastBoard board;
+    private final PitPlayerScoreboard board;
     private PitPlayer lastDamager;
 
     private Optional<Preferences> preferences;
@@ -61,8 +62,7 @@ public class PitPlayer {
         this.rating = 0;
         this.bestRating = 0;
         this.xp = 0;
-        this.board = new FastBoard(player);
-        this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
+        this.board = new PitPlayerScoreboard(this);
         this.level = Levels.getPlayerLevel(this);
         this.preferences = Optional.of(Preferences.getDefaults());
     }
@@ -78,8 +78,7 @@ public class PitPlayer {
         this.rating = rating;
         this.bestRating = bestRating;
         this.xp = xp;
-        this.board = new FastBoard(player);
-        this.board.updateTitle(ChatColor.translateAlternateColorCodes('&', "&eTHE JPS PIT"));
+        this.board = new PitPlayerScoreboard(this);
         this.level = Levels.getPlayerLevel(this);
         this.preferences = preferences;
     }
@@ -235,14 +234,16 @@ public class PitPlayer {
         this.rating = rating;
         if (bestRating < rating) {
             this.bestRating = rating;
+            getBoard().updateBestRating();
         }
+        getBoard().updateRating();
     }
 
     public double getXp() {
         return xp;
     }
 
-    public FastBoard getBoard() {
+    public PitPlayerScoreboard getBoard() {
         return board;
     }
 
@@ -265,6 +266,8 @@ public class PitPlayer {
         if (bestStreaks < streaks) {
             this.bestStreaks = streaks;
         }
+        getBoard().updateKillStreaks();
+        getBoard().updateBestKillStreaks();
     }
     public void increaseDeaths() {
         this.deaths++;
@@ -275,6 +278,7 @@ public class PitPlayer {
         // レベルアップ
         if (Levels.getPlayerNeededXP(level, (int) xp) == 0) levelUp();
         updateXpBar();
+        getBoard().updateNeededXp();
     }
 
     public void setLastDamager(PitPlayer player) {
@@ -283,6 +287,8 @@ public class PitPlayer {
 
     public void resetStreaks() {
         streaks = 0;
+        getBoard().updateKillStreaks();
+        getBoard().updateBestKillStreaks();
     }
 
     public void levelUp() {
@@ -292,5 +298,6 @@ public class PitPlayer {
         player.sendTitle("§b§lLEVEL UP!", previousLevel + " → " + nextLevel, 20,40, 20);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         updateDisplayName();
+        getBoard().updateLevel();
     }
 }
