@@ -79,6 +79,7 @@ public class PitPlayerScoreboard {
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
+                .replaceAll("%coins", player.coins().toPlainString())
         ).collect(Collectors.toList());
     }
 }
