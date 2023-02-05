@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
@@ -35,7 +36,7 @@ public class EventListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, TheJpsPit.getInstance());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
         new NoCollisionUtil().sendNoCollisionPacket(event.getPlayer());
