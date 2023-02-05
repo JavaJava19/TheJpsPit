@@ -29,13 +29,13 @@ public class GameScoreboard {
 
     public List<String> boardLines(PitPlayer player) {
         return TheJpsPit.getInstance().getSettings().getScoreboard().stream().map(s -> PlaceholderAPI.setPlaceholders(player.getPlayer(), s)).map(s ->
-            s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
-                .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
-                    (int) player.getXp()) + "")
-                .replaceAll("%rating%", player.getRating() + "%")
-                .replaceAll("%bestRating%", player.getBestRating() + "%")
-                .replaceAll("%streaks%", player.getStreaks() + "")
-                .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
+                s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
+                        .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(), (int) player.getXp()) + "")
+                        .replaceAll("%rating%", player.getRating() + "%")
+                        .replaceAll("%bestRating%", player.getBestRating() + "%")
+                        .replaceAll("%streaks%", player.getStreaks() + "")
+                        .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
+                        .replaceAll("%coins%", player.coins().toPlainString())
         ).collect(Collectors.toList());
     }
 

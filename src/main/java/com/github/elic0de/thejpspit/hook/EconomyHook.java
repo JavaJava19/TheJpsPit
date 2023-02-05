@@ -11,6 +11,8 @@ public abstract class EconomyHook extends Hook {
         super(plugin, name);
     }
 
+    public abstract BigDecimal getBalance(PitPlayer player);
+
     public abstract boolean hasMoney(PitPlayer player, BigDecimal amount);
 
     public abstract void takeMoney(PitPlayer player, BigDecimal amount);
