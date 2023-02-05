@@ -36,7 +36,7 @@ public class EventListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, TheJpsPit.getInstance());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler()
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
         new NoCollisionUtil().sendNoCollisionPacket(event.getPlayer());
