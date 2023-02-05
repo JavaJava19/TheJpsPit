@@ -28,32 +28,36 @@ public class PitPlayerScoreboard {
         if (board != null) board.delete();
     }
     public void updateLevel() {
-        board.updateLine(0, "レベル: [%level%]".replaceAll("%level%", Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET));
+        updateLine(1, "レベル: [%level%]".replaceAll("%level%", Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET));
     }
 
     public void updateCoins() {
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> board.updateLine(1, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> updateLine(2, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
     }
 
     public void updateRating() {
-        board.updateLine(3, "K/Dレート: &c%rating%".replaceAll("%rating%",  player.getRating() + ""));
+        updateLine(4, "K/Dレート: &c%rating%".replaceAll("%rating%",  player.getRating() + ""));
     }
 
     public void updateBestRating() {
-        board.updateLine(4, "最高レート: &b%bestRating%".replaceAll("%bestRating%", player.getBestRating() + ""));
+        updateLine(5, "最高レート: &b%bestRating%".replaceAll("%bestRating%", player.getBestRating() + ""));
     }
 
     public void updateNeededXp() {
-        board.updateLine(6, "次のレベルまで：&a%neededXp%".replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
+        updateLine(6, "次のレベルまで：&a%neededXp%".replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
             (int) player.getXp()) + ""));
     }
 
     public void updateKillStreaks() {
-        board.updateLine(9, "連続キル数: &a%streaks%".replaceAll("%streaks%", player.getStreaks() + ""));
+        updateLine(9, "連続キル数: &a%streaks%".replaceAll("%streaks%", player.getStreaks() + ""));
     }
 
     public void updateBestKillStreaks() {
-        board.updateLine(10, "最高連続キル数: &a%bestStreaks%".replaceAll("%bestStreaks%", player.getBestStreaks() + ""));
+        updateLine(10, "最高連続キル数: &a%bestStreaks%".replaceAll("%bestStreaks%", player.getBestStreaks() + ""));
+    }
+
+    private void updateLine(int line, String text) {
+        board.updateLine(line, ChatColor.translateAlternateColorCodes('&', text));
     }
 
     private List<String> init(PitPlayer player) {
@@ -72,14 +76,14 @@ public class PitPlayerScoreboard {
                 "",
                 "&ejapanpvpserver.net"
             ).map(s -> PlaceholderAPI.setPlaceholders(player.getPlayer(), s)).map(s ->
-            s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel()) + "" + player.getLevel() + ChatColor.RESET)
+            s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel())  + "" + player.getLevel() + ChatColor.RESET)
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
                     (int) player.getXp()) + "")
                 .replaceAll("%rating%", player.getRating() + "%")
                 .replaceAll("%bestRating%", player.getBestRating() + "%")
                 .replaceAll("%streaks%", player.getStreaks() + "")
                 .replaceAll("%bestStreaks%", player.getBestStreaks() + "")
-                .replaceAll("%coins", player.coins().toPlainString())
+                .replaceAll("%coins%", player.coins().intValue() + "")
         ).collect(Collectors.toList());
     }
 }
