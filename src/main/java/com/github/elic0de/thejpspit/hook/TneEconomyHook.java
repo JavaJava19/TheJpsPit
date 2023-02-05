@@ -23,6 +23,7 @@ public class TneEconomyHook extends EconomyHook {
     }
 
     public BigDecimal getBalance(@NotNull PitPlayer player) {
+        if (tneAPI.getAccount(player.getUniqueId()) == null) return BigDecimal.ZERO;
         return tneAPI.getAccount(player.getUniqueId()).getHoldings(player.getPlayer().getWorld().getName());
     }
 
