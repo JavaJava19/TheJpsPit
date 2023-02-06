@@ -67,7 +67,7 @@ public abstract class Database {
 
     public abstract Optional<OfflinePitPlayer> getOfflinePitPlayer(UUID uuid);
 
-    public abstract CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player,
+    public abstract Optional<Integer> getPlayerRanking(PitPlayer player,
         RankType type);
 
     public abstract void updateUserData(PitPlayer player);

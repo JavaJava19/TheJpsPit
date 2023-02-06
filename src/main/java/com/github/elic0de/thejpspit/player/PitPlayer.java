@@ -156,16 +156,13 @@ public class PitPlayer {
                 .replaceAll("%best_rating%",
                     player.getBestRating() + "")
                 .replaceAll("%kills_ranking%",
-                    pit.getDatabase().getPlayerRanking(player, Database.RankType.KILLS).join()
-                        .orElse(0)
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.KILLS).orElse(0)
                         + "")
                 .replaceAll("%deaths_ranking%",
-                    pit.getDatabase().getPlayerRanking(player, Database.RankType.DEATHS).join()
-                        .orElse(0)
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.DEATHS).orElse(0)
                         + "")
                 .replaceAll("%rating_ranking%",
-                    pit.getDatabase().getPlayerRanking(player, Database.RankType.RATING).join()
-                        .orElse(0)
+                    pit.getDatabase().getPlayerRanking(player, Database.RankType.RATING).orElse(0)
                         + "")
         ).forEach(this::sendMessage);
     }

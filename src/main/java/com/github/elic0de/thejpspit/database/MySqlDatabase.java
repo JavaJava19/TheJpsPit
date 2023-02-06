@@ -180,32 +180,30 @@ public class MySqlDatabase extends Database {
     }
 
     @Override
-    public CompletableFuture<Optional<Integer>> getPlayerRanking(PitPlayer player, RankType type) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                String test = """
-                    SELECT uuid, rank
-                    FROM(SELECT `uuid`,
-                    RANK()
-                    OVER(ORDER BY %type% DESC)
-                    AS rank FROM `%user_data%`)
-                    WHERE `uuid`=?;
-                    """;
-                try (PreparedStatement statement = getConnection().prepareStatement(
-                    format(test.replaceAll("%type%", type.name().toLowerCase())))) {
-                    statement.setString(1, player.getUniqueId().toString());
+    public Optional<Integer> getPlayerRanking(PitPlayer player, RankType type) {
+        try {
+            String test = """
+                SELECT uuid, rank
+                FROM(SELECT `uuid`,
+                RANK()
+                OVER(ORDER BY %type% DESC)
+                AS rank FROM `%user_data%`)
+                WHERE `uuid`=?;
+                """;
+            try (PreparedStatement statement = getConnection().prepareStatement(
+                format(test.replaceAll("%type%", type.name().toLowerCase())))) {
+                statement.setString(1, player.getUniqueId().toString());
 
-                    final ResultSet resultSet = statement.executeQuery();
-                    if (resultSet.next()) {
-                        return Optional.of(resultSet.getInt("rank"));
-                    }
+                final ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return Optional.of(resultSet.getInt("rank"));
                 }
-            } catch (SQLException e) {
-                Bukkit.getLogger().log(Level.SEVERE,
-                    "Failed to fetch a player from uuid from the database", e);
             }
-            return Optional.empty();
-        });
+        } catch (SQLException e) {
+            Bukkit.getLogger().log(Level.SEVERE,
+                "Failed to fetch a player from uuid from the database", e);
+        }
+        return Optional.empty();
     }
 
     @Override

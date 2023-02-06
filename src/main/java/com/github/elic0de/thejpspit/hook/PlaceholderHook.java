@@ -36,8 +36,7 @@ public class PlaceholderHook extends PlaceholderExpansion {
         // Return the requested placeholder
         final PitPlayer player = PitPlayerManager.getPitPlayer(offlinePlayer.getPlayer());
         return switch (params) {
-            case "kill_ranking" -> String.valueOf(TheJpsPit.getInstance().getDatabase().getPlayerRanking(player, RankType.KILLS).join()
-                    .orElse(0));
+            case "kill_ranking" -> String.valueOf(TheJpsPit.getInstance().getDatabase().getPlayerRanking(player, RankType.KILLS).orElse(0));
             case "kill" -> String.valueOf(player.getKills());
             case "level" -> String.valueOf(player.getLevel());
             default -> null;
