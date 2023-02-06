@@ -32,7 +32,7 @@ public class PitPlayerScoreboard {
     }
 
     public void updateCoins() {
-        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> updateLine(2, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
+        //TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> updateLine(2, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
     }
 
     public void updateRating() {
@@ -44,7 +44,7 @@ public class PitPlayerScoreboard {
     }
 
     public void updateNeededXp() {
-        updateLine(6, "次のレベルまで：&a%neededXp%".replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
+        updateLine(7, "次のレベルまで：&a%neededXp%".replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
             (int) player.getXp()) + ""));
     }
 
