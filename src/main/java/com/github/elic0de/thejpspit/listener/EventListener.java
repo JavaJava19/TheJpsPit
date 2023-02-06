@@ -38,29 +38,32 @@ public class EventListener implements Listener {
 
     @EventHandler()
     public void onJoin(PlayerJoinEvent event) {
-        event.setJoinMessage("");
-        new NoCollisionUtil().sendNoCollisionPacket(event.getPlayer());
-        final Player player = event.getPlayer();
-        final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
+        Bukkit.getScheduler().runTaskLater(TheJpsPit.getInstance(), () -> {
+            event.setJoinMessage("");
+            new NoCollisionUtil().sendNoCollisionPacket(event.getPlayer());
+            final Player player = event.getPlayer();
+            final Optional<PitPlayer> userData = plugin.getDatabase().getPitPlayer(player);
 
-        plugin.getPitPreferences().ifPresent(pitPreferences -> {
-            final Location location = pitPreferences.getSpawn().get().getLocation();
+            plugin.getPitPreferences().ifPresent(pitPreferences -> {
+                final Location location = pitPreferences.getSpawn().get().getLocation();
 
-            if (location != null) player.teleport(location);
-        });
-        if (userData.isEmpty()) {
-            plugin.getDatabase().createPitPlayer(player);
-            PitPlayerManager.registerUser(new PitPlayer(player));
-            return;
-        }
-        // Update the user's name if it has changed
-        final PitPlayer pitPlayer = userData.get();
-        boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
+                if (location != null)
+                    player.teleport(location);
+            });
+            if (userData.isEmpty()) {
+                plugin.getDatabase().createPitPlayer(player);
+                PitPlayerManager.registerUser(new PitPlayer(player));
+                return;
+            }
+            // Update the user's name if it has changed
+            final PitPlayer pitPlayer = userData.get();
+            boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
 
-        PitPlayerManager.registerUser(pitPlayer);
-        if (updateNeeded) {
-            plugin.getDatabase().updateUserData(pitPlayer);
-        }
+            PitPlayerManager.registerUser(pitPlayer);
+            if (updateNeeded) {
+                plugin.getDatabase().updateUserData(pitPlayer);
+            }
+        },  5 * 20);
     }
 
     @EventHandler
