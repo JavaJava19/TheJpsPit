@@ -62,8 +62,8 @@ public class PitPlayer {
         this.rating = 0;
         this.bestRating = 0;
         this.xp = 0;
-        this.board = new PitPlayerScoreboard(this);
         this.level = Levels.getPlayerLevel(this);
+        this.board = new PitPlayerScoreboard(this);
         this.preferences = Optional.of(Preferences.getDefaults());
     }
 
@@ -78,8 +78,8 @@ public class PitPlayer {
         this.rating = rating;
         this.bestRating = bestRating;
         this.xp = xp;
-        this.board = new PitPlayerScoreboard(this);
         this.level = Levels.getPlayerLevel(this);
+        this.board = new PitPlayerScoreboard(this);
         this.preferences = preferences;
     }
 
