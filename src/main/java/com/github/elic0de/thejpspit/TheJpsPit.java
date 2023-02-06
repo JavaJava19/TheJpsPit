@@ -15,7 +15,7 @@ import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.hook.Hook;
 import com.github.elic0de.thejpspit.hook.PlaceholderHook;
-import com.github.elic0de.thejpspit.hook.TneEconomyHook;
+import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.BlockPlaceListener;
@@ -94,7 +94,8 @@ public final class TheJpsPit extends JavaPlugin {
         // Prepare the database and networking system
         this.database = this.loadDatabase();
         if (!database.hasLoaded()) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to load database! Please check your credentials! Disabling plugin...");
+            Bukkit.getLogger().log(Level.SEVERE,
+                "Failed to load database! Please check your credentials! Disabling plugin...");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -119,25 +120,23 @@ public final class TheJpsPit extends JavaPlugin {
             world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             world.setGameRule(GameRule.KEEP_INVENTORY, true);
         });
-        Bukkit.getScheduler().runTaskLater(TheJpsPit.getInstance(), () -> {
-            Bukkit.getOnlinePlayers().forEach(player -> {
+        Bukkit.getOnlinePlayers().forEach(player -> {
 
-                final Optional<PitPlayer> userData = database.getPitPlayer(player);
-                if (userData.isEmpty()) {
-                    database.createPitPlayer(player);
-                    PitPlayerManager.registerUser(new PitPlayer(player));
-                    return;
-                }
-                // Update the user's name if it has changed
-                final PitPlayer pitPlayer = userData.get();
-                boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
+            final Optional<PitPlayer> userData = database.getPitPlayer(player);
+            if (userData.isEmpty()) {
+                database.createPitPlayer(player);
+                PitPlayerManager.registerUser(new PitPlayer(player));
+                return;
+            }
+            // Update the user's name if it has changed
+            final PitPlayer pitPlayer = userData.get();
+            boolean updateNeeded = !pitPlayer.getName().equals(player.getName());
 
-                PitPlayerManager.registerUser(pitPlayer);
-                if (updateNeeded) {
-                    database.updateUserData(pitPlayer);
-                }
-            });
-        }, 5 * 20);
+            PitPlayerManager.registerUser(pitPlayer);
+            if (updateNeeded) {
+                database.updateUserData(pitPlayer);
+            }
+        });
     }
 
     private Database loadDatabase() throws RuntimeException {
@@ -192,8 +191,8 @@ public final class TheJpsPit extends JavaPlugin {
 
     private void registerHooks() {
         final PluginManager plugins = Bukkit.getPluginManager();
-        if (plugins.getPlugin("TheNewEconomy") != null) {
-            this.registerHook(new TneEconomyHook(this));
+        if (plugins.getPlugin("Vault") != null) {
+            this.registerHook(new VaultEconomyHook(this));
         }
         if (plugins.getPlugin("PlaceholderAPI") != null) {
             new PlaceholderHook().register();

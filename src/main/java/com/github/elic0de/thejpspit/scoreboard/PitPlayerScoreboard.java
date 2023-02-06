@@ -32,7 +32,7 @@ public class PitPlayerScoreboard {
     }
 
     public void updateCoins() {
-        //TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> updateLine(2, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
+        TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> updateLine(2, "JP: [%coins%]".replaceAll("%coins%", economyHook.getBalance(player).toPlainString())));
     }
 
     public void updateRating() {
