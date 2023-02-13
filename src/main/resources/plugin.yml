@@ -4,6 +4,6 @@ main: com.github.elic0de.thejpspit.TheJpsPit
 api-version: 1.19
 author: 'Elic0de#0342'
 softdepend:
-  - TheNewEconomy
   - PlaceholderAPI
   - Vault
+  - MysqlEcoBridge
