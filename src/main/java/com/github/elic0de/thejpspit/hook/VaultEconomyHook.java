@@ -39,11 +39,13 @@ public class VaultEconomyHook extends EconomyHook {
     @Override
     public void takeMoney(PitPlayer player, BigDecimal amount) {
         economy.withdrawPlayer(player.getPlayer(), amount.doubleValue());
+        player.getBoard().updateCoins();
     }
 
     @Override
     public void giveMoney(PitPlayer player, BigDecimal amount) {
         economy.depositPlayer(player.getPlayer(), amount.doubleValue());
+        player.getBoard().updateCoins();
     }
 
     @Override
