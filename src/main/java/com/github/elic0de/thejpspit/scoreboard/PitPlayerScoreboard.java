@@ -74,7 +74,7 @@ public class PitPlayerScoreboard {
                 "連続キル数: &a%streaks%",
                 "最高連続キル数: &a%bestStreaks%",
                 "",
-                "&ejapanpvpserver.net"
+                "&ejps.gg"
             ).map(s -> PlaceholderAPI.setPlaceholders(player.getPlayer(), s)).map(s ->
             s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel())  + "" + player.getLevel() + ChatColor.RESET)
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
