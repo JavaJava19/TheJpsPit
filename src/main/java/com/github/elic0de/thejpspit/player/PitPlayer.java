@@ -5,20 +5,17 @@ import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.hook.EconomyHook;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.scoreboard.PitPlayerScoreboard;
-import com.github.elic0de.thejpspit.util.ShowHealth;
 import de.themoep.minedown.MineDown;
-import fr.mrmicky.fastboard.FastBoard;
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 public class PitPlayer {
 
@@ -120,10 +117,6 @@ public class PitPlayer {
 
     public void giveCoin(BigDecimal bigDecimal) {
         TheJpsPit.getInstance().getEconomyHook().ifPresent(economyHook -> economyHook.giveMoney(this, bigDecimal));
-    }
-
-    public void showHealth(PitPlayer targetPit) {
-        ShowHealth.showHealth(this, targetPit);
     }
 
     public void sendMessage(String message) {

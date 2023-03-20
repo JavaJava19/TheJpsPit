@@ -9,7 +9,10 @@ import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import com.github.elic0de.thejpspit.util.NoCollisionUtil;
 import com.github.elic0de.thejpspit.villager.VillagerNPC;
 import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -144,7 +147,6 @@ public class EventListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                pitPlayer.showHealth(victimPitPlayer);
                 victimPitPlayer.setLastDamager(pitPlayer);
             }
             if (event.getDamager() instanceof Arrow) {
@@ -154,11 +156,42 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onFight(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player vitim) {
+            Player damager = null;
+            if (event.getDamager() instanceof Player) damager = (Player) event.getDamager();
+            if (event.getDamager() instanceof Arrow arrow) if (arrow.getShooter() instanceof Player player) damager = player;
+            if (damager != null) damager.spigot().sendMessage(
+                ChatMessageType.ACTION_BAR, new ComponentBuilder(vitim.getName() + " " + getHeartLevel(vitim)).create());
+        }
+    }
+
+    private String getHeartLevel(Player player) {
+
+        int currentHealth = (int) player.getHealth() / 2;
+        int maxHealth = (int) player.getMaxHealth() / 2;
+        int lostHealth = maxHealth - currentHealth;
+
+        StringBuilder rHeart = new StringBuilder();
+        StringBuilder lHeart = new StringBuilder();
+
+        for (int i = 0; i < currentHealth; i++) {
+            rHeart.append(ChatColor.RED).append("❤");
+        }
+        for (int i = 0; i < lostHealth; i++) {
+            lHeart.append(ChatColor.GRAY).append("❤");
+        }
+
+        return rHeart + lHeart.toString();
+    }
+
+    @EventHandler
     private void onEntityRegainHealth(EntityRegainHealthEvent event) {
-        if (event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player player) {
+            event.setCancelled(true);
             if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
-                TheJpsPit.getInstance().getPitPreferences().ifPresent(
-                        pitPreferences -> event.setAmount(pitPreferences.getAmountRegenHealth()));
+                Bukkit.getScheduler().runTaskLater(TheJpsPit.getInstance(),
+                    () -> TheJpsPit.getInstance().getPitPreferences().ifPresent(pitPreferences -> player.setHealth(Math.min(20, player.getHealth() + pitPreferences.getAmountRegenHealth()))), 10 * 20);
             }
         }
     }
