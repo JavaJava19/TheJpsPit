@@ -4,11 +4,11 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import fr.mrmicky.fastboard.FastBoard;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
 public class PitPlayerScoreboard {
@@ -74,7 +74,7 @@ public class PitPlayerScoreboard {
                 "連続キル数: &a%streaks%",
                 "最高連続キル数: &a%bestStreaks%",
                 "",
-                "&ejps.gg"
+                StringUtils.center("&ejps.gg", 24)
             ).map(s -> PlaceholderAPI.setPlaceholders(player.getPlayer(), s)).map(s ->
             s.replaceAll("%level%",   Levels.getPlayerLevelColor(player.getLevel())  + "" + player.getLevel() + ChatColor.RESET)
                 .replaceAll("%neededXp%", Levels.getPlayerNeededXP(player.getLevel(),
