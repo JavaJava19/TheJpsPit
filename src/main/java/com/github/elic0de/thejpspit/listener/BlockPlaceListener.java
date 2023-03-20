@@ -30,9 +30,6 @@ public class BlockPlaceListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE) return;
         final BlockState replacedState = event.getBlockReplacedState();
 
-        // クリエイティブ以外は壊せないように
-        event.setCancelled(true);
-
         if (replacedStates.containsKey(replacedState.getLocation())) return;
         replacedStates.put(replacedState.getLocation(), replacedState);
 
