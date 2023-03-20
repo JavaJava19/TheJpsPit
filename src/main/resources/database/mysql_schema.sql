@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `%user_data%`
     `rating`            integer     NOT NULL DEFAULT 0,
     `bestRating`        integer     NOT NULL DEFAULT 0,
     `xp`                integer     NOT NULL DEFAULT 0,
-    `preferences`       longblob    NOT NULL,
+    `preferences`       longblob    NOT NULL
 ) CHARACTER SET utf8
   COLLATE utf8_unicode_ci;
 
@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS `%pit_data%`
     `id`   int         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `preferences` longblob    NOT NULL
 ) CHARACTER SET utf8
-  COLLATE utf8_unicode_ci;
+COLLATE utf8_unicode_ci;
