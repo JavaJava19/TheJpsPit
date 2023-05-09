@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class PitPlayerScoreboard {
@@ -61,6 +62,11 @@ public class PitPlayerScoreboard {
     }
 
     private List<String> init(PitPlayer player) {
+        Bukkit.getScheduler().runTaskLater(TheJpsPit.getInstance(), () -> {
+            if (!board.isDeleted()) {
+                updateCoins();
+            }
+        }, 20);
         return Stream.of(
                 "",
                 "レベル: [%level%]",
