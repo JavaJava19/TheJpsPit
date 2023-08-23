@@ -31,6 +31,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -208,16 +209,15 @@ public class EventListener implements Listener {
         return rHeart + lHeart.toString();
     }
 
-    @EventHandler
+/*    @EventHandler
     private void onEntityRegainHealth(EntityRegainHealthEvent event) {
         if (event.getEntity() instanceof Player player) {
-            event.setCancelled(true);
-            if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED) {
+            *//*if (event.getRegainReason() == RegainReason.SATIATED) {
                 Bukkit.getScheduler().runTaskLater(TheJpsPit.getInstance(),
                     () -> TheJpsPit.getInstance().getPitPreferences().ifPresent(pitPreferences -> player.setHealth(Math.min(20, player.getHealth() + pitPreferences.getAmountRegenHealth()))), 10 * 20);
-            }
+            }*//*
         }
-    }
+    }*/
 
     @EventHandler
     public void onProjectileShoot(ProjectileLaunchEvent event) {
