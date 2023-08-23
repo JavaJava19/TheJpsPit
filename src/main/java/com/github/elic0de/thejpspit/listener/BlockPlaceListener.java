@@ -4,10 +4,13 @@ import com.github.elic0de.thejpspit.TheJpsPit;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
@@ -57,6 +60,25 @@ public class BlockPlaceListener implements Listener {
             }
         }, (10 * 20));
     }
+
+    @EventHandler
+    private void on(BlockFormEvent event) {
+        if (event.getNewState().getBlock().getType() == Material.OBSIDIAN) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onLiquidSpread(BlockFromToEvent event) {
+        Material block = event.getBlock().getType();
+
+        if (block == Material.LAVA || block == Material.WATER) {
+            event.getBlock().setType(Material.AIR);
+            event.setCancelled(true);
+            return;
+        }
+    }
+
 
     public static void restoreBlocks() {
         replacedStates.values().forEach(b -> b.update(true));
