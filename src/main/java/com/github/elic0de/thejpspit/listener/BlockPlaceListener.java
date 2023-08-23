@@ -38,7 +38,7 @@ public class BlockPlaceListener implements Listener {
                 replacedState.update(true);
                 replacedStates.remove(replacedState.getLocation());
             }
-        }, (15 * 20));
+        }, (10 * 20));
     }
 
     @EventHandler
@@ -55,7 +55,7 @@ public class BlockPlaceListener implements Listener {
                 replacedState.update(true);
                 replacedStates.remove(replacedState.getLocation());
             }
-        }, (15 * 20));
+        }, (10 * 20));
     }
 
     public static void restoreBlocks() {
