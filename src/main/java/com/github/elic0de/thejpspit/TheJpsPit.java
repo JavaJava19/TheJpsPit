@@ -12,10 +12,7 @@ import com.github.elic0de.thejpspit.database.Database;
 import com.github.elic0de.thejpspit.database.MySqlDatabase;
 import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
-import com.github.elic0de.thejpspit.hook.EconomyHook;
-import com.github.elic0de.thejpspit.hook.Hook;
-import com.github.elic0de.thejpspit.hook.PlaceholderHook;
-import com.github.elic0de.thejpspit.hook.VaultEconomyHook;
+import com.github.elic0de.thejpspit.hook.*;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.BlockPlaceListener;
@@ -29,6 +26,7 @@ import com.github.elic0de.thejpspit.villager.VillagerNPCManager;
 import com.github.elic0de.thejpspit.villager.villagers.ShopVillager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -36,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+
 import net.william278.annotaml.Annotaml;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -95,7 +94,7 @@ public final class TheJpsPit extends JavaPlugin {
         this.database = this.loadDatabase();
         if (!database.hasLoaded()) {
             Bukkit.getLogger().log(Level.SEVERE,
-                "Failed to load database! Please check your credentials! Disabling plugin...");
+                    "Failed to load database! Please check your credentials! Disabling plugin...");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -191,7 +190,9 @@ public final class TheJpsPit extends JavaPlugin {
 
     private void registerHooks() {
         final PluginManager plugins = Bukkit.getPluginManager();
-        if (plugins.getPlugin("Vault") != null) {
+        if (plugins.getPlugin("Jecon") != null) {
+            this.registerHook(new JeconEconomyHook(this));
+        } else if (plugins.getPlugin("Vault") != null) {
             this.registerHook(new VaultEconomyHook(this));
         }
         if (plugins.getPlugin("PlaceholderAPI") != null) {
