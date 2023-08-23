@@ -41,6 +41,15 @@ public class Game {
             if (location != null) player.getPlayer().teleport(location);
         });
 
+        if (killer == player)  {
+            player.increaseDeaths();
+            player.resetItem();
+            player.resetStreaks();
+            player.sendMessage("&c【PIT】死亡しました");
+
+            return;
+        }
+
         if (killer == null) {
             player.increaseDeaths();
             player.resetItem();
