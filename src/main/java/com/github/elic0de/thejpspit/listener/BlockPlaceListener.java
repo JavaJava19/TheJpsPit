@@ -50,6 +50,11 @@ public class BlockPlaceListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE) return;
         final BlockState replacedState = event.getBlock().getState();
 
+        // 水、溶岩にブロックを置けないように
+        switch (event.getBlock().getType()) {
+            case LAVA, WATER -> event.setCancelled(true);
+        }
+
         if (replacedStates.containsKey(replacedState.getLocation())) return;
         replacedStates.put(replacedState.getLocation(), replacedState);
 
@@ -63,7 +68,7 @@ public class BlockPlaceListener implements Listener {
 
     @EventHandler
     private void on(BlockFormEvent event) {
-        if (event.getNewState().getBlock().getType() == Material.OBSIDIAN) {
+        if (event.getBlock().getType() == Material.LAVA) {
             event.setCancelled(true);
         }
     }
@@ -73,12 +78,9 @@ public class BlockPlaceListener implements Listener {
         Material block = event.getBlock().getType();
 
         if (block == Material.LAVA || block == Material.WATER) {
-            event.getBlock().setType(Material.AIR);
             event.setCancelled(true);
-            return;
         }
     }
-
 
     public static void restoreBlocks() {
         replacedStates.values().forEach(b -> b.update(true));
