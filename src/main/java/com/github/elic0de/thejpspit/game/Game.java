@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.tnemc.core.item.ItemStackBuilder;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 public class Game {
 
@@ -33,6 +35,8 @@ public class Game {
 
     public void death(PitPlayer player) {
         final PitPlayer killer = player.getKiller();
+
+        player.getPlayer().setItemOnCursor(ItemStackBuilder.create(Material.AIR).getStack());
 
         // 死んだらテレポートをさせる
         pit.getPitPreferences().ifPresent(pitPreferences -> {
