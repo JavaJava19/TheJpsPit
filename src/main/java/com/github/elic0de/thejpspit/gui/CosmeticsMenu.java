@@ -94,7 +94,7 @@ public class CosmeticsMenu {
                     pitPlayer.sendMessage("たりない");
                 });
                 click.getGui().draw();
-                return true;
+                return false;
             }, "&a" + cosmetic.getName(),
                 "&7" + cosmetic.getDescription(),
                 " ",

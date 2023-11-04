@@ -10,7 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.xenondevs.particle.ParticleEffect;
 
-@CosmeticData(id = "greenstar", name = "なんか緑", description = "みどり", icon = Material.EMERALD, coin = 50)
+@CosmeticData(id = "greenstar", name = "Green Star Trail", description = "", icon = Material.EMERALD, coin = 50)
 public class GreenStar extends Cosmetic implements TrailCosmetic {
 
     @Override

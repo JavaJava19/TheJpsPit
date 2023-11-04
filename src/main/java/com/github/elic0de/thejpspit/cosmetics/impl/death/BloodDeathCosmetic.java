@@ -7,7 +7,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 
-@CosmeticData(id = "blooddeath", name = "床が赤でいっぱい", description = "death", icon = Material.REDSTONE, coin = 50)
+@CosmeticData(id = "blooddeath", name = "Death Blood", description = "返り血", icon = Material.REDSTONE, coin = 50)
 public class BloodDeathCosmetic extends Cosmetic implements DeathCosmetic {
 
     @Override

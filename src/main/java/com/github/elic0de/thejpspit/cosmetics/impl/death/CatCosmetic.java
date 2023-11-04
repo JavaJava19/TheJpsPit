@@ -7,7 +7,7 @@ import com.github.elic0de.thejpspit.player.PitPlayer;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
-@CosmeticData(id = "cat", name = "ねこねこ", description = "あいうえお", icon = Material.CAT_SPAWN_EGG, coin = 50)
+@CosmeticData(id = "cat", name = "Cat", description = "猫の悲鳴", icon = Material.CAT_SPAWN_EGG, coin = 50)
 public class CatCosmetic extends Cosmetic implements DeathCosmetic {
 
     @Override

@@ -8,7 +8,7 @@ import org.bukkit.Material;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
-@CosmeticData(id = "Fire", name = "ファイやー", description = "足元が焦げて..", slot = 'F', icon = Material.BLACK_BANNER, coin = 50)
+@CosmeticData(id = "Fire", name = "Fire Effect", description = "", slot = 'F', icon = Material.BLACK_BANNER, coin = 50)
 public class FireCosmetic extends Cosmetic implements KillCosmetic {
 
     @Override
