@@ -97,7 +97,7 @@ public class Game {
             if (preferences.isDeathMessage()) {
                 player.sendMessage("&c【PIT】%player%に倒されました(KDレート:%rating%)"
                     .replaceAll("%player%", killer.getName())
-                    .replaceAll("%rating%", killer.getRating() + "%")
+                    .replaceAll("%rating%", killer.getRating())
                 );
             }
         });
@@ -105,7 +105,7 @@ public class Game {
             if (preferences.isKillMessage()) {
                 killer.sendMessage("&b【PIT】%player%を倒しました(KDレート:%rating%)"
                     .replaceAll("%player%", player.getName())
-                    .replaceAll("%rating%", player.getRating() + "%")
+                    .replaceAll("%rating%", player.getRating())
                 );
             }
         });
