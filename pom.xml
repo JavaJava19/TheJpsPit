@@ -125,6 +125,11 @@
             <version>1.1.2</version>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>24.0.1</version>
@@ -162,18 +167,6 @@
             <version>1.1.9.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/TNE-0.1.1.16.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>jp.jyn</groupId>
-            <artifactId>Jecon</artifactId>
-            <version>2.2.1</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
