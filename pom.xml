@@ -6,7 +6,7 @@
 
     <groupId>com.github.elic0de</groupId>
     <artifactId>thejpspit</artifactId>
-    <version>1.10.7</version>
+    <version>1.11.0</version>
     <packaging>jar</packaging>
 
     <name>TheJpsPit</name>
