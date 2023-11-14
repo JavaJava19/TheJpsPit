@@ -164,9 +164,9 @@
         <dependency>
             <groupId>gg.jps</groupId>
             <artifactId>JpsCore</artifactId>
-            <version>1.10.7</version>
+            <version>1.11.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jpscore-1.10.7.jar</systemPath>
+            <systemPath>${project.basedir}/lib/jpscore-1.11.0.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

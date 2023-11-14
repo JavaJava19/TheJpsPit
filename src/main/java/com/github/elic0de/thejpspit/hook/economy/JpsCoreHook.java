@@ -50,7 +50,7 @@ public class JpsCoreHook extends EconomyHook {
     public void giveMoney(PitPlayer player, BigDecimal amount){
         api.giveBySystem(
                 PlayerUuidStr.instance(player.getPlayer()), PluginName.instance(TheJpsPit.getInstance().getName()),
-                new MoneyJp(amount), PassBookNote.instance("PITで付与"), false
+                new MoneyJp(amount), PassBookNote.instance("PITで付与"), IJpsBankApi.AddableToDailyEarnAmount.YES
         );
         player.getBoard().updateCoins();
     }
