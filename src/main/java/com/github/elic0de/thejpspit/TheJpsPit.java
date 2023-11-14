@@ -14,8 +14,7 @@ import com.github.elic0de.thejpspit.database.SqLiteDatabase;
 import com.github.elic0de.thejpspit.game.Game;
 import com.github.elic0de.thejpspit.hook.*;
 import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
-import com.github.elic0de.thejpspit.hook.economy.JeconEconomyHook;
-import com.github.elic0de.thejpspit.hook.economy.VaultEconomyHook;
+import com.github.elic0de.thejpspit.hook.economy.JpsCoreHook;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.listener.BlockPlaceListener;
@@ -38,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import gg.jps.jpscore.define.JpsConst;
 import net.william278.annotaml.Annotaml;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -193,10 +193,8 @@ public final class TheJpsPit extends JavaPlugin {
 
     private void registerHooks() {
         final PluginManager plugins = Bukkit.getPluginManager();
-        if (plugins.getPlugin("Jecon") != null) {
-            this.registerHook(new JeconEconomyHook(this));
-        } else if (plugins.getPlugin("Vault") != null) {
-            this.registerHook(new VaultEconomyHook(this));
+        if (plugins.getPlugin(JpsConst.pluginName.get()) != null) {
+            this.registerHook(new JpsCoreHook(this));
         }
         if (plugins.getPlugin("PlaceholderAPI") != null) {
             new PlaceholderHook().register();
