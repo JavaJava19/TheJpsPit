@@ -2,13 +2,12 @@ package com.github.elic0de.thejpspit.player;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.cosmetics.AbstractCosmetic;
-import com.github.elic0de.thejpspit.cosmetics.Cosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.AuraCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.DeathCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.KillCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.StreakCosmetic;
 import com.github.elic0de.thejpspit.cosmetics.type.TrailCosmetic;
-import com.github.elic0de.thejpspit.hook.EconomyHook;
+import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
