@@ -2,4 +2,4 @@
 某サバのThePitに似ているプラグインです
 
 ---
-&copy; [JPS](https://japanpvpserver.net), 2023. All rights reserved.
+&copy; [JPS](https://jps.gg/), 2023. All rights reserved.
