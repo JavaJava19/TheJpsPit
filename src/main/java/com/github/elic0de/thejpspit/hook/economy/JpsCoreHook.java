@@ -44,6 +44,7 @@ public class JpsCoreHook extends EconomyHook {
                 PlayerUuidStr.instance(player.getPlayer()), PluginName.instance(TheJpsPit.getInstance().getName()),
                 new MoneyJp(amount), PassBookNote.instance("PITで徴収")
         );
+        player.getBoard().updateCoins();
     }
 
     public void giveMoney(PitPlayer player, BigDecimal amount){
@@ -51,6 +52,7 @@ public class JpsCoreHook extends EconomyHook {
                 PlayerUuidStr.instance(player.getPlayer()), PluginName.instance(TheJpsPit.getInstance().getName()),
                 new MoneyJp(amount), PassBookNote.instance("PITで付与"), false
         );
+        player.getBoard().updateCoins();
     }
 
     public String formatMoney(BigDecimal amount){
