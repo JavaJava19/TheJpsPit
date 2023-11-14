@@ -168,5 +168,12 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/TNE-0.1.1.16.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>gg.jps</groupId>
+            <artifactId>JpsCore</artifactId>
+            <version>1.10.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jpscore-1.10.7.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
