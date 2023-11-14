@@ -1,6 +1,7 @@
-package com.github.elic0de.thejpspit.hook;
+package com.github.elic0de.thejpspit.hook.economy;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import java.math.BigDecimal;
 import java.util.logging.Level;

@@ -1,19 +1,15 @@
 package com.github.elic0de.thejpspit.gui;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
-import com.github.elic0de.thejpspit.hook.EconomyHook;
-import com.github.elic0de.thejpspit.item.PitItemEntry;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import com.github.elic0de.thejpspit.player.PitPlayerManager;
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
-import java.math.BigDecimal;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class PitChatMenu {

@@ -1,7 +1,7 @@
 package com.github.elic0de.thejpspit.gui;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
-import com.github.elic0de.thejpspit.hook.EconomyHook;
+import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
 import com.github.elic0de.thejpspit.item.ItemManager;
 import com.github.elic0de.thejpspit.item.PitItemEntry;
 import com.github.elic0de.thejpspit.player.PitPlayer;

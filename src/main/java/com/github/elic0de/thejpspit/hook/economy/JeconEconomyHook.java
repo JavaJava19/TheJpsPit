@@ -1,6 +1,7 @@
-package com.github.elic0de.thejpspit.hook;
+package com.github.elic0de.thejpspit.hook.economy;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
+import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
 import com.github.elic0de.thejpspit.player.PitPlayer;
 import jp.jyn.jecon.Jecon;
 import org.bukkit.Bukkit;

@@ -2,7 +2,7 @@ package com.github.elic0de.thejpspit.player;
 
 import com.github.elic0de.thejpspit.TheJpsPit;
 import com.github.elic0de.thejpspit.database.Database;
-import com.github.elic0de.thejpspit.hook.EconomyHook;
+import com.github.elic0de.thejpspit.hook.economy.EconomyHook;
 import com.github.elic0de.thejpspit.leveler.Levels;
 import com.github.elic0de.thejpspit.scoreboard.PitPlayerScoreboard;
 import de.themoep.minedown.MineDown;
